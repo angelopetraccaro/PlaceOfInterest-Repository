@@ -79,7 +79,7 @@ public class LoginActivity extends AppCompatActivity  {
                         }
                     });
 
-            mAuth.createUserWithEmailAndPassword(email, password)
+          /*  mAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
@@ -91,7 +91,7 @@ public class LoginActivity extends AppCompatActivity  {
                                 Log.e(TAG, "createUserWithEmail:failure", task.getException());
                             }
                         }
-                    });
+                    });  */
         }
     }
 
