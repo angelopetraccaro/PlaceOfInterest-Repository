@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".ReadActivity"
+    tools:ignore="MergeRootFrame">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="170dp"
+        android:fitsSystemWindows="true"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/toolbar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="165dp"
+            android:fitsSystemWindows="true"
+            app:contentScrim="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:toolbarId="@+id/toolbar">
+
+            <HorizontalScrollView
+                android:id="@+id/Horizontal"
+                android:layout_width="522dp"
+                android:layout_height="100dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="25dp"
+                android:scrollbars="none"
+                app:layout_constraintBottom_toTopOf="@+id/nome"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.411"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/take">
+
+                <LinearLayout
+                    android:id="@+id/gallery"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"></LinearLayout>
+
+            </HorizontalScrollView>
+        </android.support.design.widget.CollapsingToolbarLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/item_detail_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <TextView
+            android:id="@+id/nome"
+            android:layout_width="wrap_content"
+            android:layout_height="33dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="8dp"
+            android:text="Nome"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/nom"
+            app:layout_constraintHorizontal_bias="0.189"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/gallery_b" />
+
+        <TextView
+            android:id="@+id/breve_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginTop="8dp"
+            android:text="Breve Descrizione"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/b_desc"
+            app:layout_constraintStart_toEndOf="@+id/nom"
+            app:layout_constraintTop_toBottomOf="@+id/gps" />
+
+        <EditText
+            android:id="@+id/desc"
+            android:layout_width="384dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="19dp"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:hint="Descrizione"
+            android:inputType="textMultiLine"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/nom" />
+
+        <EditText
+            android:id="@+id/text_cord"
+            android:layout_width="145dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="4dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/desc" />
+
+        <EditText
+            android:id="@+id/nom"
+            android:layout_width="165dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            app:layout_constraintEnd_toStartOf="@+id/breve_desc"
+            app:layout_constraintStart_toEndOf="@+id/nome"
+            app:layout_constraintTop_toBottomOf="@+id/scatta" />
+
+        <EditText
+            android:id="@+id/b_desc"
+            android:layout_width="167dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/breve_desc"
+            app:layout_constraintTop_toBottomOf="@+id/gps" />
+
+        <EditText
+            android:id="@+id/edit_cord"
+            android:layout_width="145dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="180dp"
+            android:ems="10"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.86"
+            app:layout_constraintStart_toEndOf="@+id/text_cord"
+            app:layout_constraintTop_toBottomOf="@+id/desc" />
+
+        <CheckBox
+            android:id="@+id/pubblico"
+            android:layout_width="103dp"
+            android:layout_height="37dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="Pubblico"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.654"
+            app:layout_constraintStart_toEndOf="@+id/desc"
+            app:layout_constraintTop_toBottomOf="@+id/b_desc" />
+
+        <CheckBox
+            android:id="@+id/privato"
+            android:layout_width="103dp"
+            android:layout_height="37dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="38dp"
+            android:text="Privato"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pubblico" />
+
+        <ImageButton
+            android:id="@+id/gps"
+            android:layout_width="65dp"
+            android:layout_height="43dp"
+            android:layout_marginStart="72dp"
+            android:layout_marginTop="8dp"
+            android:src="@android:drawable/ic_menu_compass"
+            app:layout_constraintStart_toEndOf="@+id/scatta"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/scatta"
+            android:layout_width="65dp"
+            android:layout_height="43dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="32dp"
+            android:src="@android:drawable/ic_menu_camera"
+            app:layout_constraintEnd_toStartOf="@+id/gps"
+            app:layout_constraintStart_toEndOf="@+id/gallery_b"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/gallery_b"
+            android:layout_width="65dp"
+            android:layout_height="43dp"
+            android:layout_marginStart="45dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="32dp"
+            android:src="@android:drawable/ic_menu_gallery"
+            app:layout_constraintEnd_toStartOf="@+id/scatta"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|start"
+        android:layout_margin="@dimen/fab_margin"
+        app:layout_anchor="@+id/item_detail_container"
+        app:layout_anchorGravity="top|end"
+        app:srcCompat="@android:drawable/ic_input_add" />
+
+</android.support.design.widget.CoordinatorLayout>

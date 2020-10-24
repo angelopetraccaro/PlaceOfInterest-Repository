@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "971444728581",
+    "firebase_url": "https://placesofinterest-2bc8d.firebaseio.com",
+    "project_id": "placesofinterest-2bc8d",
+    "storage_bucket": "placesofinterest-2bc8d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:971444728581:android:92fc25ef2fc1777b",
+        "android_client_info": {
+          "package_name": "com.gmail.petraccaro.angelo.placesofinterest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "971444728581-2vdfd26p4pi1fbiaj45fd6cn80mbu15c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gmail.petraccaro.angelo.placesofinterest",
+            "certificate_hash": "52822346a1542425dbf2b2b332bd17aaaeca3a3f"
+          }
+        },
+        {
+          "client_id": "971444728581-7q7n0pjf5ogco507a86updsqmejli10q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDuubmgRlLKDANXevdcG5wsRduvv-RLBqI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "971444728581-7q7n0pjf5ogco507a86updsqmejli10q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
