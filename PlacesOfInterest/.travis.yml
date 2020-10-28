@@ -1,14 +1,10 @@
 language: java
-
 jdk: openjdk8
-
 before_install:
   - chmod +x gradlew
   - echo yes | sdkmanager "build-tools;28.0.3"
-
 script:
-        - ./gradlew build
-
+  - ./gradlew build
 notifications:
   email:
     - francescosaccone97@gmail.com
