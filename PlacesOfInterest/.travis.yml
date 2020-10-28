@@ -1,4 +1,4 @@
-language: java
+language: android
 jdk: openjdk8
 before_install:
   - chmod +x gradlew
