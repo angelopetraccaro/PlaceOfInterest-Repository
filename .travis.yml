@@ -12,6 +12,6 @@ notifications:
     - francescosaccone97@gmail.com
     - antoniorapuano323@gmail.com
     - petraccaro.angelo@gmail.com
-  on_success: change
+  on_success: always
   on_failure: always
   
