@@ -7,7 +7,9 @@ script:
   - ./PlacesOfInterest/gradlew build
   
 notifications:
-  slack: placeofinterest:Ym2BDJzlJpX91UuBFXloJxpc
+  slack: 
+        placeofinterest:YZZyNweMd8nqEwgvmtph26Xfa
+        on_success: always
   email:
     - francescosaccone97@gmail.com
     - antoniorapuano323@gmail.com
