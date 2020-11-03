@@ -8,4 +8,10 @@ script:
 
 notifications:
   slack: placeofinterest:ZZyNweMd8nqEwgvmtph26Xfa
+  email:
+    - francescosaccone97@gmail.com
+    - antoniorapuano323@gmail.com
+    - petraccaro.angelo@gmail.com
+  on_success: change
+  on_failure: always
   
