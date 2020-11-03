@@ -1,5 +1,20 @@
 language: android
 jdk: openjdk8
+android:
+  components:
+    # Uncomment the lines below if you want to
+    # use the latest revision of Android SDK Tools
+    # - tools
+    # - platform-tools
+
+    # The BuildTools version used by your project
+    - build-tools-28.0.3
+    - android-28
+      # Additional components
+    - extra-google-google_play_services
+    - extra-google-m2repository
+    - extra-android-m2repository
+    
 before_install:
   - chmod +x ./PlacesOfInterest/gradlew
   - echo yes | sdkmanager "build-tools;28.0.3"
@@ -8,10 +23,6 @@ script:
 
 notifications:
   slack: placeofinterest:ZZyNweMd8nqEwgvmtph26Xfa
-  email:
-    - francescosaccone97@gmail.com
-    - antoniorapuano323@gmail.com
-    - petraccaro.angelo@gmail.com
-  on_success: always
+  on_success: change
   on_failure: always
   
