@@ -9,7 +9,6 @@ script:
 notifications:
   slack:
   	if: branch = master
-        on_success: always
   email:
     - francescosaccone97@gmail.com
     - antoniorapuano323@gmail.com
