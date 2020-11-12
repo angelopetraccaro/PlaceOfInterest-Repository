@@ -1,5 +1,8 @@
 package com.gmail.petraccaro.angelo.placesofinterest;
 
+/**
+ * Dichiara variabili e metodi dell'item appartenente alla lista visualizzata nella MainActivity
+ */
 public class ElementoLista {
     private String nome;
     private String breve_descrizione;

@@ -12,6 +12,9 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+/**
+ * Predispone la visualizzazione degli elementi
+ */
 public class CustomAdapter extends ArrayAdapter<ElementoLista>  {
 
     public CustomAdapter(Context context, int textViewResourceId, List<ElementoLista> objects) {

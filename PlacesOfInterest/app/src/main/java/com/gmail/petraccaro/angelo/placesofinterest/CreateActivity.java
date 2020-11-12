@@ -442,6 +442,7 @@ public class CreateActivity extends AppCompatActivity {
     /**
      * Creazione di un file per salvare l'immagine
      * Funzione che specifica la locazione ed il nome del file che vogliamo creare
+     * @return ritorna il nuovo file path
      */
     private File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmSS").format(new Date());

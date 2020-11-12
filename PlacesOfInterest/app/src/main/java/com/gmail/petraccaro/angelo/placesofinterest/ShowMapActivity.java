@@ -9,6 +9,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+/**
+ * Visualizza la posizione mostrata su maps(google) relativa alla foto scattata
+ */
 public class ShowMapActivity extends FragmentActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
 

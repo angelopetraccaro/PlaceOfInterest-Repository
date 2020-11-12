@@ -36,6 +36,12 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
+/**
+ * Visualizza la lista degli item (foto,nome_luogo,descrizione_luogo);
+ * Permette il passaggio alla CreateActivity per inserire una nuova foto;
+ * Permette il passaggio alla ReadActivity per visualizzare una foto;
+ *
+ */
 public class MainActivity extends AppCompatActivity {
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
@@ -83,6 +89,9 @@ public class MainActivity extends AppCompatActivity {
             return true;
     }
 
+    /**
+     * Fragment per la gestione della lista pubblica e privata di elementi
+     */
     public static class PlaceholderFragment extends Fragment {
         private static final String ARG_SECTION_NUMBER = "section_number";
         private ListView lista;
@@ -103,6 +112,13 @@ public class MainActivity extends AppCompatActivity {
             return fragment;
         }
 
+        /**
+         * Il metodo gestisce listener che per un click sulla lista di item lancia l'intent alla ReadActivity;
+         * gestisce un listener che per un long click sulla lista di item elimina l'elemento;
+         * @param container il contenitore di elementi della lista
+         * @param savedInstanceState variabile che memorizza lo stato precedente
+         * @return rootView, ovvero la lista aggiornata
+         */
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
@@ -202,7 +218,9 @@ public class MainActivity extends AppCompatActivity {
             return rootView;
         }
 
-        //caricamento liste
+        /**
+         * Caricamento lista pubblica
+         */
         public void getContactPublic(){
             list.clear();
             lista.setAdapter(new CustomAdapter(getContext(), R.layout.list_item, list));
@@ -225,6 +243,10 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
         }
+
+        /**
+         * Caricamento lista privata
+         */
         public void getContactPrivate(){
             list1.clear();
             lista.setAdapter(new CustomAdapter(getContext(), R.layout.list_item, list1));

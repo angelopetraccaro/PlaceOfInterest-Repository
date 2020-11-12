@@ -47,6 +47,13 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+/**
+ * Visualizza la/le foto (max 3) ed i relativi parametri;
+ * Permette di visualizzare la posizione aprendo la mappa;
+ * Permette di sostituire le foto caricate e/o pubblicare
+ * nella parte pubblica la foto (se questa risiede in privato) e viceversa.
+ * Inoltre permette la modifica dei campi dell'elemento.
+ */
 public class ReadActivity extends AppCompatActivity {
     private final String TAG = "lifecycle";
     private static int RESULT_LOAD_IMAGE = 1;   //per chiamare la galleria
@@ -132,7 +139,7 @@ public class ReadActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //in questo caso (arraylist string) uri perche non cambio la foto
+                //in questo caso (arraylist string) uri perchè non cambio la foto
                 CollectionReference luoghi = db.collection("luoghi");
                 Map<String, Object> utente1 = new HashMap<>();
 
@@ -240,7 +247,9 @@ public class ReadActivity extends AppCompatActivity {
         }
     }
 
-//metodo per apripre la fotocamera
+    /**
+     * Lancia l'intent che richiama la fotocamera dello smartphone
+     */
 public void takePhoto(View v) {
     Intent callCameraApplicationIntent = new Intent();
     callCameraApplicationIntent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -258,6 +267,13 @@ public void takePhoto(View v) {
     callCameraApplicationIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
     startActivityForResult(callCameraApplicationIntent, ACTIVITY_START_CAMERA_APP);
 }
+
+    /**
+     * Il metodo viene richiamato quando l'intent viene evaso
+     * @param requestCode gestisce il tipo di intent lanciato
+     * @param resultCode esito del risultato
+     * @param data dati restituiti
+     */
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //per la galleria in on activity result controllo:
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
@@ -331,6 +347,12 @@ public void takePhoto(View v) {
             addOnStorage(outputUri);
         }
     }
+
+    /**
+     * Creazione di un file per salvare l'immagine
+     * Funzione che specifica la locazione ed il nome del file che vogliamo creare
+     * @return il nuovo file path
+     */
     private File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmSS").format(new Date());
         String imageFileName = "IMAGE_" + timeStamp+".jpg";
@@ -338,12 +360,20 @@ public void takePhoto(View v) {
         return new File(externalDir.toString()+"/"+imageFileName);
 
     }
+
+    /**
+     * Trasmissione di uno scanner multimediale con l'intento di far apparire l'immagine nella galleria
+     */
     private void galleryAddPic() {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         mediaScanIntent.setData(outputUri);
         this.sendBroadcast(mediaScanIntent);
     }
 
+    /**
+     * Carica la foto sullo storage di firebase
+     * @param outputUri uri della foto da salvare su firebase storage
+     */
     public void addOnStorage(Uri outputUri){
         //messo qui l'alert cosi anche se capita di cliccare la foto e nn salvarla nn appare la didascalia
         AlertDialog.Builder didascalia=new AlertDialog.Builder(this);
@@ -421,6 +451,10 @@ public void takePhoto(View v) {
         });
     }
 
+    /**
+     * Memorizza lo stato da ripristinare se lo smartphone va in landscape
+     * @param b stato da ripristinare
+     */
     protected void onSaveInstanceState(Bundle b) {
         super.onSaveInstanceState(b);
         b.putString("u", uri_foto_iniziali.get(0));
