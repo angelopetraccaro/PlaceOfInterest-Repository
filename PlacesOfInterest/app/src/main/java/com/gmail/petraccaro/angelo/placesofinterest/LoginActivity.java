@@ -20,11 +20,19 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 
+/**
+ * Classe che si occupa del login
+ */
 public class LoginActivity extends AppCompatActivity  {
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
     private final String TAG = "ANGELO.PETRACCARO";
 
+    /**
+     * Il metodo crea la LoginActivity, inizializza le variabili di email e password
+     * e richiama il metodo attemptLogin.
+     * @param savedInstanceState, variabile che memorizza lo stato precedente
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +50,10 @@ public class LoginActivity extends AppCompatActivity  {
         });
     }
 
+    /**
+     * Verifica la validità delle credenziali e se corrette, recupera il profilo firebase
+     * ed effettua l'accesso alla MainActivity
+     */
     private void attemptLogin() {
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();

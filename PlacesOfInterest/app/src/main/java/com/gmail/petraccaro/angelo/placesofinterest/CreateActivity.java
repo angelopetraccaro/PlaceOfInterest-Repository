@@ -54,6 +54,9 @@ import java.util.List;
 import java.util.Map;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+/**
+ * Classe che permette l'inserimento di una nuova foto con relativi campi
+ */
 public class CreateActivity extends AppCompatActivity {
     private static final long POLLING_FREQ = 1000 * 10; // per coordin
     private static final float MIN_DISTANCE = 10.0f;    //per coordin
@@ -81,6 +84,13 @@ public class CreateActivity extends AppCompatActivity {
     private LayoutInflater inflater;
     View x;
 
+    /**
+     * Il metodo crea la CreateActivity, inizializzando tutti i campi necessari.
+     * Dopodichè recupera la uri di firestone per aggiungere le foto caricate.
+     * Poi si accupa di recuperare le coordinate gps da assegnare alla foto.
+     * Infine si occupa del ripristino dello stato se lo smartphone va in landscape
+     * @param savedInstanceState, variabile che memorizza lo stato precedente
+     */
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create);
@@ -326,6 +336,9 @@ public class CreateActivity extends AppCompatActivity {
         return bestResult;
     }
 
+    /**
+     * Lancia l'intent che richiama la fotocamera dello smartphone
+     */
     public void takePhoto(View v) {
         Intent callCameraApplicationIntent = new Intent();
         callCameraApplicationIntent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -344,6 +357,12 @@ public class CreateActivity extends AppCompatActivity {
         startActivityForResult(callCameraApplicationIntent, ACTIVITY_START_CAMERA_APP);
     }
 
+    /**
+     * Il metodo viene richiamato quando l'intent viene evaso
+     * @param requestCode gestisce il tipo di intent lanciato
+     * @param resultCode esito del risultato
+     * @param data dati restituiti
+     */
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //per la galleria in on activity result controllo:
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
@@ -421,7 +440,8 @@ public class CreateActivity extends AppCompatActivity {
     }
 
     /**
-     * The function that specifies the location and the name of the file that we want to create
+     * Creazione di un file per salvare l'immagine
+     * Funzione che specifica la locazione ed il nome del file che vogliamo creare
      */
     private File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmSS").format(new Date());
@@ -430,15 +450,21 @@ public class CreateActivity extends AppCompatActivity {
         //File externalDir = getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         //Log.e("ciao",externalDir.toString()+"/"+imageFileName);
         return new File(externalDir.toString()+"/"+imageFileName);
-
     }
 
+    /**
+     * Trasmissione di uno scanner multimediale con l'intento di far apparire l'immagine nella galleria
+     */
     private void galleryAddPic() {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         mediaScanIntent.setData(outputUri);
         this.sendBroadcast(mediaScanIntent);
     }
 
+    /**
+     * Carica la foto sullo storage di firebase
+     * @param outputUri uri della foto da salvare su firebase storage
+     */
     public void addOnStorage(Uri outputUri){
         //messo qui l'alert invece che sotto a y++, elimino errore distrazione
         AlertDialog.Builder didascalia=new AlertDialog.Builder(this);
@@ -503,6 +529,10 @@ public class CreateActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Memorizza lo stato da ripristinare se lo smartphone va in landscape
+     * @param b stato da ripristinare
+     */
     protected void onSaveInstanceState(Bundle b){
         super.onSaveInstanceState(b);
         if(array.size()>0) {
@@ -520,7 +550,10 @@ public class CreateActivity extends AppCompatActivity {
         b.putString("t1",itemtext1.getText().toString());
         b.putString("t2",itemtext2.getText().toString());
     }
-    //lo utilizzo perchè se torno indietro senza crere luoghi si ricorda lo stato e allora devo resettare
+
+    /**
+     * Utilizzato perchè, tornando indietro senza crere luoghi, resetta le variabili
+     */
     public void onBackPressed(){
         y=0;
         latitudine=0.0;
