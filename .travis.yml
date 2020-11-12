@@ -16,6 +16,6 @@ script:
 
 notifications:
   slack: placeofinterest:ZZyNweMd8nqEwgvmtph26Xfa
-  on_success: change
+  on_success: always
   on_failure: always
   
