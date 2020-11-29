@@ -32,9 +32,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-<<<<<<< HEAD
-            <com.google.android.material.textfield.TextInputLayout
-=======
             <TextView
                 android:id="@+id/login"
                 android:layout_width="match_parent"
@@ -43,11 +40,6 @@
                 android:textColor="@color/cardview_light_background"
                 android:textSize="36sp"
                 android:textStyle="bold" />
-
-            <android.support.design.widget.TextInputLayout
->>>>>>> a037d1d0e4b36e5b7d6550f7578318080b8c4738
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
 
                 <AutoCompleteTextView
                     android:id="@+id/email"
@@ -65,12 +57,6 @@
                     android:paddingRight="10dp"
                     android:paddingBottom="10dp"
                     android:singleLine="true" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
 
                 <EditText
                     android:id="@+id/password"
@@ -91,8 +77,6 @@
                     android:paddingRight="10dp"
                     android:paddingBottom="10dp"
                     android:singleLine="true" />
-
-            </com.google.android.material.textfield.TextInputLayout>
 
             <Button
                 android:id="@+id/email_sign_in_button"

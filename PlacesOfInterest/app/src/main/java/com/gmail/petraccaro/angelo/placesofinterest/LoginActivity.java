@@ -3,6 +3,7 @@ package com.gmail.petraccaro.angelo.placesofinterest;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -68,7 +69,7 @@ public class LoginActivity extends AppCompatActivity  {
         String password = mPasswordView.getText().toString();
 
 
-       /* if (TextUtils.isEmpty(password)) {
+        if (TextUtils.isEmpty(password)) {
             mPasswordView.setError(getString(R.string.error_field_required));
         }
         else if (!isPasswordValid(password)) {
@@ -81,11 +82,11 @@ public class LoginActivity extends AppCompatActivity  {
             mEmailView.setError(getString(R.string.error_invalid_email));
         }
 
-        else {*/
+        else {
             FirebaseAuth mAuth = FirebaseAuth.getInstance();
             mAuth.signOut();
 
-            mAuth.signInWithEmailAndPassword("antonio@gmail.com", "ciaociao")
+            mAuth.signInWithEmailAndPassword(email,password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
@@ -101,20 +102,7 @@ public class LoginActivity extends AppCompatActivity  {
                         }
                     });
 
-          /*  mAuth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                Log.e(TAG, "createUserWithEmail:success");
-                                Intent i = new Intent(LoginActivity.this, MainActivity.class);
-                                startActivity(i);
-                            } else {
-                                Log.e(TAG, "createUserWithEmail:failure", task.getException());
-                            }
-                        }
-                    });  */
-       // }
+        }
     }
 
     private boolean isEmailValid(String email) {
