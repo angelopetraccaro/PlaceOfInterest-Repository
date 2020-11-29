@@ -99,20 +99,6 @@ public class LoginActivity extends AppCompatActivity  {
                             }
                         }
                     });
-
-          /*  mAuth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                Log.e(TAG, "createUserWithEmail:success");
-                                Intent i = new Intent(LoginActivity.this, MainActivity.class);
-                                startActivity(i);
-                            } else {
-                                Log.e(TAG, "createUserWithEmail:failure", task.getException());
-                            }
-                        }
-                    });  */
         }
     }
 
