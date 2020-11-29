@@ -68,7 +68,6 @@ public class LoginActivity extends AppCompatActivity  {
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
 
-
         if (TextUtils.isEmpty(password)) {
             mPasswordView.setError(getString(R.string.error_field_required));
         }
