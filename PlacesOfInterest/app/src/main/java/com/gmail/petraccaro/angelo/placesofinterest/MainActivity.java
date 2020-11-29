@@ -4,16 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,10 +14,20 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -140,11 +140,9 @@ public class MainActivity extends AppCompatActivity {
                     intent1.putExtra("latitude",list.get(position).getLatitude());
                     intent1.putExtra("longitude",list.get(position).getLongitude());
                     intent1.putExtra("foto",list.get(position).getUrl_foto());
-                    intent1.putExtra("foto1",list.get(position).getUrl_foto1());
-                    intent1.putExtra("foto2",list.get(position).getUrl_foto2());
+
                     intent1.putExtra("didascalia",list.get(position).getDidascalia());
-                    intent1.putExtra("didascalia1",list.get(position).getDidascalia1());
-                    intent1.putExtra("didascalia2",list.get(position).getDidascalia2());
+
                     intent1.putExtra("owner",list.get(position).getOwner());
                     intent1.putExtra("nome_doc",list.get(position).getNome_documento());
                     } else{
@@ -154,11 +152,9 @@ public class MainActivity extends AppCompatActivity {
                     intent1.putExtra("latitude",list1.get(position).getLatitude());
                     intent1.putExtra("longitude",list1.get(position).getLongitude());
                     intent1.putExtra("foto",list1.get(position).getUrl_foto());
-                    intent1.putExtra("foto1",list1.get(position).getUrl_foto1());
-                    intent1.putExtra("foto2",list1.get(position).getUrl_foto2());
+
                     intent1.putExtra("didascalia",list1.get(position).getDidascalia());
-                    intent1.putExtra("didascalia1",list1.get(position).getDidascalia1());
-                    intent1.putExtra("didascalia2",list1.get(position).getDidascalia2());
+
                     intent1.putExtra("owner",list1.get(position).getOwner());
                     intent1.putExtra("nome_doc",list1.get(position).getNome_documento());
                     }
@@ -233,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     if (document.get("Available").toString().equals("true")) {
                                         Log.e("cc",document.getId());
-                                        list.add(new ElementoLista(document.getString("Nome"), document.getString("Breve_desc"), document.getString("Lunga_desc"), document.getString("latitude"), document.getString("longitude"), document.getString("foto"),document.getString("foto1"),document.getString("foto2"),document.getString("didascalia"),document.getString("didascalia1"),document.getString("didascalia2"),document.getId(), document.getString("owner")));
+                                        list.add(new ElementoLista(document.getString("Nome"), document.getString("Breve_desc"), document.getString("Lunga_desc"), document.getString("latitude"), document.getString("longitude"), document.getString("foto"),document.getString("didascalia"),document.getId(), document.getString("owner")));
                                         lista.setAdapter(new CustomAdapter(getContext(), R.layout.list_item, list));
                                     }
                                 }
@@ -258,7 +254,7 @@ public class MainActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     if ((document.get("Available").toString().equals("false"))&& (document.get("owner").toString().equals(currentUser.getUid()))) {
-                                        list1.add(new ElementoLista(document.getString("Nome"), document.getString("Breve_desc"), document.getString("Lunga_desc"), document.getString("latitude"),document.getString("longitude"), document.getString("foto"),document.getString("foto1"),document.getString("foto2"),document.getString("didascalia"),document.getString("didascalia1"),document.getString("didascalia2"),document.getId(), document.getString("owner")));
+                                        list1.add(new ElementoLista(document.getString("Nome"), document.getString("Breve_desc"), document.getString("Lunga_desc"), document.getString("latitude"),document.getString("longitude"), document.getString("foto"),document.getString("didascalia"),document.getId(), document.getString("owner")));
                                         lista.setAdapter(new CustomAdapter(getContext(), R.layout.list_item, list1));
                                     }
                                 }

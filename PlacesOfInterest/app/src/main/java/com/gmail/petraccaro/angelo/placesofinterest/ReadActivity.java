@@ -9,11 +9,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,8 +19,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
+
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -38,7 +39,6 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -121,18 +121,14 @@ public class ReadActivity extends AppCompatActivity {
         photoTakenImageView1 = x.findViewById(R.id.item1);
         photoTakenImageView2 = x.findViewById(R.id.item2);
         itemtext = x.findViewById(R.id.itemtext);
-        itemtext1 = x.findViewById(R.id.itemtext1);
-        itemtext2 = x.findViewById(R.id.itemtext2);
+
         itemtext.setText(intent.getStringExtra("didascalia"));
-        itemtext1.setText(intent.getStringExtra("didascalia1"));
-        itemtext2.setText(intent.getStringExtra("didascalia2"));
+
         //picasso per passare da uri a img
         Uri myUri=Uri.parse(uri_foto_iniziali.get(0));
-        Uri myUri1=Uri.parse(uri_foto_iniziali.get(1));
-        Uri myUri2=Uri.parse(uri_foto_iniziali.get(2));
+
         Picasso.get().load(myUri).into(photoTakenImageView);
-        Picasso.get().load(myUri1).into(photoTakenImageView1);
-        Picasso.get().load(myUri2).into(photoTakenImageView2);
+
         gallery.addView(x);
 
 
@@ -151,11 +147,9 @@ public class ReadActivity extends AppCompatActivity {
                     utente1.put("latitude", latitude.getText().toString());
                     utente1.put("longitude", longitude.getText().toString());
                     utente1.put("foto", uri_foto_iniziali.get(0));
-                    utente1.put("foto1", uri_foto_iniziali.get(1));
-                    utente1.put("foto2", uri_foto_iniziali.get(2));
+
                     utente1.put("didascalia",itemtext.getText()+"");
-                    utente1.put("didascalia1",itemtext1.getText()+"");
-                    utente1.put("didascalia2",itemtext2.getText()+"");
+
                     if (pub.isChecked())
                         available = true;
                     if (pri.isChecked())
@@ -234,14 +228,11 @@ public class ReadActivity extends AppCompatActivity {
             itemtext2.setText(savedInstanceState.getString("t2"));
             gallery.removeAllViews();
             uri_foto_iniziali.set(0,savedInstanceState.getString("u"));
-            uri_foto_iniziali.set(1,savedInstanceState.getString("u1"));
-            uri_foto_iniziali.set(2,savedInstanceState.getString("u2"));
+
             Uri myUrix=Uri.parse(uri_foto_iniziali.get(0));
-            Uri myUri1x=Uri.parse(uri_foto_iniziali.get(1));
-            Uri myUri2x=Uri.parse(uri_foto_iniziali.get(2));
+
             Picasso.get().load(myUrix).into(photoTakenImageView);
-            Picasso.get().load(myUri1x).into(photoTakenImageView1);
-            Picasso.get().load(myUri2x).into(photoTakenImageView2);
+
             gallery.addView(x);
            //disab bottoni
         }
@@ -458,12 +449,10 @@ public void takePhoto(View v) {
     protected void onSaveInstanceState(Bundle b) {
         super.onSaveInstanceState(b);
         b.putString("u", uri_foto_iniziali.get(0));
-        b.putString("u1", uri_foto_iniziali.get(1));
-        b.putString("u2", uri_foto_iniziali.get(2));
+
         b.putInt("num",y);
         b.putInt("num1",z);
         b.putString("t",itemtext.getText().toString());
-        b.putString("t1",itemtext1.getText().toString());
-        b.putString("t2",itemtext2.getText().toString());
+
     }
 }

@@ -13,10 +13,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,10 +63,10 @@ public class CreateActivity extends AppCompatActivity {
     private static int RESULT_LOAD_IMAGE = 1;   //per chiamare la galleria
     private static final int ACTIVITY_START_CAMERA_APP = 0; //per chiamare la fotocamera
     private Uri outputUri;
-    private CircleImageView photoTakenImageView,photoTakenImageView1,photoTakenImageView2;
+    private CircleImageView photoTakenImageView;
     private Button takefoto, galleria;
     private CheckBox pub, pri;
-    private TextView nome, breve, desc, coord,itemtext,itemtext1,itemtext2;
+    private TextView nome, breve, desc, coord,itemtext;
     private ImageButton add;
     private EditText nom, bre, coordi;
     private boolean available = true;
@@ -79,6 +79,7 @@ public class CreateActivity extends AppCompatActivity {
     private static int max=0;
     private static int y=0;
     private double latitudine,longitudine;
+    private String uriFoto;
     private ArrayList<Uri> array=new ArrayList<>();
     private LinearLayout gallery;
     private LayoutInflater inflater;
@@ -112,11 +113,8 @@ public class CreateActivity extends AppCompatActivity {
 
         x = inflater.inflate(R.layout.item_immagine, gallery, false);
         photoTakenImageView = x.findViewById(R.id.item);
-        photoTakenImageView1 = x.findViewById(R.id.item1);
-        photoTakenImageView2 = x.findViewById(R.id.item2);
+
         itemtext = x.findViewById(R.id.itemtext);
-        itemtext1 = x.findViewById(R.id.itemtext1);
-        itemtext2 = x.findViewById(R.id.itemtext2);
         db = FirebaseFirestore.getInstance();
 
         db.collection("luoghi").get()
@@ -173,20 +171,18 @@ public class CreateActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 max++;
-                String uriFoto="",uriFoto1="",uriFoto2="";
+                String uriFoto="";
                 if(array.size()>=1)
                     uriFoto = array.get(0).toString();
-                if(array.size()>=2)
-                    uriFoto1 = array.get(1).toString();
-                if(array.size()>=3)
-                    uriFoto2 = array.get(2).toString();
+
                 String IdUser = "luogo" + max;
 
                 CollectionReference luoghi = db.collection("luoghi");
-                Map<String, Object> utente1 = new HashMap<>();
-
                 FirebaseAuth mAuth = FirebaseAuth.getInstance();
                 FirebaseUser currentUser = mAuth.getCurrentUser();
+               Map<String, Object> utente1 = new HashMap<>();
+
+
 
                 utente1.put("owner", (currentUser != null) ? currentUser.getUid() : null);
                 utente1.put("Nome", nom.getText().toString());
@@ -201,17 +197,20 @@ public class CreateActivity extends AppCompatActivity {
                     utente1.put("longitude",longitudine+"");
                 }
                 utente1.put("foto", uriFoto);
-                utente1.put("foto1", uriFoto1);
-                utente1.put("foto2", uriFoto2);
+
                 utente1.put("didascalia",itemtext.getText()+"");
-                utente1.put("didascalia1",itemtext1.getText()+"");
-                utente1.put("didascalia2",itemtext2.getText()+"");
+
                 if (pub.isChecked())
                     available = true;
                 if (pri.isChecked())
                     available = false;
                 utente1.put("Available", available);
                 luoghi.document(IdUser).set(utente1);
+
+               // ElementoLista el = new ElementoLista(nom.getText().toString(),bre.getText().toString(),desc.getText().toString(),
+                //        latitudine, longitudine,uriFoto,itemtext.getText().toString(),"ciap",  (currentUser != null) ? currentUser.getUid() : null);
+
+                Log.e("urifotod", uriFoto);
                 Intent i = new Intent(CreateActivity.this, MainActivity.class);
                 startActivity(i);
                 y=0;
@@ -259,27 +258,17 @@ public class CreateActivity extends AppCompatActivity {
 
         if(savedInstanceState!=null) {
             itemtext.setText(savedInstanceState.getString("t"));
-            itemtext1.setText(savedInstanceState.getString("t1"));
-            itemtext2.setText(savedInstanceState.getString("t2"));
+
             y=savedInstanceState.getInt("num");
             gallery.removeAllViews();
             if(savedInstanceState.getString("uri")!=null){
                 Uri u = Uri.parse(savedInstanceState.getString("uri"));
-                Picasso.get().load(u).into(photoTakenImageView);
+                Picasso.get().load(u).fit().centerInside().into(photoTakenImageView);
                 array.add(0,u);
             }
-            if(savedInstanceState.getString("uri1")!=null){
-                Uri u1 = Uri.parse(savedInstanceState.getString("uri1"));
-                Picasso.get().load(u1).into(photoTakenImageView1);
-                array.add(1,u1);
-            }
-            if(savedInstanceState.getString("uri2")!=null){
-                Uri u2 = Uri.parse(savedInstanceState.getString("uri2"));
-                Picasso.get().load(u2).into(photoTakenImageView2);
-                array.add(2,u2);
-            }
+
             gallery.addView(x);
-            if(array.size()>=3) { //alla 3 foto inserita disablito i bottoni e se faccio landscape si disattivano cmq
+            if(array.size()>=1) { //alla 1 foto inserita disablito i bottoni e se faccio landscape si disattivano cmq
                 takefoto.setEnabled(false);
                 galleria.setEnabled(false);
             }// per evitare di aspettare per riprendere la posizione
@@ -376,19 +365,9 @@ public class CreateActivity extends AppCompatActivity {
             cursor.close();
 
             gallery.removeAllViews(); //facendo cosi posso anche uscire dalla galleria senza selezionare foto. e incremento y nel metodo
-            if(y==0){
                 photoTakenImageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
                 gallery.addView(x);
-            }
-            if(y==1){
-                photoTakenImageView1.setImageBitmap(BitmapFactory.decodeFile(picturePath));
-                gallery.addView(x);
-            }
-            if(y==2){
-                photoTakenImageView2.setImageBitmap(BitmapFactory.decodeFile(picturePath));
-                gallery.addView(x);
-            }
-            y++;
+
             addOnStorage(selectedImage);
         }
 
@@ -408,33 +387,7 @@ public class CreateActivity extends AppCompatActivity {
                     Log.e("uri",Log.getStackTraceString(e));
                 }
             }
-            if(y==1){
-                try {
-                    mImageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), outputUri);
-                    if(mImageBitmap!=null){
-                        gallery.removeAllViews();
-                        photoTakenImageView1.setImageBitmap(mImageBitmap);
-                        gallery.addView(x);
-                        galleryAddPic();
-                    }
-                } catch (Exception e) {
-                    Log.e("uri",Log.getStackTraceString(e));
-                }
-            }
-            if(y==2){
-                try {
-                    mImageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), outputUri);
-                    if(mImageBitmap!=null){
-                        gallery.removeAllViews();
-                        photoTakenImageView2.setImageBitmap(mImageBitmap);
-                        gallery.addView(x);
-                        galleryAddPic();
-                    }
-                } catch (Exception e) {
-                    Log.e("uri",Log.getStackTraceString(e));
-                }
-            }
-            y++;
+
             addOnStorage(outputUri);
         }
     }
@@ -475,12 +428,8 @@ public class CreateActivity extends AppCompatActivity {
         didascalia.setPositiveButton("ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if(y-1==0)
                     itemtext.setText(e.getText());
-                if(y-1==1)
-                    itemtext1.setText(e.getText());
-                if(y-1==2)
-                    itemtext2.setText(e.getText());
+
             }
         });
         didascalia.show();
@@ -510,14 +459,7 @@ public class CreateActivity extends AppCompatActivity {
                     }
                 });
                 add.setEnabled(true);
-                if(y-1==2) {
-                    takefoto.setEnabled(false); //alla 3 foto disablito i bottoni ma se faccio landscape si attivano e allora
-                    galleria.setEnabled(false); //li disabilito di nuovo quando cambio stato
-                }
-                else{
-                    takefoto.setEnabled(true);
-                    galleria.setEnabled(true);
-                }
+
             }
         }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -538,18 +480,14 @@ public class CreateActivity extends AppCompatActivity {
         super.onSaveInstanceState(b);
         if(array.size()>0) {
             b.putString("uri", array.get(0).toString());
-            if(array.size()>1){
-                b.putString("uri1", array.get(1).toString());
-                if(array.size()>2)
-                    b.putString("uri2",array.get(2).toString());
-            }
+
+
         }
         b.putInt("num",y);
         b.putDouble("la",latitudine);
         b.putDouble("lo",longitudine);
         b.putString("t",itemtext.getText().toString());
-        b.putString("t1",itemtext1.getText().toString());
-        b.putString("t2",itemtext2.getText().toString());
+
     }
 
     /**
