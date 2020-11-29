@@ -8,6 +8,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText nome,cognome,email,password,username;
@@ -43,6 +45,22 @@ public class RegisterActivity extends AppCompatActivity {
                 String str_user=username.getText().toString();
 
                 System.out.println(str_nome+str_cognome+str_email+str_password+str_user); //ok
+
+                FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                mAuth.signOut();
+                /*  mAuth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                Log.e(TAG, "createUserWithEmail:success");
+                                Intent i = new Intent(RegisterActivity.this, MainActivity.class);   //accedo direttamente all'app come da implementazione?
+                                startActivity(i);                                                  //o passo a login activity e poi reinserisco le credenziali appena create e accedo?
+                            } else {
+                                Log.e(TAG, "createUserWithEmail:failure", task.getException());
+                            }
+                        }
+                    });  */
             }
         });
     }
