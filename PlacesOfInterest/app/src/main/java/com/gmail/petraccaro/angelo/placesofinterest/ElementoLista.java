@@ -10,23 +10,24 @@ public class ElementoLista {
     private String latitude,longitude;
     private String url_foto;
     private String didascalia;
-    private String nome_documento;
     private String owner;
+    private String keyOnDb;
+    private boolean available;
 
-    public ElementoLista(String nome, String breve_descrizione, String descrizione, String latitude, String longitude, String url_foto,  String didascalia,  String nome_documento, String owner) {
+    public ElementoLista(String nome, String breve_descrizione, String descrizione, String latitude, String longitude, String url_foto,  String didascalia, String owner,String key,boolean available) {
         this.nome = nome;
         this.breve_descrizione = breve_descrizione;
         this.descrizione = descrizione;
         this.latitude = latitude;
         this.longitude = longitude;
         this.url_foto = url_foto;
-
+        this.keyOnDb = key;
         this.didascalia = didascalia;
-
-        this.nome_documento = nome_documento;
         this.owner = owner;
+        this.available = available;
     }
 
+    public  ElementoLista(){}
     public String getNome() {
         return nome;
     }
@@ -42,10 +43,12 @@ public class ElementoLista {
         return url_foto;
     }
     public String getDidascalia() { return didascalia; }
-    public String getNome_documento() {
-        return nome_documento;
-    }
     public String getOwner() {
         return owner;
     }
+    public boolean getAvailable(){return  available;}
+    public String getKeyOnDb() {
+        return this.keyOnDb;
+    }
+
 }

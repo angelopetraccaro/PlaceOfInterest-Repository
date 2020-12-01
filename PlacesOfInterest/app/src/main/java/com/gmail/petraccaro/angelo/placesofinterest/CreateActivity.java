@@ -13,10 +13,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import androidx.annotation.NonNull;
-import androidx.core.content.FileProvider;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,16 +24,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
+
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -47,11 +44,9 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -70,17 +65,11 @@ public class CreateActivity extends AppCompatActivity {
     private ImageButton add;
     private EditText nom, bre, coordi;
     private boolean available = true;
-    // Current best location estimate
     private Location mLastReading;
-    // Reference to the LocationManager and LocationListener
     private LocationManager mLocationManager;
     private LocationListener mLocationListener;
-    private FirebaseFirestore db;
-    private static int max=0;
-    private static int y=0;
     private double latitudine,longitudine;
-    private String uriFoto;
-    private ArrayList<Uri> array=new ArrayList<>();
+    private Uri uriFoto;
     private LinearLayout gallery;
     private LayoutInflater inflater;
     View x;
@@ -115,21 +104,7 @@ public class CreateActivity extends AppCompatActivity {
         photoTakenImageView = x.findViewById(R.id.item);
 
         itemtext = x.findViewById(R.id.itemtext);
-        db = FirebaseFirestore.getInstance();
 
-        db.collection("luoghi").get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                    String a = document.getId().substring(5);
-                                    if (Integer.parseInt(a) > max)
-                                        max = Integer.parseInt(a);
-                            }
-                        }
-                    }
-                });
 
         takefoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,50 +145,29 @@ public class CreateActivity extends AppCompatActivity {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                max++;
-                String uriFoto="";
-                if(array.size()>=1)
-                    uriFoto = array.get(0).toString();
+                String uriFotoString = null;
+                if( uriFoto != null)
+                    uriFotoString = uriFoto.toString();
 
-                String IdUser = "luogo" + max;
-
-                CollectionReference luoghi = db.collection("luoghi");
                 FirebaseAuth mAuth = FirebaseAuth.getInstance();
                 FirebaseUser currentUser = mAuth.getCurrentUser();
-               Map<String, Object> utente1 = new HashMap<>();
-
-
-
-                utente1.put("owner", (currentUser != null) ? currentUser.getUid() : null);
-                utente1.put("Nome", nom.getText().toString());
-                utente1.put("Breve_desc", bre.getText().toString());
-                utente1.put("Lunga_desc", desc.getText().toString());
-                //mettere if se latitudine è 0.0 caricare in firebase null
-                if(latitudine==0.0 && longitudine==0.0) {
-                    utente1.put("latitude", null);
-                    utente1.put("longitude",null);
-                }else{
-                    utente1.put("latitude", latitudine+"");  //+"" perche in firebase sono stringhe
-                    utente1.put("longitude",longitudine+"");
-                }
-                utente1.put("foto", uriFoto);
-
-                utente1.put("didascalia",itemtext.getText()+"");
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference myRefToDb = database.getReference("photos");
 
                 if (pub.isChecked())
                     available = true;
                 if (pri.isChecked())
                     available = false;
-                utente1.put("Available", available);
-                luoghi.document(IdUser).set(utente1);
 
-               // ElementoLista el = new ElementoLista(nom.getText().toString(),bre.getText().toString(),desc.getText().toString(),
-                //        latitudine, longitudine,uriFoto,itemtext.getText().toString(),"ciap",  (currentUser != null) ? currentUser.getUid() : null);
+                String uploadId = myRefToDb.push().getKey();
+                ElementoLista el = new ElementoLista(bre.getText().toString(),nom.getText().toString(),desc.getText().toString(),
+                        Double.toString(latitudine), Double.toString(longitudine),uriFotoString,
+                        itemtext.getText().toString(), (currentUser != null) ? currentUser.getUid() : null,uploadId, available);
+                myRefToDb.child(uploadId).setValue(el);
 
-                Log.e("urifotod", uriFoto);
                 Intent i = new Intent(CreateActivity.this, MainActivity.class);
                 startActivity(i);
-                y=0;
+
                 latitudine=0.0;
                 longitudine=0.0;
                 finish();
@@ -257,18 +211,17 @@ public class CreateActivity extends AppCompatActivity {
         };
 
         if(savedInstanceState!=null) {
-            itemtext.setText(savedInstanceState.getString("t"));
+            itemtext.setText(savedInstanceState.getString("descrizione"));
 
-            y=savedInstanceState.getInt("num");
             gallery.removeAllViews();
             if(savedInstanceState.getString("uri")!=null){
                 Uri u = Uri.parse(savedInstanceState.getString("uri"));
                 Picasso.get().load(u).fit().centerInside().into(photoTakenImageView);
-                array.add(0,u);
+                uriFoto = u;
             }
 
             gallery.addView(x);
-            if(array.size()>=1) { //alla 1 foto inserita disablito i bottoni e se faccio landscape si disattivano cmq
+            if(uriFoto !=null) { //alla 1 foto inserita disablito i bottoni e se faccio landscape si disattivano cmq
                 takefoto.setEnabled(false);
                 galleria.setEnabled(false);
             }// per evitare di aspettare per riprendere la posizione
@@ -374,7 +327,6 @@ public class CreateActivity extends AppCompatActivity {
         //per la fotocamera
         if (requestCode == ACTIVITY_START_CAMERA_APP && resultCode == RESULT_OK) {
             Bitmap mImageBitmap = null;
-            if(y==0){
                 try {
                     mImageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), outputUri);
                     if(mImageBitmap!=null){
@@ -386,7 +338,7 @@ public class CreateActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     Log.e("uri",Log.getStackTraceString(e));
                 }
-            }
+
 
             addOnStorage(outputUri);
         }
@@ -454,8 +406,7 @@ public class CreateActivity extends AppCompatActivity {
                 scoreRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
-                        //scarico la url da storage firestone, per passarla poi al database firestone per metterla nel campo foto
-                        array.add(uri);
+                        uriFoto = uri;
                     }
                 });
                 add.setEnabled(true);
@@ -478,23 +429,19 @@ public class CreateActivity extends AppCompatActivity {
      */
     protected void onSaveInstanceState(Bundle b){
         super.onSaveInstanceState(b);
-        if(array.size()>0) {
-            b.putString("uri", array.get(0).toString());
 
-
+        if(uriFoto != null && latitudine != 0.0) {
+            b.putString("uri", uriFoto.toString());
+            b.putDouble("la", latitudine);
+            b.putDouble("lo", longitudine);
+            b.putString("t", itemtext.getText().toString());
         }
-        b.putInt("num",y);
-        b.putDouble("la",latitudine);
-        b.putDouble("lo",longitudine);
-        b.putString("t",itemtext.getText().toString());
-
     }
 
     /**
      * Utilizzato perchè, tornando indietro senza crere luoghi, resetta le variabili
      */
     public void onBackPressed(){
-        y=0;
         latitudine=0.0;
         longitudine=0.0;
         super.onBackPressed();

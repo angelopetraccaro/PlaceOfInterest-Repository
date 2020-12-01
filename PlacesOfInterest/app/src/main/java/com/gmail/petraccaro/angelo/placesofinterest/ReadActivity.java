@@ -29,8 +29,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -40,10 +40,7 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -60,7 +57,7 @@ public class ReadActivity extends AppCompatActivity {
     private static final int ACTIVITY_START_CAMERA_APP = 0; //per chiamare la fotocamera
     private ImageButton takefoto,galleria,gps;
     private CheckBox pub,pri;
-    private TextView nome,breve,desc,itemtext,itemtext1,itemtext2;
+    private TextView nome,breve,desc,itemtext;
     private EditText nom,bre,latitude,longitude;
     private boolean available=true;
     private static int i=0;
@@ -68,11 +65,11 @@ public class ReadActivity extends AppCompatActivity {
     private Uri outputUri;
     private FloatingActionButton fab;
     private String userLog,nome_doc;
-    private FirebaseFirestore db;
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
-    private static int y,z;
-    private ArrayList<String> uri_foto_iniziali=new ArrayList<>();
+
+    private String uriFoto;
+    private String keyOfSelectElement;
     private LinearLayout gallery;
     private LayoutInflater inflater;
     private View x;
@@ -80,8 +77,6 @@ public class ReadActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        y=0;
-        z=0;
         setContentView(R.layout.activity_item_detail);
         takefoto = (ImageButton) findViewById(R.id.scatta);
         galleria=(ImageButton) findViewById(R.id.gallery_b);
@@ -96,7 +91,6 @@ public class ReadActivity extends AppCompatActivity {
         nom=(EditText) findViewById(R.id.nom);
         bre=(EditText) findViewById(R.id.b_desc);
         fab = (FloatingActionButton) findViewById(R.id.fab);
-        db= FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
         gallery=findViewById(R.id.gallery);
@@ -109,23 +103,20 @@ public class ReadActivity extends AppCompatActivity {
         desc.setText(intent.getStringExtra("desc"));
         latitude.setText(intent.getStringExtra("latitude"));
         longitude.setText(intent.getStringExtra("longitude"));
-        String urlFoto=intent.getStringExtra("foto");
-        String urlFoto1=intent.getStringExtra("foto1");
-        String urlFoto2=intent.getStringExtra("foto2");
-        uri_foto_iniziali.add(urlFoto);
-        uri_foto_iniziali.add(urlFoto1);
-        uri_foto_iniziali.add(urlFoto2);
+        uriFoto=intent.getStringExtra("foto");
+
         userLog=intent.getStringExtra("owner");      //usato per vedere se l'utente può modificare o no
         nome_doc=intent.getStringExtra("nome_doc");
         photoTakenImageView = x.findViewById(R.id.item);
-        photoTakenImageView1 = x.findViewById(R.id.item1);
-        photoTakenImageView2 = x.findViewById(R.id.item2);
+
         itemtext = x.findViewById(R.id.itemtext);
 
+
         itemtext.setText(intent.getStringExtra("didascalia"));
+        keyOfSelectElement = intent.getStringExtra("keyondb");
 
         //picasso per passare da uri a img
-        Uri myUri=Uri.parse(uri_foto_iniziali.get(0));
+        Uri myUri=Uri.parse(uriFoto);
 
         Picasso.get().load(myUri).into(photoTakenImageView);
 
@@ -135,34 +126,24 @@ public class ReadActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //in questo caso (arraylist string) uri perchè non cambio la foto
-                CollectionReference luoghi = db.collection("luoghi");
-                Map<String, Object> utente1 = new HashMap<>();
+                FirebaseDatabase mydb = FirebaseDatabase.getInstance();
+                DatabaseReference dbref = mydb.getReference();
 
                 if(userLog.equalsIgnoreCase(currentUser.getUid())) {
-                    utente1.put("owner", (currentUser != null) ? currentUser.getUid() : null);
-                    utente1.put("Nome", nom.getText().toString());
-                    utente1.put("Breve_desc", bre.getText().toString());
-                    utente1.put("Lunga_desc", desc.getText().toString());
-                    utente1.put("latitude", latitude.getText().toString());
-                    utente1.put("longitude", longitude.getText().toString());
-                    utente1.put("foto", uri_foto_iniziali.get(0));
-
-                    utente1.put("didascalia",itemtext.getText()+"");
-
                     if (pub.isChecked())
                         available = true;
                     if (pri.isChecked())
                         available = false;
-                    utente1.put("Available", available);
-                    luoghi.document(nome_doc).set(utente1);
+                    ElementoLista el = new ElementoLista(nom.getText().toString(),bre.getText().toString(),desc.getText().toString(),
+                            latitude.getText().toString(), longitude.getText().toString(),uriFoto,
+                            itemtext.getText().toString(),  (currentUser != null) ? currentUser.getUid() : null,keyOfSelectElement, available);
 
+                    dbref.child("photos").child(keyOfSelectElement).setValue(el);
                     Intent in = new Intent(ReadActivity.this, MainActivity.class);
                     startActivity(in);
                 }else{
                     Toast.makeText(getBaseContext(),"You are not the owner",Toast.LENGTH_LONG).show();
                 }
-                y=0;z=0;
                 finish();
             }
         });
@@ -218,23 +199,17 @@ public class ReadActivity extends AppCompatActivity {
                     Toast.makeText(ReadActivity.this,"Latitudine e Longitudine Assenti",Toast.LENGTH_LONG).show();
             }
         });
-        Log.i(TAG, "CREAZIONE ACTIVITY...onCreate");
+        /** reaload foto **/
+        if (savedInstanceState != null){
 
-        if (savedInstanceState != null){ //si ricorda la foto caricata
-            y=savedInstanceState.getInt("num");
-            z=savedInstanceState.getInt("num1");
-            itemtext.setText(savedInstanceState.getString("t"));
-            itemtext1.setText(savedInstanceState.getString("t1"));
-            itemtext2.setText(savedInstanceState.getString("t2"));
+            itemtext.setText(savedInstanceState.getString("descrizione"));
             gallery.removeAllViews();
-            uri_foto_iniziali.set(0,savedInstanceState.getString("u"));
+            uriFoto =savedInstanceState.getString("Uri");
+            Uri ConvertedUri =Uri.parse(uriFoto);
 
-            Uri myUrix=Uri.parse(uri_foto_iniziali.get(0));
-
-            Picasso.get().load(myUrix).into(photoTakenImageView);
+            Picasso.get().load(ConvertedUri).into(photoTakenImageView);
 
             gallery.addView(x);
-           //disab bottoni
         }
     }
 
@@ -277,25 +252,16 @@ public void takePhoto(View v) {
             cursor.close();
 
             gallery.removeAllViews(); //facendo cosi posso anche uscire dalla galleria senza selezionare foto. e incremento y nel metodo
-            if(y==0){
-                photoTakenImageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
-                gallery.addView(x);
-            }
-            if(y==1){
-                photoTakenImageView1.setImageBitmap(BitmapFactory.decodeFile(picturePath));
-                gallery.addView(x);
-            }
-            if(y==2){
-                photoTakenImageView2.setImageBitmap(BitmapFactory.decodeFile(picturePath));
-                gallery.addView(x);
-            }
-            y++;
-            addOnStorage(selectedImage);
+
+            photoTakenImageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+            gallery.addView(x);
+           // fare il caricamento quando serve
+          //  addOnStorage(selectedImage);
         }
         //per la fotocamera
         if (requestCode == ACTIVITY_START_CAMERA_APP && resultCode == RESULT_OK) {
             Bitmap mImageBitmap = null;
-            if(y==0){
+
                 try {
                     mImageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), outputUri);
                     if(mImageBitmap!=null){
@@ -307,35 +273,8 @@ public void takePhoto(View v) {
                 } catch (IOException e) {
                     Log.e("uri",Log.getStackTraceString(e));
                 }
-            }
-            if(y==1){
-                try {
-                    mImageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), outputUri);
-                    if(mImageBitmap!=null){
-                        gallery.removeAllViews();
-                        photoTakenImageView1.setImageBitmap(mImageBitmap);
-                        gallery.addView(x);
-                        galleryAddPic();
-                    }
-                } catch (IOException e) {
-                    Log.e("uri",Log.getStackTraceString(e));
-                }
-            }
-            if(y==2){
-                try {
-                    mImageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), outputUri);
-                    if(mImageBitmap!=null){
-                        gallery.removeAllViews();
-                        photoTakenImageView2.setImageBitmap(mImageBitmap);
-                        gallery.addView(x);
-                        galleryAddPic();
-                    }
-                } catch (IOException e) {
-                    Log.e("uri",Log.getStackTraceString(e));
-                }
-            }
-            y++;
-            addOnStorage(outputUri);
+
+         //   addOnStorage(outputUri);
         }
     }
 
@@ -374,12 +313,8 @@ public void takePhoto(View v) {
         didascalia.setPositiveButton("ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if(y-1==0)
-                    itemtext.setText(e.getText());
-                if(y-1==1)
-                    itemtext1.setText(e.getText());
-                if(y-1==2)
-                    itemtext2.setText(e.getText());
+                itemtext.setText(e.getText());
+
             }
         });
         didascalia.show();
@@ -405,36 +340,17 @@ public void takePhoto(View v) {
                 scoreRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
-                        //scarico la url da storage firestone, per passarla poi al database firestone per metterla nel campo foto
-                        //array.add(uri); se arraylist di uri.
-                        if(z==0){
-                            uri_foto_iniziali.remove(z);
-                            uri_foto_iniziali.add(z,uri.toString());
-                        }
-                       else if(z==1){
-                            uri_foto_iniziali.remove(z);
-                            uri_foto_iniziali.add(z,uri.toString());
-                        }
-                       else if(z==2){
-                            uri_foto_iniziali.remove(z);
-                            uri_foto_iniziali.add(z,uri.toString());
-                        }
-                        z++;
+                            uriFoto = uri.toString();
                     }
                 });
                 fab.setEnabled(true);
-                if(y-1==2) {
-                    takefoto.setEnabled(false);
-                    galleria.setEnabled(false);
-                }else{
-                takefoto.setEnabled(true);
-                galleria.setEnabled(true);
-                }
+                takefoto.setEnabled(false);
+                galleria.setEnabled(false);
+
             }
         }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                //Toast.makeText(getApplicationContext(), "On progress...", Toast.LENGTH_LONG).show();
                 fab.setEnabled(false);
                 takefoto.setEnabled(false);
                 galleria.setEnabled(false);
@@ -444,15 +360,12 @@ public void takePhoto(View v) {
 
     /**
      * Memorizza lo stato da ripristinare se lo smartphone va in landscape
-     * @param b stato da ripristinare
+     * @param b bundle che incapsula lo stato corrente
      */
     protected void onSaveInstanceState(Bundle b) {
         super.onSaveInstanceState(b);
-        b.putString("u", uri_foto_iniziali.get(0));
-
-        b.putInt("num",y);
-        b.putInt("num1",z);
-        b.putString("t",itemtext.getText().toString());
+        b.putString("Uri", uriFoto);
+        b.putString("descrizione",itemtext.getText().toString());
 
     }
 }
