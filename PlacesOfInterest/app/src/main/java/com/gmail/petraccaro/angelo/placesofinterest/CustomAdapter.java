@@ -6,11 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
+//import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Predispone la visualizzazione degli elementi
@@ -27,9 +28,9 @@ public class CustomAdapter extends ArrayAdapter<ElementoLista>  {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         convertView = inflater.inflate(R.layout.list_item,null);
 
-        TextView n = (TextView)convertView.findViewById(R.id.textView);
-        TextView d = (TextView)convertView.findViewById(R.id.textView2);
-        CircleImageView i = (CircleImageView) convertView.findViewById(R.id.imageView2);
+        TextView n = convertView.findViewById(R.id.textView);
+        TextView d = convertView.findViewById(R.id.textView2);
+        ImageView i = convertView.findViewById(R.id.imageView2);
 
         ElementoLista c = getItem(position);
         n.setText(c.getNome());
