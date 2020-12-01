@@ -22,17 +22,18 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
@@ -94,10 +95,11 @@ public class MainActivity extends AppCompatActivity {
      */
     public static class PlaceholderFragment extends Fragment {
         private static final String ARG_SECTION_NUMBER = "section_number";
-        private ListView lista;
-        private ArrayList<ElementoLista> list = new ArrayList<ElementoLista>(); //pubblici
-        private ArrayList<ElementoLista> list1 = new ArrayList<ElementoLista>(); //privati
-        private FirebaseFirestore db;
+        private ListView ListOfPhotos;
+        private ArrayList<ElementoLista> PublicList = new ArrayList<ElementoLista>();
+        private ArrayList<ElementoLista> PrivateList = new ArrayList<ElementoLista>();
+        private FirebaseDatabase db;
+        private DatabaseReference myRef;
         private FirebaseAuth mAuth;
         private FirebaseUser currentUser;
 
@@ -123,85 +125,83 @@ public class MainActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            lista=(ListView)rootView.findViewById(R.id.lista);
-            db = FirebaseFirestore.getInstance();
+            ListOfPhotos=(ListView)rootView.findViewById(R.id.lista);
 
-            //dettagli elemento lista pubb e pri
+            db = FirebaseDatabase.getInstance();
+            myRef  = db.getReference("photos");
             mAuth = FirebaseAuth.getInstance();
             currentUser = mAuth.getCurrentUser();
-            lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            ListOfPhotos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent1=new Intent(getContext(),ReadActivity.class);
                 if (getArguments().getInt(ARG_SECTION_NUMBER) == 1) {
-                    intent1.putExtra("name",list.get(position).getNome());
-                    intent1.putExtra("b_desc",list.get(position).getBreve_descrizione());
-                    intent1.putExtra("desc",list.get(position).getDescrizione());
-                    intent1.putExtra("latitude",list.get(position).getLatitude());
-                    intent1.putExtra("longitude",list.get(position).getLongitude());
-                    intent1.putExtra("foto",list.get(position).getUrl_foto());
+                    intent1.putExtra("name",PublicList.get(position).getNome());
+                    intent1.putExtra("b_desc",PublicList.get(position).getBreve_descrizione());
+                    intent1.putExtra("desc",PublicList.get(position).getDescrizione());
+                    intent1.putExtra("latitude",PublicList.get(position).getLatitude());
+                    intent1.putExtra("longitude",PublicList.get(position).getLongitude());
+                    intent1.putExtra("foto",PublicList.get(position).getUrl_foto());
 
-                    intent1.putExtra("didascalia",list.get(position).getDidascalia());
+                    intent1.putExtra("didascalia",PublicList.get(position).getDidascalia());
 
-                    intent1.putExtra("owner",list.get(position).getOwner());
-                    intent1.putExtra("nome_doc",list.get(position).getNome_documento());
+                    intent1.putExtra("owner",PublicList.get(position).getOwner());
+                    intent1.putExtra("keyondb",PublicList.get(position).getKeyOnDb());
                     } else{
-                    intent1.putExtra("name",list1.get(position).getNome());
-                    intent1.putExtra("b_desc",list1.get(position).getBreve_descrizione());
-                    intent1.putExtra("desc",list1.get(position).getDescrizione());
-                    intent1.putExtra("latitude",list1.get(position).getLatitude());
-                    intent1.putExtra("longitude",list1.get(position).getLongitude());
-                    intent1.putExtra("foto",list1.get(position).getUrl_foto());
+                    intent1.putExtra("name",PrivateList.get(position).getNome());
+                    intent1.putExtra("b_desc",PrivateList.get(position).getBreve_descrizione());
+                    intent1.putExtra("desc",PrivateList.get(position).getDescrizione());
+                    intent1.putExtra("latitude",PrivateList.get(position).getLatitude());
+                    intent1.putExtra("longitude",PrivateList.get(position).getLongitude());
+                    intent1.putExtra("foto",PrivateList.get(position).getUrl_foto());
 
-                    intent1.putExtra("didascalia",list1.get(position).getDidascalia());
+                    intent1.putExtra("didascalia",PrivateList.get(position).getDidascalia());
 
-                    intent1.putExtra("owner",list1.get(position).getOwner());
-                    intent1.putExtra("nome_doc",list1.get(position).getNome_documento());
+                    intent1.putExtra("owner",PrivateList.get(position).getOwner());
+                    Log.e("key",PrivateList.get(position).getKeyOnDb() );
+                    intent1.putExtra("keyondb",PrivateList.get(position).getKeyOnDb());
                     }
                 startActivity(intent1);
                                           }
             });
-
-            lista.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+           /** l'utente può cancellare solo le foto che ha postato**/
+            ListOfPhotos.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
                AlertDialog.Builder adb= new AlertDialog.Builder(getContext());
                adb.setTitle("Delete?");
                adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                   if(getArguments().getInt(ARG_SECTION_NUMBER) == 1){
-                       if (list.get(position).getOwner().equalsIgnoreCase(currentUser.getUid())) {
-                             db.collection("luoghi").document(list.get(position).getNome_documento()).delete()
-                                  .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                      @Override
-                                      public void onSuccess(Void aVoid) {
-                                          getContactPublic();
-                                          Log.d("ciao", "deleted place!");
-                                      }
-                                      })
-                                     .addOnFailureListener(new OnFailureListener() {
-                                          @Override
-                                          public void onFailure(@NonNull Exception e) {
-                                            Log.d("ciao", "Error deleting place ");
-                                          }
-                                     });
-                       }else{
+
+                            if(getArguments().getInt(ARG_SECTION_NUMBER) == 1){
+
+                            if (PublicList.get(position).getOwner().equalsIgnoreCase(currentUser.getUid())) {
+                                final ElementoLista el =  PublicList.get(position);
+                                final String key = el.getKeyOnDb();
+                                StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(el.getUrl_foto());
+                           storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                               @Override
+                               public void onSuccess(Void aVoid) {
+                                   myRef.child(key).removeValue();
+                                   PublicList.remove(el);
+                               }
+                           });
+
+                           }else
                            Toast.makeText(getContext(),"You are not the owner",Toast.LENGTH_LONG).show();
-                       }
-                   }else{
-                       db.collection("luoghi").document(list1.get(position).getNome_documento()).delete()
-                               .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                   @Override
-                                   public void onSuccess(Void aVoid) {
-                                       getContactPrivate();
-                                       Log.d("ciao", "deleted place!");
-                                   }
-                               })
-                               .addOnFailureListener(new OnFailureListener() {
-                                      @Override
-                                       public void onFailure(@NonNull Exception e) {
-                                          Log.d("ciao", "Error deleting place");
-                                       }
-                               });
+
+                           }else{
+                       /** nella parte private ci sono le foto dell'utente che non ha ancora deciso di pubblicare **/
+                                final ElementoLista el =  PrivateList.get(position);
+                                final String k = el.getKeyOnDb();
+                                StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(el.getUrl_foto());
+                                 storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                          @Override
+                                                                          public void onSuccess(Void aVoid) {
+                                                                              myRef.child(k).removeValue();
+                                                                              PrivateList.remove(el);
+                                                                          }
+                                                                      });// stai quì
                             }
                         }
                     });
@@ -215,54 +215,61 @@ public class MainActivity extends AppCompatActivity {
         }
 
         /**
-         * Caricamento lista pubblica
+         * Caricamento e visualizazzione della lista delle foto pubbliche
          */
         public void getContactPublic(){
-            list.clear();
-            lista.setAdapter(new CustomAdapter(getContext(), R.layout.list_item, list));
-            db.collection("luoghi")
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    if (document.get("Available").toString().equals("true")) {
-                                        Log.e("cc",document.getId());
-                                        list.add(new ElementoLista(document.getString("Nome"), document.getString("Breve_desc"), document.getString("Lunga_desc"), document.getString("latitude"), document.getString("longitude"), document.getString("foto"),document.getString("didascalia"),document.getId(), document.getString("owner")));
-                                        lista.setAdapter(new CustomAdapter(getContext(), R.layout.list_item, list));
-                                    }
-                                }
-                            } else {
-                                Log.e("ciao", "Get failed: ");
+            PublicList.clear();
+            ListOfPhotos.setAdapter(new CustomAdapter(getContext(), R.layout.list_item, PublicList));
+            myRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    PublicList.clear();
+                    PrivateList.clear();
+                    Log.e("prova","vengo chiamato al cambiamento");
+                    for(DataSnapshot ds: snapshot.getChildren()){
+                            ElementoLista els = ds.getValue(ElementoLista.class);
+                            if(els.getAvailable() == true){
+                                Log.e("carico il seuguente elemento", els.getNome());
+                                PublicList.add(els);
                             }
                         }
-                    });
+                    ListOfPhotos.setAdapter(new CustomAdapter(getContext(), R.layout.list_item, PublicList));
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
         }
 
         /**
-         * Caricamento lista privata
+         * Caricamento e visualizazzione della lista delle foto privata
          */
         public void getContactPrivate(){
-            list1.clear();
-            lista.setAdapter(new CustomAdapter(getContext(), R.layout.list_item, list1));
-            db.collection("luoghi")
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    if ((document.get("Available").toString().equals("false"))&& (document.get("owner").toString().equals(currentUser.getUid()))) {
-                                        list1.add(new ElementoLista(document.getString("Nome"), document.getString("Breve_desc"), document.getString("Lunga_desc"), document.getString("latitude"),document.getString("longitude"), document.getString("foto"),document.getString("didascalia"),document.getId(), document.getString("owner")));
-                                        lista.setAdapter(new CustomAdapter(getContext(), R.layout.list_item, list1));
-                                    }
-                                }
-                            } else {
-                                Log.e("ciao", "Get failed: ");
-                            }
-                        }
-                    });
+            PrivateList.clear();
+            ListOfPhotos.setAdapter(new CustomAdapter(getContext(), R.layout.list_item, PrivateList));
+
+            myRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    PrivateList.clear();
+                    PublicList.clear();
+                    for(DataSnapshot ds: snapshot.getChildren()){
+                        ElementoLista els = ds.getValue(ElementoLista.class);
+                        if(els.getAvailable()== false) PrivateList.add(els);
+
+                    }
+
+                    ListOfPhotos.setAdapter(new CustomAdapter(getContext(), R.layout.list_item, PrivateList));
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
         }
         public void onStart(){
             if (getArguments().getInt(ARG_SECTION_NUMBER) == 1) {
