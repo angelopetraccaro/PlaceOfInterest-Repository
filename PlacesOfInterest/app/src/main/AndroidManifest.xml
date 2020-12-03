@@ -20,7 +20,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".RegisterActivity"></activity>
+        <activity android:name=".GalleryActivity"/>
+        <activity android:name=".RegisterActivity"/>
 
         <uses-library
             android:name="org.apache.http.legacy"
@@ -40,7 +41,7 @@
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".CreateActivity"></activity>
+        <activity android:name=".CreateActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
