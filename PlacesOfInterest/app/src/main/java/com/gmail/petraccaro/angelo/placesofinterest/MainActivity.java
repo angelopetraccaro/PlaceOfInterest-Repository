@@ -80,8 +80,13 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean Avvia_Riconoscimento(MenuItem item) {
+        //Intent i=new Intent(this,LoginActivity.class);
+        //startActivity(i);
+        return true;
+    }
+
+    public boolean Logout(MenuItem item) {
             FirebaseAuth mAuth = FirebaseAuth.getInstance();
             mAuth.signOut();
             finish();
