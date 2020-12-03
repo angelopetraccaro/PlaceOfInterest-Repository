@@ -1,4 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group>
+        <item android:id="@+id/nav_item_name"
+            android:icon="@drawable/ic_person"
+            android:title="Nome" />
+        <item android:id="@+id/nav_item_cognome"
+            android:icon="@drawable/ic_person"
+            android:title="Cognome" />
+        <item android:id="@+id/nav_item_mail"
+            android:icon="@drawable/ic_mail"
+            android:title="Email" />
+    </group>
 
+    <item android:title="Funzionalità">
+        <menu>
+            <item android:id="@+id/nav_item_search"
+                android:icon="@drawable/ic_image_search_24"
+                android:title="Avvia riconoscimento facciale" />
+
+        </menu>
+    </item>
 </menu>
