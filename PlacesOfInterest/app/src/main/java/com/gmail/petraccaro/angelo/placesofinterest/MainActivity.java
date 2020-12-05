@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -85,6 +86,12 @@ public class MainActivity extends AppCompatActivity {
         startActivity(i);
         return true;
     }
+
+    /*public void follow(View view) {
+        Intent i=new Intent(this,GalleryActivity.class);
+        startActivity(i);
+        ImageView img=findViewById(R.id.imageView);
+    }*/
 
     public boolean Logout(MenuItem item) {
             FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -215,7 +222,6 @@ public class MainActivity extends AppCompatActivity {
                return true;
                 }
             });
-
             return rootView;
         }
 
