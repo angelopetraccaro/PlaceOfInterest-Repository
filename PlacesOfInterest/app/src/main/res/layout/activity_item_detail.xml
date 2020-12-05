@@ -1,217 +1,178 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:backgroundTint="@color/colorPrimary"
     tools:context=".ReadActivity"
-    tools:ignore="MergeRootFrame">
+    tools:ignore="MergeRootFrame"
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/app_bar"
+    >
+
+
+    <TextView
+        android:id="@+id/breve_desc2"
+        android:layout_width="107dp"
+        android:layout_height="39dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="542dp"
+        android:ems="10"
+        android:text="Descrizione"
+        android:textColor="@color/design_default_color_primary_dark"
+        android:textSize="20sp"
+
+        android:textStyle="bold" />
+
+    <ScrollView
+        android:id="@+id/Horizontal"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/app_bar_height"
-        android:fitsSystemWindows="true"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:layout_height="319dp"
+        android:background="@color/colorPrimary"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toTopOf="@+id/nome"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.411"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/take">
 
-        <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:id="@+id/toolbar_layout"
+
+        <LinearLayout
+            android:id="@+id/gallery"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:toolbarId="@+id/toolbar">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"></LinearLayout>
 
-            <HorizontalScrollView
-                android:id="@+id/Horizontal"
-                android:layout_width="398dp"
-                android:layout_height="184dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="25dp"
-                android:scrollbars="none"
-                app:layout_constraintBottom_toTopOf="@+id/nome"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.411"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/take">
 
-                <LinearLayout
-                    android:id="@+id/gallery"
-                    android:layout_width="100dp"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"/>
+    </ScrollView>
 
-            </HorizontalScrollView>
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    <TextView
+        android:id="@+id/nome"
+        android:layout_width="107dp"
+        android:layout_height="39dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="480dp"
+        android:ems="10"
+        android:textColor="@color/design_default_color_primary_dark"
+        android:textStyle="bold"
+        android:text="Nome"
+        android:textSize="20sp" />
 
-    </com.google.android.material.appbar.AppBarLayout>
+    <TextView
+        android:id="@+id/nom"
+        android:layout_width="219dp"
+        android:layout_height="39dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="27dp"
+        android:layout_marginTop="480dp"
+        android:layout_marginEnd="25dp"
+        android:layout_toEndOf="@+id/nome"
+        android:ems="10"
+        android:hint="Name"
+        android:inputType="textPersonName"
+        android:textSize="20sp" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/item_detail_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    <TextView
+        android:id="@+id/breve_desc"
+        android:layout_width="107dp"
+        android:layout_height="39dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="598dp"
+        android:ems="10"
+        android:text="Didascalia"
+        android:textColor="@color/design_default_color_primary_dark"
+        android:textSize="20sp"
+
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/b_desc"
+        android:layout_width="219dp"
+        android:layout_height="39dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="27dp"
+        android:layout_marginTop="540dp"
+        android:layout_marginEnd="25dp"
+        android:layout_toEndOf="@+id/breve_desc"
+        android:ems="10"
+        android:hint="Preview"
+        android:inputType="textPersonName"
+        android:textSize="20sp" />
+
+    <ScrollView
+        android:id="@+id/SCROLLER_ID"
+        android:layout_width="wrap_content"
+        android:layout_height="156dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="641dp"
+        android:layout_marginEnd="27dp">
 
         <TextView
-            android:id="@+id/nome"
-            android:layout_width="75dp"
-            android:layout_height="33dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="10dp"
-            android:text="Nome"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/nom"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/gallery_b" />
-
-        <TextView
-            android:id="@+id/breve_desc"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="16dp"
-            android:text="Breve Descrizione"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/desc"
-            app:layout_constraintEnd_toStartOf="@+id/b_desc"
-            app:layout_constraintHorizontal_bias="0.222"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nome" />
-
-        <EditText
             android:id="@+id/desc"
-            android:layout_width="288dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:ems="10"
-            android:hint="Descrizione"
-            android:inputType="textMultiLine"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.41"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/b_desc" />
-
-        <EditText
-            android:id="@+id/text_cord"
-            android:layout_width="145dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="11dp"
-            android:layout_marginTop="32dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/desc" />
-
-        <EditText
-            android:id="@+id/nom"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="28dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/scatta" />
+            android:layout_marginEnd="183dp"
+            android:layout_marginBottom="15dp"
+            android:text="Didascalia"
+            android:textSize="20sp" />
+    </ScrollView>
 
-        <EditText
-            android:id="@+id/b_desc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="28dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nom" />
 
-        <EditText
-            android:id="@+id/edit_cord"
-            android:layout_width="145dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="16dp"
-            android:ems="10"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.508"
-            app:layout_constraintStart_toEndOf="@+id/text_cord"
-            app:layout_constraintTop_toBottomOf="@+id/desc" />
+    <ImageButton
+        android:id="@+id/gps"
+        android:layout_width="60dp"
+        android:layout_height="49dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="389dp"
+        android:background="@drawable/ic_location"
+        android:backgroundTint="@android:color/holo_blue_dark"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <CheckBox
-            android:id="@+id/pubblico"
-            android:layout_width="103dp"
-            android:layout_height="37dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="24dp"
-            android:text="Pubblico"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_cord" />
-
-        <CheckBox
-            android:id="@+id/privato"
-            android:layout_width="103dp"
-            android:layout_height="37dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="24dp"
-            android:text="Privato"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_cord" />
-
-        <ImageButton
-            android:id="@+id/gps"
-            android:layout_width="65dp"
-            android:layout_height="43dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="100dp"
-            android:src="@android:drawable/ic_menu_mylocation"
-            app:layout_constraintBottom_toBottomOf="@+id/scatta"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageButton
-            android:id="@+id/scatta"
-            android:layout_width="65dp"
-            android:layout_height="43dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:src="@android:drawable/ic_menu_camera"
-            app:layout_constraintBottom_toBottomOf="@+id/gallery_b"
-            app:layout_constraintEnd_toStartOf="@+id/gps"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <ImageButton
-            android:id="@+id/gallery_b"
-            android:layout_width="65dp"
-            android:layout_height="43dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:src="@android:drawable/ic_menu_gallery"
-            app:layout_constraintEnd_toStartOf="@+id/scatta"
-            app:layout_constraintHorizontal_bias="0.966"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
+    <TextView
+        android:id="@+id/loc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical|start"
-        android:layout_margin="@dimen/fab_margin"
-        app:layout_anchor="@+id/item_detail_container"
-        app:layout_anchorGravity="top|end"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        android:layout_alignBottom="@+id/gps"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="160dp"
+        android:layout_marginBottom="12dp"
+        android:textColor="@color/design_default_color_primary_dark"
+        android:textStyle="bold"
+        android:hint="Location"
+        android:text="Location"
+        android:textSize="20sp" />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+    <TextView
+        android:id="@+id/dida"
+        android:layout_width="wrap_content"
+        android:layout_height="37dp"
+        android:layout_below="@+id/Horizontal"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="23dp"
+        android:layout_marginEnd="203dp"
+        android:text="dida"
+        android:textColor="@color/design_default_color_primary_dark"
+        android:textSize="20sp"
+        android:textStyle="bold"></TextView>
+
+
+</RelativeLayout>

@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -15,6 +17,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,6 +44,8 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -57,11 +62,11 @@ public class ReadActivity extends AppCompatActivity {
     private static final int ACTIVITY_START_CAMERA_APP = 0; //per chiamare la fotocamera
     private ImageButton takefoto,galleria,gps;
     private CheckBox pub,pri;
-    private TextView nome,breve,desc,itemtext;
-    private EditText nom,bre,latitude,longitude;
+    private TextView nome,breve,desc,itemtext,nom,bre,latitude,longitude;
+    //private EditText nom,bre,latitude,longitude;
     private boolean available=true;
     private static int i=0;
-    private CircleImageView photoTakenImageView,photoTakenImageView1,photoTakenImageView2;
+    private ImageView photoTakenImageView,photoTakenImageView1,photoTakenImageView2;
     private Uri outputUri;
     private FloatingActionButton fab;
     private String userLog,nome_doc;
@@ -73,57 +78,66 @@ public class ReadActivity extends AppCompatActivity {
     private LinearLayout gallery;
     private LayoutInflater inflater;
     private View x;
+    private TextView loc,did;
+    private String lt ,lg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_detail);
-        takefoto = (ImageButton) findViewById(R.id.scatta);
-        galleria=(ImageButton) findViewById(R.id.gallery_b);
+        //takefoto = (ImageButton) findViewById(R.id.scatta);
+       // galleria=(ImageButton) findViewById(R.id.gallery_b);
         gps=(ImageButton) findViewById(R.id.gps);
-        pub=(CheckBox) findViewById(R.id.pubblico);
-        pri=(CheckBox) findViewById(R.id.privato);
+        //pub=(CheckBox) findViewById(R.id.pubblico);
+        //pri=(CheckBox) findViewById(R.id.privato);
         nome=(TextView) findViewById(R.id.nome);
         breve=(TextView) findViewById(R.id.breve_desc);
         desc=(TextView) findViewById(R.id.desc);
-        latitude=(EditText) findViewById(R.id.text_cord);
-        longitude=(EditText) findViewById(R.id.edit_cord);
-        nom=(EditText) findViewById(R.id.nom);
-        bre=(EditText) findViewById(R.id.b_desc);
+        //latitude=(TextView) findViewById(R.id.text_cord);
+        //longitude=(TextView) findViewById(R.id.edit_cord);
+        nom=(TextView) findViewById(R.id.nom);
+        bre=(TextView) findViewById(R.id.b_desc);
         fab = (FloatingActionButton) findViewById(R.id.fab);
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
         gallery=findViewById(R.id.gallery);
         inflater=LayoutInflater.from(this);
         x = inflater.inflate(R.layout.item_immagine, gallery, false);
+        loc =(TextView) findViewById(R.id.loc);
+        did = findViewById(R.id.dida);
+
+
+
+
+
 
         final Intent intent=getIntent();
         nom.setText(intent.getStringExtra("name"));
         bre.setText(intent.getStringExtra("b_desc"));
         desc.setText(intent.getStringExtra("desc"));
-        latitude.setText(intent.getStringExtra("latitude"));
-        longitude.setText(intent.getStringExtra("longitude"));
+        //latitude.setText(intent.getStringExtra("latitude"));
+        //longitude.setText(intent.getStringExtra("longitude"));
+        lt = intent.getStringExtra("latitude");
+        lg = intent.getStringExtra("longitude");
         uriFoto=intent.getStringExtra("foto");
-
         userLog=intent.getStringExtra("owner");      //usato per vedere se l'utente può modificare o no
         nome_doc=intent.getStringExtra("nome_doc");
         photoTakenImageView = x.findViewById(R.id.item);
 
         itemtext = x.findViewById(R.id.itemtext);
 
-
         itemtext.setText(intent.getStringExtra("didascalia"));
+        did.setText(intent.getStringExtra("didascalia"));
         keyOfSelectElement = intent.getStringExtra("keyondb");
+
 
         //picasso per passare da uri a img
         Uri myUri=Uri.parse(uriFoto);
-
         Picasso.get().load(myUri).into(photoTakenImageView);
-
         gallery.addView(x);
 
 
-        fab.setOnClickListener(new View.OnClickListener() {
+        /*fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FirebaseDatabase mydb = FirebaseDatabase.getInstance();
@@ -146,9 +160,9 @@ public class ReadActivity extends AppCompatActivity {
                 }
                 finish();
             }
-        });
+        });*/
 
-        pub.setOnClickListener(new View.OnClickListener() {
+        /*pub.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(pub.isChecked()) {
@@ -157,8 +171,8 @@ public class ReadActivity extends AppCompatActivity {
                     pri.setEnabled(true);
                 }
             }
-        });
-        pri.setOnClickListener(new View.OnClickListener() {
+        });*/
+        /*pri.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(pri.isChecked()) {
@@ -167,31 +181,44 @@ public class ReadActivity extends AppCompatActivity {
                     pub.setEnabled(true);
                 }
             }
-        });
+        });*/
 
         //copia dei metodi di create activity, usati per modificare l'elemento
-        takefoto.setOnClickListener(new View.OnClickListener() {
+        /*takefoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 takePhoto(v);
             }
-        });
+        });*/
 
-       galleria.setOnClickListener(new View.OnClickListener() {
+       /*galleria.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(i, RESULT_LOAD_IMAGE);
             }
-        });
+        });*/
+
+        //Get location from latitude and longitude
+        Geocoder geo = new Geocoder(ReadActivity.this, Locale.getDefault());
+        Double lat = Double.parseDouble(lt);
+        Double lon = Double.parseDouble(lg);
+        try {
+            List<Address> addresses = geo.getFromLocation(lat,lon,1);
+            loc.setText(addresses.get(0).getLocality());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         gps.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!(latitude.getText().toString().isEmpty()&&longitude.getText().toString().isEmpty())) {
+                if(!(lt.isEmpty()&&lg.isEmpty())) {
                     Intent inte = new Intent(ReadActivity.this, ShowMapActivity.class);
-                    Double latitu = Double.parseDouble(latitude.getText().toString());
-                    Double longitu = Double.parseDouble(longitude.getText().toString());
+
+                    Double latitu = Double.parseDouble(lt);
+                    Double longitu = Double.parseDouble(lg);
                     inte.putExtra("Latitude", latitu);
                     inte.putExtra("Longitude", longitu);
                     startActivity(inte);
@@ -199,6 +226,10 @@ public class ReadActivity extends AppCompatActivity {
                     Toast.makeText(ReadActivity.this,"Latitudine e Longitudine Assenti",Toast.LENGTH_LONG).show();
             }
         });
+
+
+
+
         /** reaload foto **/
         if (savedInstanceState != null){
 
@@ -216,6 +247,8 @@ public class ReadActivity extends AppCompatActivity {
     /**
      * Lancia l'intent che richiama la fotocamera dello smartphone
      */
+
+    /*
 public void takePhoto(View v) {
     Intent callCameraApplicationIntent = new Intent();
     callCameraApplicationIntent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -233,14 +266,14 @@ public void takePhoto(View v) {
     callCameraApplicationIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
     startActivityForResult(callCameraApplicationIntent, ACTIVITY_START_CAMERA_APP);
 }
-
+*/
     /**
      * Il metodo viene richiamato quando l'intent viene evaso
      * @param requestCode gestisce il tipo di intent lanciato
      * @param resultCode esito del risultato
      * @param data dati restituiti
      */
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+   /* protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //per la galleria in on activity result controllo:
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
             Uri selectedImage = data.getData();
@@ -276,35 +309,35 @@ public void takePhoto(View v) {
 
          //   addOnStorage(outputUri);
         }
-    }
+    }*/
 
     /**
      * Creazione di un file per salvare l'immagine
      * Funzione che specifica la locazione ed il nome del file che vogliamo creare
      * @return il nuovo file path
      */
-    private File createImageFile() throws IOException {
+    /*private File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmSS").format(new Date());
         String imageFileName = "IMAGE_" + timeStamp+".jpg";
         File externalDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
         return new File(externalDir.toString()+"/"+imageFileName);
 
     }
-
+    */
     /**
      * Trasmissione di uno scanner multimediale con l'intento di far apparire l'immagine nella galleria
      */
-    private void galleryAddPic() {
+    /*private void galleryAddPic() {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         mediaScanIntent.setData(outputUri);
         this.sendBroadcast(mediaScanIntent);
-    }
+    }*/
 
     /**
      * Carica la foto sullo storage di firebase
      * @param outputUri uri della foto da salvare su firebase storage
      */
-    public void addOnStorage(Uri outputUri){
+    /*public void addOnStorage(Uri outputUri){
         //messo qui l'alert cosi anche se capita di cliccare la foto e nn salvarla nn appare la didascalia
         AlertDialog.Builder didascalia=new AlertDialog.Builder(this);
         final EditText e=new EditText(this);
@@ -356,7 +389,7 @@ public void takePhoto(View v) {
                 galleria.setEnabled(false);
             }
         });
-    }
+    }*/
 
     /**
      * Memorizza lo stato da ripristinare se lo smartphone va in landscape
