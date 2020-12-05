@@ -4,21 +4,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/btn_arrotondato"
+    android:textAlignment="center"
     tools:context=".GalleryActivity">
 
-    <GridView
-        android:id="@+id/grid_view"
-        android:layout_width="381dp"
-        android:layout_height="698dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:numColumns="auto_fit"
+    <Button
+        android:id="@+id/progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="150dp"
+        android:layout_marginTop="455dp"
+        android:layout_marginEnd="150dp"
+        android:layout_marginBottom="228dp"
+        android:background="@drawable/btn_arrotondato"
+        android:backgroundTint="@color/colorPrimary"
+        android:text="Detect"
+        android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
-
+    <ImageView
+        android:id="@+id/imgFace"
+        android:layout_width="379dp"
+        android:layout_height="244dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="233dp"
+        app:layout_constraintBottom_toTopOf="@+id/progress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@drawable/angelo" />
 </androidx.constraintlayout.widget.ConstraintLayout>
