@@ -69,8 +69,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_user_nav);
-
- UserNavigationDrawer
         Intent IntentInizializzazione = getIntent();
 
         String nome = IntentInizializzazione.getStringExtra("nome");
@@ -119,14 +117,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
     public boolean Avvia_Riconoscimento(MenuItem item) {
         Intent i=new Intent(this,GalleryActivity.class);
         startActivity(i);
         return true;
     }
-
-  
 
     public boolean Logout(MenuItem item) {
             FirebaseAuth mAuth = FirebaseAuth.getInstance();
