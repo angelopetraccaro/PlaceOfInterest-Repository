@@ -35,12 +35,12 @@ public class GalleryActivity extends AppCompatActivity {
         imgDetect=findViewById(R.id.imgFace);
         btnProgress=findViewById(R.id.progress);
 
-        final Bitmap mBitmap= BitmapFactory.decodeResource(getApplicationContext().getResources(),R.drawable.angelo);
+        final Bitmap mBitmap= BitmapFactory.decodeResource(getApplicationContext().getResources(),R.drawable.noface);
         imgDetect.setImageBitmap(mBitmap);
 
         final Paint boxPaint=new Paint();
         /*int dpSize =  10;
-        DisplayMetrics dm = getResources().getDisplayMetrics() ;
+        DisplayMetrics dm = getResources().getD55rics() ;
         float strokeWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpSize, dm);
         boxPaint.setStrokeWidth(strokeWidth);*/
         boxPaint.setStrokeWidth(10);
@@ -55,9 +55,9 @@ public class GalleryActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 FaceDetector faceDetector=new FaceDetector.Builder(getApplicationContext())
-                        .setTrackingEnabled(false)
+                        .setTrackingEnabled(true)
                         .setLandmarkType(FaceDetector.ALL_LANDMARKS)
-                        .setMode(FaceDetector.FAST_MODE)
+                        .setMode(FaceDetector.ACCURATE_MODE)
                         .build();
 
                 if(!faceDetector.isOperational()) {
