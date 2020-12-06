@@ -74,10 +74,9 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.484"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/b_desc"
-        app:layout_constraintVertical_bias="0.466" />
+        app:layout_constraintVertical_bias="0.629" />
 
     <EditText
         android:id="@+id/desc"
@@ -182,12 +181,12 @@
         android:id="@+id/pubblico"
         android:layout_width="77dp"
         android:layout_height="23dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="18dp"
         android:layout_marginEnd="32dp"
         android:scaleX="1"
         android:scaleY="1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/take" />
+        app:layout_constraintTop_toBottomOf="@+id/b_desc" />
 
     <Switch
         android:id="@+id/privato"
@@ -202,31 +201,30 @@
 
     <TextView
         android:id="@+id/edit_cord"
-        android:layout_width="62dp"
-        android:layout_height="21dp"
-        android:layout_marginStart="152dp"
-        android:layout_marginTop="28dp"
+        android:layout_width="154dp"
+        android:layout_height="18dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="144dp"
         android:text="posizione"
+
         android:textColor="@color/colorPrimaryDark"
-        android:textSize="12sp"
+        android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/text_cord"
         app:layout_constraintTop_toBottomOf="@+id/pubblico" />
 
     <TextView
         android:id="@+id/privat"
         android:layout_width="115dp"
         android:layout_height="21dp"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="164dp"
         android:text="Privato"
         android:textColor="@color/design_default_color_primary_dark"
         android:textSize="15sp"
         android:textStyle="bold"
         android:visibility="invisible"
         app:layout_constraintEnd_toStartOf="@+id/privato"
-        app:layout_constraintHorizontal_bias="0.307"
+        app:layout_constraintHorizontal_bias="0.209"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/b_desc" />
 
@@ -235,26 +233,26 @@
         android:layout_width="115dp"
         android:layout_height="21dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="18dp"
         android:text="Pubblico"
         android:textColor="@color/design_default_color_primary_dark"
         android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/apri" />
+        app:layout_constraintTop_toBottomOf="@+id/b_desc" />
 
     <TextView
         android:id="@+id/nome"
         android:layout_width="115dp"
         android:layout_height="21dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="18dp"
         android:text="Nome"
         android:textColor="@color/design_default_color_primary_dark"
         android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_cord" />
+        app:layout_constraintTop_toBottomOf="@+id/apri" />
 
     <TextView
         android:id="@+id/breve_desc"
@@ -271,11 +269,12 @@
 
     <TextView
         android:id="@+id/text_cord"
-        android:layout_width="115dp"
-        android:layout_height="21dp"
+        android:layout_width="54dp"
+        android:layout_height="45dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="28dp"
-        android:text="Coordinate"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/ic_location"
+        android:backgroundTint="@android:color/holo_blue_dark"
         android:textColor="@color/design_default_color_primary_dark"
         android:textSize="15sp"
         android:textStyle="bold"

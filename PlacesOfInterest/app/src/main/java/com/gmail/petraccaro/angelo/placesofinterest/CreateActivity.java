@@ -173,7 +173,7 @@ public class CreateActivity extends AppCompatActivity {
                 String ds = desc.getText().toString().trim();
                 String item = itemtext.getText().toString().trim();
                 String uriFotoString = null;
-            if( uriFoto != null || br != null || nm != null || ds != null || item != null) {
+            if( uriFoto != null && !TextUtils.isEmpty(br) && !TextUtils.isEmpty(nm) && !TextUtils.isEmpty(ds) && !TextUtils.isEmpty(item)) {
                     uriFotoString = uriFoto.toString();
 
                     FirebaseAuth mAuth = FirebaseAuth.getInstance();
