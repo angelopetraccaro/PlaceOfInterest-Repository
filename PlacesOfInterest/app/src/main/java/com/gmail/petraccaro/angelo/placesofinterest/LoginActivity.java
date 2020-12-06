@@ -17,9 +17,16 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Source;
 
 
 /**
@@ -29,6 +36,7 @@ public class LoginActivity extends AppCompatActivity  {
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
     private final String TAG = "ANGELO.PETRACCARO";
+    private FirebaseFirestore myDB = FirebaseFirestore.getInstance();
 
     /**
      * Il metodo crea la LoginActivity, inizializza le variabili di email e password
@@ -65,7 +73,7 @@ public class LoginActivity extends AppCompatActivity  {
      * ed effettua l'accesso alla MainActivity
      */
     private void attemptLogin() {
-        String email = mEmailView.getText().toString();
+        final String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
 
         if (TextUtils.isEmpty(password)) {
@@ -90,14 +98,31 @@ public class LoginActivity extends AppCompatActivity  {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                Intent i = new Intent(LoginActivity.this, MainActivity.class);
-                                startActivity(i);
-                                Log.e(TAG, "signInWithEmail:success");
-                            } else {
-                                Toast.makeText(LoginActivity.this, task.getException().toString(), Toast.LENGTH_LONG).show();
-                               // Toast.makeText(LoginActivity.this, "The email address is already in use, password incorrect", Toast.LENGTH_LONG).show();
-                                Log.e(TAG, "signInWithEmail:FAIL");
-                            }
+
+
+                                myDB.collection("users")
+                                        .document(email)
+                                        .get()
+                                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                User LoggedUser = ((User)documentSnapshot.toObject(User.class));
+                                                Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                                                i.putExtra("nome",LoggedUser.getNome());
+                                                i.putExtra("cognome",LoggedUser.getCognome());
+                                                i.putExtra("username",LoggedUser.getUsername());
+                                                i.putExtra("password",LoggedUser.getPassword());
+                                                i.putExtra("email",LoggedUser.getEmail());
+                                                i.putExtra("uriFotoDelProfilo",LoggedUser.getUriFotoDelProfilo());
+                                                startActivity(i);
+                                            }
+                                        });
+
+
+
+                            } else
+                                Toast.makeText(LoginActivity.this, R.string.UtenteNonregistrato, Toast.LENGTH_LONG).show();
+
                         }
                     });
 

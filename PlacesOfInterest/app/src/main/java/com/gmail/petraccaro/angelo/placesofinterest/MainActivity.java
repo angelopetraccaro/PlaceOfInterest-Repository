@@ -1,18 +1,24 @@
 package com.gmail.petraccaro.angelo.placesofinterest;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,6 +31,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -33,10 +40,16 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Visualizza la lista degli item (foto,nome_luogo,descrizione_luogo);
@@ -48,13 +61,43 @@ public class MainActivity extends AppCompatActivity {
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
+    private CircleImageView imgviewFotoProfilo;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_user_nav);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+ UserNavigationDrawer
+        Intent IntentInizializzazione = getIntent();
+
+        String nome = IntentInizializzazione.getStringExtra("nome");
+        String cognome = IntentInizializzazione.getStringExtra("cognome");
+        String username = IntentInizializzazione.getStringExtra("username");
+        String password = IntentInizializzazione.getStringExtra("password");
+        String email = IntentInizializzazione.getStringExtra("email");
+        final String uriFotoDelProfilo = IntentInizializzazione.getStringExtra("uriFotoDelProfilo");
+        User userLogged = new User(nome,cognome,username,email,password,uriFotoDelProfilo);
+
+        NavigationView mynav = (NavigationView) findViewById(R.id.nav_view);
+
+        Menu menu = (Menu) mynav.getMenu();
+        menu.getItem(0).setTitle(nome);
+        menu.getItem(1).setTitle(cognome);
+        menu.getItem(2).setTitle(email);
+
+        imgviewFotoProfilo = (CircleImageView) mynav.getHeaderView(0).findViewById(R.id.nav_header_imageViewFoto);
+        TextView user= (TextView) mynav.getHeaderView(0).findViewById(R.id.nav_header_username);
+
+         user.setText(username);
+
+        StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(uriFotoDelProfilo);
+        Picasso.get().load(uriFotoDelProfilo).into(imgviewFotoProfilo);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+ 
         setSupportActionBar(toolbar);
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mViewPager = findViewById(R.id.container);
@@ -72,14 +115,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-    }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
     }
+
 
     public boolean Avvia_Riconoscimento(MenuItem item) {
         Intent i=new Intent(this,GalleryActivity.class);
@@ -87,11 +126,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    /*public void follow(View view) {
-        Intent i=new Intent(this,GalleryActivity.class);
-        startActivity(i);
-        ImageView img=findViewById(R.id.imageView);
-    }*/
+  
 
     public boolean Logout(MenuItem item) {
             FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -191,7 +226,7 @@ public class MainActivity extends AppCompatActivity {
                                 final ElementoLista el =  PublicList.get(position);
                                 final String key = el.getKeyOnDb();
                                 StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(el.getUrl_foto());
-                           storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                                @Override
                                public void onSuccess(Void aVoid) {
                                    myRef.child(key).removeValue();
@@ -213,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
                                                                               myRef.child(k).removeValue();
                                                                               PrivateList.remove(el);
                                                                           }
-                                                                      });// stai quì
+                                                                      });
                             }
                         }
                     });
@@ -236,13 +271,11 @@ public class MainActivity extends AppCompatActivity {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     PublicList.clear();
                     PrivateList.clear();
-                    Log.e("prova","vengo chiamato al cambiamento");
                     for(DataSnapshot ds: snapshot.getChildren()){
                             ElementoLista els = ds.getValue(ElementoLista.class);
-                            if(els.getAvailable() == true){
-                                Log.e("carico il seuguente elemento", els.getNome());
+                            if(els.getAvailable() == true)
                                 PublicList.add(els);
-                            }
+
                         }
                     ListOfPhotos.setAdapter(new CustomAdapter(getContext(), R.layout.list_item, PublicList));
                 }
