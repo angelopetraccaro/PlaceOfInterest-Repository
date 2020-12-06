@@ -1,11 +1,14 @@
 package com.gmail.petraccaro.angelo.placesofinterest;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -13,6 +16,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +24,9 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +52,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -58,12 +65,12 @@ public class CreateActivity extends AppCompatActivity {
     private static int RESULT_LOAD_IMAGE = 1;   //per chiamare la galleria
     private static final int ACTIVITY_START_CAMERA_APP = 0; //per chiamare la fotocamera
     private Uri outputUri;
-    private CircleImageView photoTakenImageView;
-    private Button takefoto, galleria;
-    private CheckBox pub, pri;
-    private TextView nome, breve, desc, coord,itemtext;
-    private ImageButton add;
-    private EditText nom, bre, coordi;
+    private ImageView photoTakenImageView;
+    private ImageButton takefoto, galleria;
+    private Switch pub, pri;
+    private TextView nome, breve, desc, coord,itemtext,coordi;
+    private Button add;
+    private EditText nom, bre;
     private boolean available = true;
     private Location mLastReading;
     private LocationManager mLocationManager;
@@ -72,6 +79,7 @@ public class CreateActivity extends AppCompatActivity {
     private Uri uriFoto;
     private LinearLayout gallery;
     private LayoutInflater inflater;
+    private String lt ,lg;
     View x;
 
     /**
@@ -85,25 +93,27 @@ public class CreateActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create);
 
-        takefoto = (Button) findViewById(R.id.take);
-        galleria = (Button) findViewById(R.id.apri);
-        pub = (CheckBox) findViewById(R.id.pubblico);
-        pri = (CheckBox) findViewById(R.id.privato);
+        takefoto = (ImageButton) findViewById(R.id.take);
+        galleria = (ImageButton) findViewById(R.id.apri);
+        pub = (Switch) findViewById(R.id.pubblico);
+        pri = (Switch) findViewById(R.id.privato);
         nome = (TextView) findViewById(R.id.nome);
         breve = (TextView) findViewById(R.id.breve_desc);
         desc = (TextView) findViewById(R.id.desc);
         coord = (TextView) findViewById(R.id.text_cord);
         nom = (EditText) findViewById(R.id.nom);
         bre = (EditText) findViewById(R.id.b_desc);
-        add = (ImageButton) findViewById(R.id.imageButton);
-        coordi =(EditText) findViewById(R.id.edit_cord);
+        add = (Button) findViewById(R.id.imageButton);
+        coordi =(TextView) findViewById(R.id.edit_cord);
         gallery=findViewById(R.id.gallery);
         inflater=LayoutInflater.from(this);
 
-        x = inflater.inflate(R.layout.item_immagine, gallery, false);
+        x = inflater.inflate(R.layout.item_immage_create, gallery, false);
         photoTakenImageView = x.findViewById(R.id.item);
 
         itemtext = x.findViewById(R.id.itemtext);
+
+
 
 
         takefoto.setOnClickListener(new View.OnClickListener() {
@@ -113,17 +123,26 @@ public class CreateActivity extends AppCompatActivity {
             }
         });
 
+
+        pub.setChecked(true);
+
+
+
+
         pub.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (pub.isChecked()) {
-                    pri.setEnabled(false);
-                } else {
+                if (pub.isChecked()== false) {
+                    pri.setChecked(true);
                     pri.setEnabled(true);
+                    Toast.makeText(CreateActivity.this, "Post privato", Toast.LENGTH_SHORT).show();
+                } else {
+                    pub.setEnabled(true);
                 }
             }
         });
-        pri.setOnClickListener(new View.OnClickListener() {
+
+        /*pri.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (pri.isChecked()) {
@@ -132,7 +151,7 @@ public class CreateActivity extends AppCompatActivity {
                     pub.setEnabled(true);
                 }
             }
-        });
+        });*/
 
         galleria.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,37 +161,58 @@ public class CreateActivity extends AppCompatActivity {
             }
         });
 
+
+
+
+
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String br = bre.getText().toString().trim();
+                String nm = nom.getText().toString().trim();
+                String ds = desc.getText().toString().trim();
+                String item = itemtext.getText().toString().trim();
                 String uriFotoString = null;
-                if( uriFoto != null)
+            if( uriFoto != null && !TextUtils.isEmpty(br) && !TextUtils.isEmpty(nm) && !TextUtils.isEmpty(ds) && !TextUtils.isEmpty(item)) {
                     uriFotoString = uriFoto.toString();
 
-                FirebaseAuth mAuth = FirebaseAuth.getInstance();
-                FirebaseUser currentUser = mAuth.getCurrentUser();
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference myRefToDb = database.getReference("photos");
+                    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                    FirebaseUser currentUser = mAuth.getCurrentUser();
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference myRefToDb = database.getReference("photos");
 
-                if (pub.isChecked())
-                    available = true;
-                if (pri.isChecked())
-                    available = false;
+                    if (pub.isChecked())
+                        available = true;
+                    if (pri.isChecked())
+                        available = false;
 
-                String uploadId = myRefToDb.push().getKey();
-                ElementoLista el = new ElementoLista(bre.getText().toString(),nom.getText().toString(),desc.getText().toString(),
-                        Double.toString(latitudine), Double.toString(longitudine),uriFotoString,
-                        itemtext.getText().toString(), (currentUser != null) ? currentUser.getUid() : null,uploadId, available);
-                myRefToDb.child(uploadId).setValue(el);
+                    String uploadId = myRefToDb.push().getKey();
+                    ElementoLista el = new ElementoLista(bre.getText().toString(), nom.getText().toString(), desc.getText().toString(),
+                            Double.toString(latitudine), Double.toString(longitudine), uriFotoString,
+                            itemtext.getText().toString(), (currentUser != null) ? currentUser.getUid() : null, uploadId, available);
+                    myRefToDb.child(uploadId).setValue(el);
 
-                Intent i = new Intent(CreateActivity.this, MainActivity.class);
-                startActivity(i);
+                    Intent i = new Intent(CreateActivity.this, MainActivity.class);
+                    startActivity(i);
 
-                latitudine=0.0;
-                longitudine=0.0;
-                finish();
-            }
-        });
+                    latitudine = 0.0;
+                    longitudine = 0.0;
+                    finish();
+                }else{
+                    if(uriFoto == null)
+                        Toast.makeText(CreateActivity.this, "Attenzione,scegli o scatta una foto!Cafone", Toast.LENGTH_SHORT).show();
+                    if(TextUtils.isEmpty(br))
+                        bre.setError("Attenzione, aggiungi una descrizione!");
+                    if(TextUtils.isEmpty(nm))
+                        nom.setError("Attenzione, aggiungi un nome!");
+                    if(TextUtils.isEmpty(ds))
+                        desc.setError("Attenzione, aggiungi una didascalia!");
+                    if(TextUtils.isEmpty(item))
+                        itemtext.setError("Attenzione,aggiungi il testo!");
+                }
+              }
+             });
+
 
         //per il gps
         // Acquire reference to the LocationManager
@@ -196,8 +236,19 @@ public class CreateActivity extends AppCompatActivity {
                 mLastReading = bestKnownLocation();
                 latitudine=mLastReading.getLatitude();
                 longitudine=mLastReading.getLongitude();
-                String concatena="Latitude:"+latitudine+", Longitude:"+longitudine;
-                coordi.setText(concatena);
+                //String concatena="Latitude:"+latitudine+", Longitude:"+longitudine;
+                Geocoder geo = new Geocoder(CreateActivity.this, Locale.getDefault());
+               // Double lat = Double.parseDouble(lat);
+                //  Double lon = Double.parseDouble(lg);
+                try {
+                    List<Address> addresses = geo.getFromLocation(latitudine,longitudine,1);
+                    coordi.setText(addresses.get(0).getLocality());
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                //coordi.setText(concatena);
             }
             public void onStatusChanged(String provider, int status, Bundle extras) {
                 // NA
