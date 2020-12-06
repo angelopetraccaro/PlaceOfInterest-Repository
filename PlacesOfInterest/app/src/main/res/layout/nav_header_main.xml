@@ -2,27 +2,27 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/nav_header"
     android:layout_width="match_parent"
-    android:layout_height="160dp"
+    android:layout_height="170dp"
     android:background="@color/colorPrimaryDark"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackgroundBorderless"
     android:gravity="bottom"
     android:orientation="vertical"
-    android:padding="16dp"
+    android:padding="10dp"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <ImageView
-        android:id="@+id/nav_header_imageView"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:src="@mipmap/ic_launcher" />
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/nav_header_imageViewFoto"
+        android:layout_width="102dp"
+        android:layout_height="89dp"
+        android:background="@drawable/ic_person" />
 
     <TextView
-        android:id="@+id/nav_header_textView"
-        android:layout_width="match_parent"
+        android:id="@+id/nav_header_username"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:paddingTop="16dp"
-        android:text="Chike Mgbemena"
+
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 </LinearLayout>

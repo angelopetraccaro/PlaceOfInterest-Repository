@@ -16,4 +16,13 @@
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="tab_text_1">Public</string>
     <string name="tab_text_2">Private</string>
+    <string name="dialog_fire_missiles">Seleziona la foto </string>
+    <string name="camera">Fotocamera</string>
+    <string name="galleria">Galleria</string>
+    <string name="dialog_title">Scegli foto</string>
+    <string name="UtenteGiaregistrato">Utente già registrato</string>
+    <string name="UtenteNonregistrato">Utente non registrato</string>
+    <string name="FotoNonAggiunta">Foto non aggiunta</string>
+    <string name="selezionaFoto">Scegli foto da :</string>
+
 </resources>
