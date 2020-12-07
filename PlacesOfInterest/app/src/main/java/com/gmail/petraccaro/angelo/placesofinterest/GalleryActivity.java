@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.FaceDetector;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.SparseArray;
@@ -18,17 +19,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.google.android.gms.vision.Frame;
-import com.google.android.gms.vision.face.Face;
-import com.google.android.gms.vision.face.FaceDetector;
 
 public class GalleryActivity extends AppCompatActivity {
     private ImageView imgDetect;
     private Button btnProgress;
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+  /*  protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
 
@@ -42,7 +39,7 @@ public class GalleryActivity extends AppCompatActivity {
         /*int dpSize =  10;
         DisplayMetrics dm = getResources().getD55rics() ;
         float strokeWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpSize, dm);
-        boxPaint.setStrokeWidth(strokeWidth);*/
+        boxPaint.setStrokeWidth(strokeWidth);
         boxPaint.setStrokeWidth(10);
         boxPaint.setColor(Color.GREEN);
         boxPaint.setStyle(Paint.Style.STROKE);
@@ -82,5 +79,8 @@ public class GalleryActivity extends AppCompatActivity {
             }
         });
 
-    }
+        }*/
+
+
+
 }

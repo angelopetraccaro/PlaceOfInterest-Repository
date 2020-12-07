@@ -28,8 +28,8 @@ public class CustomAdapter extends ArrayAdapter<ElementoLista>  {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         convertView = inflater.inflate(R.layout.list_item,null);
 
-        TextView n = convertView.findViewById(R.id.textView);
-        TextView d = convertView.findViewById(R.id.textView2);
+        TextView n = convertView.findViewById(R.id.breveDescrizione);
+        TextView d = convertView.findViewById(R.id.NomeText);
         ImageView i = convertView.findViewById(R.id.imageView2);
 
         ElementoLista c = getItem(position);

@@ -1,53 +1,30 @@
 package com.gmail.petraccaro.angelo.placesofinterest;
 
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Visualizza la/le foto (max 3) ed i relativi parametri;
@@ -66,19 +43,20 @@ public class ReadActivity extends AppCompatActivity {
     //private EditText nom,bre,latitude,longitude;
     private boolean available=true;
     private static int i=0;
-    private ImageView photoTakenImageView,photoTakenImageView1,photoTakenImageView2;
+    private ImageView photoTakenImageView;
     private Uri outputUri;
     private FloatingActionButton fab;
     private String userLog,nome_doc;
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
+    private ScrollView didascalia;
 
     private String uriFoto;
     private String keyOfSelectElement;
     private LinearLayout gallery;
     private LayoutInflater inflater;
     private View x;
-    private TextView loc,did;
+    private TextView loc;
     private String lt ,lg;
 
     @Override
@@ -92,10 +70,10 @@ public class ReadActivity extends AppCompatActivity {
         //pri=(CheckBox) findViewById(R.id.privato);
         nome=(TextView) findViewById(R.id.nome);
         breve=(TextView) findViewById(R.id.breve_desc);
-        desc=(TextView) findViewById(R.id.desc);
+        desc=(TextView) findViewById(R.id.Didascalia);
         //latitude=(TextView) findViewById(R.id.text_cord);
         //longitude=(TextView) findViewById(R.id.edit_cord);
-        nom=(TextView) findViewById(R.id.nom);
+        nom=(TextView) findViewById(R.id.NomeText);
         bre=(TextView) findViewById(R.id.b_desc);
         fab = (FloatingActionButton) findViewById(R.id.fab);
         mAuth = FirebaseAuth.getInstance();
@@ -104,17 +82,11 @@ public class ReadActivity extends AppCompatActivity {
         inflater=LayoutInflater.from(this);
         x = inflater.inflate(R.layout.item_immagine, gallery, false);
         loc =(TextView) findViewById(R.id.loc);
-        did = findViewById(R.id.dida);
-
-
-
-
-
-
         final Intent intent=getIntent();
         nom.setText(intent.getStringExtra("name"));
         bre.setText(intent.getStringExtra("b_desc"));
-        desc.setText(intent.getStringExtra("desc"));
+        desc.setText(intent.getStringExtra("didascalia"));
+
         //latitude.setText(intent.getStringExtra("latitude"));
         //longitude.setText(intent.getStringExtra("longitude"));
         lt = intent.getStringExtra("latitude");
@@ -124,10 +96,9 @@ public class ReadActivity extends AppCompatActivity {
         nome_doc=intent.getStringExtra("nome_doc");
         photoTakenImageView = x.findViewById(R.id.item);
 
-        itemtext = x.findViewById(R.id.itemtext);
+        itemtext = x.findViewById(R.id.Didascalia);
 
-        itemtext.setText(intent.getStringExtra("didascalia"));
-        did.setText(intent.getStringExtra("didascalia"));
+       // itemtext.setText(intent.getStringExtra("didascalia"));
         keyOfSelectElement = intent.getStringExtra("keyondb");
 
 

@@ -66,7 +66,7 @@
             android:layout_marginTop="8dp"
             android:text="Nome"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/nom"
+            app:layout_constraintEnd_toStartOf="@+id/NomeText"
             app:layout_constraintHorizontal_bias="0.189"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/gallery_b" />
@@ -79,11 +79,11 @@
             android:text="Breve Descrizione"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/b_desc"
-            app:layout_constraintStart_toEndOf="@+id/nom"
+            app:layout_constraintStart_toEndOf="@+id/NomeText"
             app:layout_constraintTop_toBottomOf="@+id/gps" />
 
         <EditText
-            android:id="@+id/desc"
+            android:id="@+id/Didascalia"
             android:layout_width="384dp"
             android:layout_height="60dp"
             android:layout_marginStart="19dp"
@@ -92,7 +92,7 @@
             android:hint="Descrizione"
             android:inputType="textMultiLine"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nom" />
+            app:layout_constraintTop_toBottomOf="@+id/NomeText" />
 
         <EditText
             android:id="@+id/text_cord"
@@ -101,10 +101,10 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="4dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/desc" />
+            app:layout_constraintTop_toBottomOf="@+id/Didascalia" />
 
         <EditText
-            android:id="@+id/nom"
+            android:id="@+id/NomeText"
             android:layout_width="165dp"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -135,7 +135,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.86"
             app:layout_constraintStart_toEndOf="@+id/text_cord"
-            app:layout_constraintTop_toBottomOf="@+id/desc" />
+            app:layout_constraintTop_toBottomOf="@+id/Didascalia" />
 
         <CheckBox
             android:id="@+id/pubblico"
@@ -148,7 +148,7 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.654"
-            app:layout_constraintStart_toEndOf="@+id/desc"
+            app:layout_constraintStart_toEndOf="@+id/Didascalia"
             app:layout_constraintTop_toBottomOf="@+id/b_desc" />
 
         <CheckBox

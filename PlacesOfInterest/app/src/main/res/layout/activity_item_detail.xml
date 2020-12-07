@@ -17,13 +17,13 @@
     <TextView
         android:id="@+id/breve_desc2"
         android:layout_width="107dp"
-        android:layout_height="39dp"
+        android:layout_height="60dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="542dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="406dp"
         android:ems="10"
-        android:text="Descrizione"
+        android:text="Breve descrizione"
         android:textColor="@color/design_default_color_primary_dark"
         android:textSize="20sp"
 
@@ -57,23 +57,23 @@
         android:layout_height="39dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="480dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="338dp"
         android:ems="10"
-        android:textColor="@color/design_default_color_primary_dark"
-        android:textStyle="bold"
         android:text="Nome"
-        android:textSize="20sp" />
+        android:textColor="@color/design_default_color_primary_dark"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/nom"
+        android:id="@+id/NomeText"
         android:layout_width="219dp"
         android:layout_height="39dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="27dp"
-        android:layout_marginTop="480dp"
-        android:layout_marginEnd="25dp"
+        android:layout_marginStart="41dp"
+        android:layout_marginTop="339dp"
+        android:layout_marginEnd="11dp"
         android:layout_toEndOf="@+id/nome"
         android:ems="10"
         android:hint="Name"
@@ -81,29 +81,30 @@
         android:textSize="20sp" />
 
     <TextView
-        android:id="@+id/breve_desc"
+        android:id="@+id/didascalia"
         android:layout_width="107dp"
         android:layout_height="39dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="598dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="494dp"
         android:ems="10"
         android:text="Didascalia"
         android:textColor="@color/design_default_color_primary_dark"
-        android:textSize="20sp"
 
+        android:textSize="20sp"
         android:textStyle="bold" />
+
 
     <TextView
         android:id="@+id/b_desc"
-        android:layout_width="219dp"
-        android:layout_height="39dp"
+        android:layout_width="229dp"
+        android:layout_height="70dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="27dp"
-        android:layout_marginTop="540dp"
-        android:layout_marginEnd="25dp"
+        android:layout_marginStart="39dp"
+        android:layout_marginTop="404dp"
+        android:layout_marginEnd="23dp"
         android:layout_toEndOf="@+id/breve_desc"
         android:ems="10"
         android:hint="Preview"
@@ -111,18 +112,18 @@
         android:textSize="20sp" />
 
     <ScrollView
-        android:id="@+id/SCROLLER_ID"
+        android:id="@+id/DidascaliaVew"
         android:layout_width="wrap_content"
-        android:layout_height="156dp"
+        android:layout_height="120dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="14dp"
-        android:layout_marginTop="641dp"
-        android:layout_marginEnd="27dp">
+        android:layout_marginStart="9dp"
+        android:layout_marginTop="534dp"
+        android:layout_marginEnd="32dp">
 
         <TextView
-            android:id="@+id/desc"
+            android:id="@+id/Didascalia"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="183dp"
@@ -131,15 +132,14 @@
             android:textSize="20sp" />
     </ScrollView>
 
-
     <ImageButton
         android:id="@+id/gps"
         android:layout_width="60dp"
         android:layout_height="49dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="14dp"
-        android:layout_marginTop="389dp"
+        android:layout_marginStart="115dp"
+        android:layout_marginTop="669dp"
         android:background="@drawable/ic_location"
         android:backgroundTint="@android:color/holo_blue_dark"
         app:layout_constraintEnd_toEndOf="parent"
@@ -147,32 +147,19 @@
 
     <TextView
         android:id="@+id/loc"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="195dp"
+        android:layout_height="52dp"
         android:layout_alignBottom="@+id/gps"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="160dp"
-        android:layout_marginBottom="12dp"
-        android:textColor="@color/design_default_color_primary_dark"
-        android:textStyle="bold"
+        android:layout_marginStart="11dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="-9dp"
+        android:layout_toEndOf="@+id/gps"
         android:hint="Location"
         android:text="Location"
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/dida"
-        android:layout_width="wrap_content"
-        android:layout_height="37dp"
-        android:layout_below="@+id/Horizontal"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="14dp"
-        android:layout_marginTop="23dp"
-        android:layout_marginEnd="203dp"
-        android:text="dida"
         android:textColor="@color/design_default_color_primary_dark"
         android:textSize="20sp"
-        android:textStyle="bold"></TextView>
+        android:textStyle="bold" />
 
 
 </RelativeLayout>

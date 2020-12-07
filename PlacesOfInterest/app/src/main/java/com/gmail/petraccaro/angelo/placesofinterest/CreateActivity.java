@@ -1,8 +1,7 @@
 package com.gmail.petraccaro.angelo.placesofinterest;
 
-import android.app.Dialog;
+import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -21,7 +20,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -31,7 +29,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
@@ -54,8 +51,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-
 /**
  * Classe che permette l'inserimento di una nuova foto con relativi campi
  */
@@ -68,9 +63,9 @@ public class CreateActivity extends AppCompatActivity {
     private ImageView photoTakenImageView;
     private ImageButton takefoto, galleria;
     private Switch pub, pri;
-    private TextView nome, breve, desc, coord,itemtext,coordi;
+    private TextView nome, breve, didascalia, coord,coordi;
     private Button add;
-    private EditText nom, bre;
+    private EditText nom, b_desc;
     private boolean available = true;
     private Location mLastReading;
     private LocationManager mLocationManager;
@@ -97,24 +92,21 @@ public class CreateActivity extends AppCompatActivity {
         galleria = (ImageButton) findViewById(R.id.apri);
         pub = (Switch) findViewById(R.id.pubblico);
         pri = (Switch) findViewById(R.id.privato);
-        nome = (TextView) findViewById(R.id.nome);
-        breve = (TextView) findViewById(R.id.breve_desc);
-        desc = (TextView) findViewById(R.id.desc);
         coord = (TextView) findViewById(R.id.text_cord);
-        nom = (EditText) findViewById(R.id.nom);
-        bre = (EditText) findViewById(R.id.b_desc);
         add = (Button) findViewById(R.id.imageButton);
         coordi =(TextView) findViewById(R.id.edit_cord);
+
+        nom = (EditText) findViewById(R.id.NomeText);
+        b_desc = (EditText) findViewById(R.id.b_desc);
+        didascalia = (TextView) findViewById(R.id.Didascalia);
+
+
+
         gallery=findViewById(R.id.gallery);
         inflater=LayoutInflater.from(this);
 
         x = inflater.inflate(R.layout.item_immage_create, gallery, false);
         photoTakenImageView = x.findViewById(R.id.item);
-
-        itemtext = x.findViewById(R.id.itemtext);
-
-
-
 
         takefoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,21 +134,11 @@ public class CreateActivity extends AppCompatActivity {
             }
         });
 
-        /*pri.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (pri.isChecked()) {
-                    pub.setEnabled(false);
-                } else {
-                    pub.setEnabled(true);
-                }
-            }
-        });*/
 
         galleria.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(i, RESULT_LOAD_IMAGE);
             }
         });
@@ -168,12 +150,11 @@ public class CreateActivity extends AppCompatActivity {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String br = bre.getText().toString().trim();
+                String breve = b_desc.getText().toString().trim();
                 String nm = nom.getText().toString().trim();
-                String ds = desc.getText().toString().trim();
-                String item = itemtext.getText().toString().trim();
+                String ds = didascalia.getText().toString().trim();
                 String uriFotoString = null;
-            if( uriFoto != null && !TextUtils.isEmpty(br) && !TextUtils.isEmpty(nm) && !TextUtils.isEmpty(ds) && !TextUtils.isEmpty(item)) {
+            if( uriFoto != null && !TextUtils.isEmpty(breve) && !TextUtils.isEmpty(nm) && !TextUtils.isEmpty(ds) ) {
                     uriFotoString = uriFoto.toString();
 
                     FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -187,28 +168,27 @@ public class CreateActivity extends AppCompatActivity {
                         available = false;
 
                     String uploadId = myRefToDb.push().getKey();
-                    ElementoLista el = new ElementoLista(bre.getText().toString(), nom.getText().toString(), desc.getText().toString(),
+                    ElementoLista el = new ElementoLista( nm,breve,
                             Double.toString(latitudine), Double.toString(longitudine), uriFotoString,
-                            itemtext.getText().toString(), (currentUser != null) ? currentUser.getUid() : null, uploadId, available);
+                            ds, (currentUser != null) ? currentUser.getUid() : null, uploadId, available);
                     myRefToDb.child(uploadId).setValue(el);
 
                     Intent i = new Intent(CreateActivity.this, MainActivity.class);
-                    startActivity(i);
-
+                    Intent returnIntent = new Intent();
+                    setResult(Activity.RESULT_OK,returnIntent);
                     latitudine = 0.0;
                     longitudine = 0.0;
                     finish();
                 }else{
                     if(uriFoto == null)
                         Toast.makeText(CreateActivity.this, "Attenzione,scegli o scatta una foto!Cafone", Toast.LENGTH_SHORT).show();
-                    if(TextUtils.isEmpty(br))
-                        bre.setError("Attenzione, aggiungi una descrizione!");
+                    if(TextUtils.isEmpty(b_desc.getText()))
+                        b_desc.setError("Attenzione, aggiungi una descrizione!");
                     if(TextUtils.isEmpty(nm))
                         nom.setError("Attenzione, aggiungi un nome!");
                     if(TextUtils.isEmpty(ds))
-                        desc.setError("Attenzione, aggiungi una didascalia!");
-                    if(TextUtils.isEmpty(item))
-                        itemtext.setError("Attenzione,aggiungi il testo!");
+                        didascalia.setError("Attenzione, aggiungi una didascalia!");
+
                 }
               }
              });
@@ -262,8 +242,6 @@ public class CreateActivity extends AppCompatActivity {
         };
 
         if(savedInstanceState!=null) {
-            itemtext.setText(savedInstanceState.getString("descrizione"));
-
             gallery.removeAllViews();
             if(savedInstanceState.getString("uri")!=null){
                 Uri u = Uri.parse(savedInstanceState.getString("uri"));
@@ -359,7 +337,6 @@ public class CreateActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //per la galleria in on activity result controllo:
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
-            Log.e("dat",data.getData()+"");
             Uri selectedImage = data.getData();
             String[] filePathColumn = { MediaStore.Images.Media.DATA };
             Cursor cursor = getContentResolver().query(selectedImage,filePathColumn, null, null, null);
@@ -423,19 +400,7 @@ public class CreateActivity extends AppCompatActivity {
      * @param outputUri uri della foto da salvare su firebase storage
      */
     public void addOnStorage(Uri outputUri){
-        //messo qui l'alert invece che sotto a y++, elimino errore distrazione
-        AlertDialog.Builder didascalia=new AlertDialog.Builder(this);
-        final EditText e=new EditText(this);
-        didascalia.setTitle("Inserisci la didascalia");
-        didascalia.setView(e);
-        didascalia.setPositiveButton("ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                    itemtext.setText(e.getText());
 
-            }
-        });
-        didascalia.show();
         //dopo aver salvato l'imm nella imageview la salvo nello storage di firestone
         FirebaseStorage myStorage = FirebaseStorage.getInstance();
         StorageReference rootStorageRef = myStorage.getReference();
@@ -485,7 +450,6 @@ public class CreateActivity extends AppCompatActivity {
             b.putString("uri", uriFoto.toString());
             b.putDouble("la", latitudine);
             b.putDouble("lo", longitudine);
-            b.putString("t", itemtext.getText().toString());
         }
     }
 

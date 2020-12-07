@@ -6,7 +6,6 @@ package com.gmail.petraccaro.angelo.placesofinterest;
 public class ElementoLista {
     private String nome;
     private String breve_descrizione;
-    private String descrizione;
     private String latitude,longitude;
     private String url_foto;
     private String didascalia;
@@ -14,10 +13,9 @@ public class ElementoLista {
     private String keyOnDb;
     private boolean available;
 
-    public ElementoLista(String nome, String breve_descrizione, String descrizione, String latitude, String longitude, String url_foto,  String didascalia, String owner,String key,boolean available) {
+    public ElementoLista(String nome, String breve_descrizione, String latitude, String longitude, String url_foto,  String didascalia, String owner,String key,boolean available) {
         this.nome = nome;
         this.breve_descrizione = breve_descrizione;
-        this.descrizione = descrizione;
         this.latitude = latitude;
         this.longitude = longitude;
         this.url_foto = url_foto;
@@ -33,9 +31,6 @@ public class ElementoLista {
     }
     public String getBreve_descrizione() {
         return breve_descrizione;
-    }
-    public String getDescrizione() {
-        return descrizione;
     }
     public String getLatitude() { return latitude; }
     public String getLongitude() { return longitude; }

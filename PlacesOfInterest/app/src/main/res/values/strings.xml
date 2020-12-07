@@ -24,5 +24,6 @@
     <string name="UtenteNonregistrato">Utente non registrato</string>
     <string name="FotoNonAggiunta">Foto non aggiunta</string>
     <string name="selezionaFoto">Scegli foto da :</string>
+    <string name="NuovoPost">  Nuovo post</string>
 
 </resources>

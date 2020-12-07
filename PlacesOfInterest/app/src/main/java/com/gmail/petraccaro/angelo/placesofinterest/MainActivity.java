@@ -1,5 +1,6 @@
 package com.gmail.petraccaro.angelo.placesofinterest;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -8,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -62,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     private CircleImageView imgviewFotoProfilo;
+    private User userLogged;
 
 
 
@@ -70,29 +73,46 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_user_nav);
         Intent IntentInizializzazione = getIntent();
+        String nome,cognome,username,password,email,uriFotoDelProfilo;
+        if( IntentInizializzazione.getExtras() != null && IntentInizializzazione.getExtras().containsKey("email")){
+           nome = IntentInizializzazione.getStringExtra("nome");
+           cognome = IntentInizializzazione.getStringExtra("cognome");
+           username = IntentInizializzazione.getStringExtra("username");
+           password = IntentInizializzazione.getStringExtra("password");
+           email = IntentInizializzazione.getStringExtra("email");
+           uriFotoDelProfilo = IntentInizializzazione.getStringExtra("uriFotoDelProfilo");
+            userLogged = new User(nome,cognome,username,email,password,uriFotoDelProfilo);
+            NavigationView mynav = (NavigationView) findViewById(R.id.nav_view);
 
-        String nome = IntentInizializzazione.getStringExtra("nome");
-        String cognome = IntentInizializzazione.getStringExtra("cognome");
-        String username = IntentInizializzazione.getStringExtra("username");
-        String password = IntentInizializzazione.getStringExtra("password");
-        String email = IntentInizializzazione.getStringExtra("email");
-        final String uriFotoDelProfilo = IntentInizializzazione.getStringExtra("uriFotoDelProfilo");
-        User userLogged = new User(nome,cognome,username,email,password,uriFotoDelProfilo);
+            Menu menu = (Menu) mynav.getMenu();
+            menu.getItem(1).setTitle(userLogged.getCognome());
+            menu.getItem(2).setTitle(userLogged.getEmail());
 
-        NavigationView mynav = (NavigationView) findViewById(R.id.nav_view);
+            imgviewFotoProfilo = (CircleImageView) mynav.getHeaderView(0).findViewById(R.id.nav_header_imageViewFoto);
+            TextView user= (TextView) mynav.getHeaderView(0).findViewById(R.id.nav_header_username);
 
-        Menu menu = (Menu) mynav.getMenu();
-        menu.getItem(0).setTitle(nome);
-        menu.getItem(1).setTitle(cognome);
-        menu.getItem(2).setTitle(email);
+            user.setText(userLogged.getUsername());
 
-        imgviewFotoProfilo = (CircleImageView) mynav.getHeaderView(0).findViewById(R.id.nav_header_imageViewFoto);
-        TextView user= (TextView) mynav.getHeaderView(0).findViewById(R.id.nav_header_username);
+            StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(userLogged.getUriFotoDelProfilo());
+            Picasso.get().load(userLogged.getUriFotoDelProfilo()).into(imgviewFotoProfilo); menu.getItem(0).setTitle(userLogged.getNome());
 
-         user.setText(username);
 
-        StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(uriFotoDelProfilo);
-        Picasso.get().load(uriFotoDelProfilo).into(imgviewFotoProfilo);
+        }
+        if(savedInstanceState != null){
+            Log.e("entro2"," qui è nullo l'intent");
+            nome = (String) savedInstanceState.get("nome");
+            cognome = (String) savedInstanceState.get("cognome");
+            username = (String) savedInstanceState.get("username");
+            password = (String) savedInstanceState.get("password");
+            email = (String)savedInstanceState.get("email");
+            uriFotoDelProfilo = (String) savedInstanceState.get("uriFotoDelProfilo");
+            userLogged = new User(nome,cognome,username,email,password,uriFotoDelProfilo);
+
+
+        }
+
+
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
  
@@ -109,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i=new Intent(MainActivity.this,CreateActivity.class);
-                startActivity(i);
+                startActivityForResult(i,2);
             }
         });
 
@@ -117,6 +137,25 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putString("nome",userLogged.getNome());
+        savedInstanceState.putString("cognome",userLogged.getCognome());
+        savedInstanceState.putString("username",userLogged.getUsername());
+        savedInstanceState.putString("password",userLogged.getPassword());
+        savedInstanceState.putString("email",userLogged.getEmail());
+
+        savedInstanceState.putString("uriFotoDelProfilo",userLogged.getUriFotoDelProfilo());
+        super.onSaveInstanceState(savedInstanceState);
+
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+
+        if(resultCode ==RESULT_OK )
+          Toast.makeText(this,R.string.NuovoPost,Toast.LENGTH_LONG);
+
+    }
     public boolean Avvia_Riconoscimento(MenuItem item) {
         Intent i=new Intent(this,GalleryActivity.class);
         startActivity(i);
@@ -181,7 +220,6 @@ public class MainActivity extends AppCompatActivity {
                 if (getArguments().getInt(ARG_SECTION_NUMBER) == 1) {
                     intent1.putExtra("name",PublicList.get(position).getNome());
                     intent1.putExtra("b_desc",PublicList.get(position).getBreve_descrizione());
-                    intent1.putExtra("desc",PublicList.get(position).getDescrizione());
                     intent1.putExtra("latitude",PublicList.get(position).getLatitude());
                     intent1.putExtra("longitude",PublicList.get(position).getLongitude());
                     intent1.putExtra("foto",PublicList.get(position).getUrl_foto());
@@ -193,7 +231,6 @@ public class MainActivity extends AppCompatActivity {
                     } else{
                     intent1.putExtra("name",PrivateList.get(position).getNome());
                     intent1.putExtra("b_desc",PrivateList.get(position).getBreve_descrizione());
-                    intent1.putExtra("desc",PrivateList.get(position).getDescrizione());
                     intent1.putExtra("latitude",PrivateList.get(position).getLatitude());
                     intent1.putExtra("longitude",PrivateList.get(position).getLongitude());
                     intent1.putExtra("foto",PrivateList.get(position).getUrl_foto());
@@ -318,6 +355,7 @@ public class MainActivity extends AppCompatActivity {
             }
             super.onStart();
         }
+
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
