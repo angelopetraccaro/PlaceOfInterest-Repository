@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -73,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_user_nav);
         Intent IntentInizializzazione = getIntent();
+
+
         String nome,cognome,username,password,email,uriFotoDelProfilo;
         if( IntentInizializzazione.getExtras() != null && IntentInizializzazione.getExtras().containsKey("email")){
            nome = IntentInizializzazione.getStringExtra("nome");
@@ -99,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
 
         }
         if(savedInstanceState != null){
-            Log.e("entro2"," qui è nullo l'intent");
             nome = (String) savedInstanceState.get("nome");
             cognome = (String) savedInstanceState.get("cognome");
             username = (String) savedInstanceState.get("username");
@@ -183,6 +185,8 @@ public class MainActivity extends AppCompatActivity {
         private DatabaseReference myRef;
         private FirebaseAuth mAuth;
         private FirebaseUser currentUser;
+        private ProgressBar ProgressBar;
+
 
         public PlaceholderFragment() {
         }
@@ -207,6 +211,7 @@ public class MainActivity extends AppCompatActivity {
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
             ListOfPhotos=(ListView)rootView.findViewById(R.id.lista);
+            ProgressBar = (ProgressBar) rootView.findViewById(R.id.progress_circle);
 
             db = FirebaseDatabase.getInstance();
             myRef  = db.getReference("photos");
@@ -309,11 +314,14 @@ public class MainActivity extends AppCompatActivity {
                                 PublicList.add(els);
 
                         }
+
                     ListOfPhotos.setAdapter(new CustomAdapter(getContext(), R.layout.list_item, PublicList));
+                    ProgressBar.setVisibility(View.INVISIBLE);
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
 
+                    ProgressBar.setVisibility(View.VISIBLE);
                 }
             });
 
@@ -334,6 +342,7 @@ public class MainActivity extends AppCompatActivity {
                     for(DataSnapshot ds: snapshot.getChildren()){
                         ElementoLista els = ds.getValue(ElementoLista.class);
                         if(els.getAvailable()== false) PrivateList.add(els);
+                        ProgressBar.setVisibility(View.INVISIBLE);
 
                     }
 
@@ -343,6 +352,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
+                    ProgressBar.setVisibility(View.VISIBLE);
 
                 }
             });
@@ -366,8 +376,6 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
             return MainActivity.PlaceholderFragment.newInstance(position + 1);
         }
 

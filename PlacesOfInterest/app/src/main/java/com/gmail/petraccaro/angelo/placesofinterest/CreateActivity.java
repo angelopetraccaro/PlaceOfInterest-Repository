@@ -143,57 +143,6 @@ public class CreateActivity extends AppCompatActivity {
             }
         });
 
-
-
-
-
-        add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String breve = b_desc.getText().toString().trim();
-                String nm = nom.getText().toString().trim();
-                String ds = didascalia.getText().toString().trim();
-                String uriFotoString = null;
-            if( uriFoto != null && !TextUtils.isEmpty(breve) && !TextUtils.isEmpty(nm) && !TextUtils.isEmpty(ds) ) {
-                    uriFotoString = uriFoto.toString();
-
-                    FirebaseAuth mAuth = FirebaseAuth.getInstance();
-                    FirebaseUser currentUser = mAuth.getCurrentUser();
-                    FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    DatabaseReference myRefToDb = database.getReference("photos");
-
-                    if (pub.isChecked())
-                        available = true;
-                    if (pri.isChecked())
-                        available = false;
-
-                    String uploadId = myRefToDb.push().getKey();
-                    ElementoLista el = new ElementoLista( nm,breve,
-                            Double.toString(latitudine), Double.toString(longitudine), uriFotoString,
-                            ds, (currentUser != null) ? currentUser.getUid() : null, uploadId, available);
-                    myRefToDb.child(uploadId).setValue(el);
-
-                    Intent i = new Intent(CreateActivity.this, MainActivity.class);
-                    Intent returnIntent = new Intent();
-                    setResult(Activity.RESULT_OK,returnIntent);
-                    latitudine = 0.0;
-                    longitudine = 0.0;
-                    finish();
-                }else{
-                    if(uriFoto == null)
-                        Toast.makeText(CreateActivity.this, "Attenzione,scegli o scatta una foto!Cafone", Toast.LENGTH_SHORT).show();
-                    if(TextUtils.isEmpty(b_desc.getText()))
-                        b_desc.setError("Attenzione, aggiungi una descrizione!");
-                    if(TextUtils.isEmpty(nm))
-                        nom.setError("Attenzione, aggiungi un nome!");
-                    if(TextUtils.isEmpty(ds))
-                        didascalia.setError("Attenzione, aggiungi una didascalia!");
-
-                }
-              }
-             });
-
-
         //per il gps
         // Acquire reference to the LocationManager
         if (null == (mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE)))
@@ -370,6 +319,7 @@ public class CreateActivity extends AppCompatActivity {
 
             addOnStorage(outputUri);
         }
+
     }
 
     /**
@@ -399,44 +349,91 @@ public class CreateActivity extends AppCompatActivity {
      * Carica la foto sullo storage di firebase
      * @param outputUri uri della foto da salvare su firebase storage
      */
-    public void addOnStorage(Uri outputUri){
+    public void addOnStorage(final Uri outputUri){
 
-        //dopo aver salvato l'imm nella imageview la salvo nello storage di firestone
-        FirebaseStorage myStorage = FirebaseStorage.getInstance();
-        StorageReference rootStorageRef = myStorage.getReference();
-        StorageReference documentRef = rootStorageRef.child("images");
-        Uri uri= outputUri;
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String breve = b_desc.getText().toString().trim();
+                final String nm = nom.getText().toString().trim();
+                final String ds = didascalia.getText().toString().trim();
 
-        final StorageReference scoreRef = documentRef.child(uri.getLastPathSegment());
-        final UploadTask uploadTask = scoreRef.putFile(uri);
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                Toast.makeText(getApplicationContext(), "Upload Failure", Toast.LENGTH_LONG).show();
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                Toast.makeText(getApplicationContext(), "File uploaded on storage", Toast.LENGTH_LONG).show();
-                scoreRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        uriFoto = uri;
-                    }
-                });
-                add.setEnabled(true);
+                FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                final FirebaseUser currentUser = mAuth.getCurrentUser();
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    FirebaseStorage myStorage = FirebaseStorage.getInstance();
+                    StorageReference rootStorageRef = myStorage.getReference();
+                    StorageReference documentRef = rootStorageRef.child("images");
+                    final DatabaseReference myRefToDb = database.getReference("photos");
 
-            }
-        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                //Toast.makeText(getApplicationContext(), "On progress...", Toast.LENGTH_LONG).show();
-                add.setEnabled(false);
-                takefoto.setEnabled(false);
-                galleria.setEnabled(false);
+                    Uri uri= outputUri;
+                if( !TextUtils.isEmpty(breve) && !TextUtils.isEmpty(nm) && !TextUtils.isEmpty(ds) ) {
+
+                    final StorageReference scoreRef = documentRef.child(uri.getLastPathSegment());
+                    final UploadTask uploadTask = scoreRef.putFile(uri);
+                    uploadTask.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            Toast.makeText(getApplicationContext(), "Upload Failure", Toast.LENGTH_LONG).show();
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                            Toast.makeText(getApplicationContext(), "File uploaded on storage", Toast.LENGTH_LONG).show();
+                            scoreRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    uriFoto = uri;
+                                        if (pub.isChecked())
+                                            available = true;
+                                        if (pri.isChecked())
+                                            available = false;
+
+                                        String uploadId = myRefToDb.push().getKey();
+                                        ElementoLista el = new ElementoLista( nm,breve,
+                                                Double.toString(latitudine), Double.toString(longitudine), uriFoto.toString(),
+                                                ds, (currentUser != null) ? currentUser.getUid() : null, uploadId, available);
+                                        myRefToDb.child(uploadId).setValue(el);
+                                        Intent i = new Intent(CreateActivity.this, MainActivity.class);
+                                        Intent returnIntent = new Intent();
+                                        setResult(Activity.RESULT_OK,returnIntent);
+                                        finish();
+
+                                        latitudine = 0.0;
+                                        longitudine = 0.0;
+
+
+                                }
+                            });
+                            add.setEnabled(true);
+
+                        }
+                    }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            //Toast.makeText(getApplicationContext(), "On progress...", Toast.LENGTH_LONG).show();
+                            add.setEnabled(false);
+                            takefoto.setEnabled(false);
+                            galleria.setEnabled(false);
+                        }
+                    });
+                }else{
+                    if(uriFoto == null)
+                        Toast.makeText(CreateActivity.this, "Attenzione,scegli o scatta una foto", Toast.LENGTH_SHORT).show();
+                    if(TextUtils.isEmpty(b_desc.getText()))
+                        b_desc.setError("Attenzione, aggiungi una descrizione!");
+                    if(TextUtils.isEmpty(nm))
+                        nom.setError("Attenzione, aggiungi un nome!");
+                    if(TextUtils.isEmpty(ds))
+                        didascalia.setError("Attenzione, aggiungi una didascalia!");
+
+                }
             }
         });
+
+
+
     }
 
     /**

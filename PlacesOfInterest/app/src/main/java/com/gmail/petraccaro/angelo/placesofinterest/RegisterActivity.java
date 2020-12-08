@@ -60,8 +60,7 @@ public class RegisterActivity extends AppCompatActivity {
     private ImageButton imgbtnFotocamera;
     private CircleImageView imgview;
     private FirebaseFirestore myDB = FirebaseFirestore.getInstance();
-
-
+    Uri uri= null;
     private  Uri outputUri;
 
     @Override
@@ -119,14 +118,13 @@ public class RegisterActivity extends AppCompatActivity {
 
                 else if (!isEmailValid(str_email))
                     email.setError(getString(R.string.error_invalid_email));
-                else if( outputUri == null)
+                else if( uri == null)
                     Toast.makeText(RegisterActivity.this, R.string.FotoNonAggiunta, Toast.LENGTH_LONG).show();
 
                 else{
                     FirebaseStorage myStorage = FirebaseStorage.getInstance();
                     StorageReference rootStorageRef = myStorage.getReference();
                     final StorageReference documentRef = rootStorageRef.child("ProfileImages");
-                    final Uri uri= outputUri;
                     final StorageReference scoreRef = documentRef.child(uri.getLastPathSegment());
                     final UploadTask uploadTask = scoreRef.putFile(uri);
                     uploadTask.addOnFailureListener(new OnFailureListener() {
@@ -158,16 +156,33 @@ public class RegisterActivity extends AppCompatActivity {
                                                         if(!presente){
                                                             DocumentReference myRef = myDB.collection("users").document(str_email);
 
-                                                            User user = new User(str_nome,str_cognome,str_user,str_email,str_password, uri.toString() );
+                                                            final User user = new User(str_nome,str_cognome,str_user,str_email,str_password, uri.toString() );
                                                             myRef.set(user);
-                                                            Intent i = new Intent(RegisterActivity.this, MainActivity.class);
-                                                            i.putExtra("nome",user.getNome());
-                                                            i.putExtra("cognome",user.getCognome());
-                                                            i.putExtra("username",user.getUsername());
-                                                            i.putExtra("password",user.getPassword());
-                                                            i.putExtra("email",user.getEmail());
-                                                            i.putExtra("uriFotoDelProfilo",user.getUriFotoDelProfilo());
-                                                            startActivity(i);
+                                                            FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                                                            mAuth.signOut();
+
+                                                            mAuth.createUserWithEmailAndPassword(str_email,str_password)
+                                                                    .addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
+                                                                        @Override
+                                                                        public void onComplete(@NonNull Task<AuthResult> task) {
+                                                                            if (task.isSuccessful()){
+
+                                                                                Intent i = new Intent(RegisterActivity.this, MainActivity.class);
+                                                                                i.putExtra("nome",user.getNome());
+                                                                                i.putExtra("cognome",user.getCognome());
+                                                                                i.putExtra("username",user.getUsername());
+                                                                                i.putExtra("password",user.getPassword());
+                                                                                i.putExtra("email",user.getEmail());
+                                                                                i.putExtra("uriFotoDelProfilo",user.getUriFotoDelProfilo());
+                                                                                startActivity(i);
+                                                                            }else{
+                                                                                Log.e("cosa succede", task.getException().toString());
+                                                                            }
+
+
+                                                                        }
+                                                                    });
+
 
                                                         }else{
                                                             Toast.makeText(RegisterActivity.this, R.string.UtenteGiaregistrato, Toast.LENGTH_LONG).show();
@@ -210,25 +225,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-    private void Login(String str_email,String str_password) {
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        mAuth.signOut();
-
-        mAuth.signInWithEmailAndPassword(str_email,str_password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()){
-                            Intent i = new Intent(RegisterActivity.this, MainActivity.class);
-                            startActivity(i);
-                        }
-
-
-                    }
-                });
-
-    }
-
 
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -241,6 +237,7 @@ public class RegisterActivity extends AppCompatActivity {
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
 
+            uri = selectedImage;
             imgview.setImageBitmap(BitmapFactory.decodeFile(picturePath));
         }
         if (requestCode == ACTIVITY_START_CAMERA_APP && resultCode == RESULT_OK) {
@@ -250,7 +247,7 @@ public class RegisterActivity extends AppCompatActivity {
                 mImageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), outputUri);
                 if(mImageBitmap!=null){
                     imgview.setImageBitmap(mImageBitmap);
-
+               uri = outputUri;
                     galleryAddPic();
                 }
             } catch (IOException e) {
