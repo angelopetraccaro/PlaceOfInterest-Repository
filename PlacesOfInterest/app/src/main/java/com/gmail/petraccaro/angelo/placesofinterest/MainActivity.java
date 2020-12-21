@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
         Intent IntentInizializzazione = getIntent();
 
 
+
         String nome,cognome,username,password,email,uriFotoDelProfilo;
         if( IntentInizializzazione.getExtras() != null && IntentInizializzazione.getExtras().containsKey("email")){
            nome = IntentInizializzazione.getStringExtra("nome");
