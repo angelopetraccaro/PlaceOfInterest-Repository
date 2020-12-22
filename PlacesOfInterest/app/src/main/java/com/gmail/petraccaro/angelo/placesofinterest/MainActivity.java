@@ -1,4 +1,3 @@
-
 package com.gmail.petraccaro.angelo.placesofinterest;
 
 import android.annotation.SuppressLint;
