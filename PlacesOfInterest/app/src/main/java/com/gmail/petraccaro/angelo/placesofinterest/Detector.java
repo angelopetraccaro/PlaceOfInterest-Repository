@@ -13,6 +13,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,8 +61,8 @@ import java.util.Map;
 
 
 public class Detector extends AppCompatActivity {
-    public ArrayList<String> distanza=new ArrayList<String>();
-    ArrayList<Bitmap> bitmapArray = new ArrayList<Bitmap>();
+    public ArrayList<String> distanza=new ArrayList<>();
+    ArrayList<Bitmap> bitmapArray = new ArrayList<>();
     protected Interpreter tflite;
     private  int imageSizeX;
     private  int imageSizeY;
@@ -102,16 +103,22 @@ public class Detector extends AppCompatActivity {
         ImgViewFotoProfilo = findViewById(R.id.imgFace);
 
         Intent i = getIntent();
+
         final String[] uriProfilo = {i.getStringExtra("uri")};
         Log.e("uriProfilo", uriProfilo[0]);
-        Picasso.get().load(uriProfilo[0]).into(ImgViewFotoProfilo);
-        final Bitmap BitMapFotoDelProfilo = ((BitmapDrawable)ImgViewFotoProfilo.getDrawable()).getBitmap();
-        try {
-            tflite=new Interpreter(loadmodelfile(this));
+        Picasso.get().load(uriProfilo[0]).into( new Target() {
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                //  Log.e("sto convertendo","converto");
+                Picasso.get().load(uriProfilo[0]).into(ImgViewFotoProfilo);
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+                final Bitmap BitMapFotoDelProfilo = ((BitmapDrawable)ImgViewFotoProfilo.getDrawable()).getBitmap();
+                try {
+                    tflite=new Interpreter(loadmodelfile(Detector.this));
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 DatabaseReference myRef;
                 FirebaseDatabase db  = FirebaseDatabase.getInstance();
                 myRef  = db.getReference("photos");
@@ -124,13 +131,13 @@ public class Detector extends AppCompatActivity {
                         for(DataSnapshot ds: snapshot.getChildren()){
                             final ElementoLista els = ds.getValue(ElementoLista.class);
                             arrayofuri.add(els.getUrl_foto());
-                         }
+                        }
                         arrayBitmap.clear();
                         for(String key: arrayofuri)
                             Picasso.get().load(key).into( new Target() {
                                 @Override
                                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                                  //  Log.e("sto convertendo","converto");
+                                    //  Log.e("sto convertendo","converto");
                                     arrayBitmap.add(bitmap);
                                     if(arrayBitmap.size()>=arrayofuri.size()) {
                                         face_detector(BitMapFotoDelProfilo,"original", uriProfilo[0]);
@@ -153,14 +160,27 @@ public class Detector extends AppCompatActivity {
 
                     }
                 });
+            }
+            @Override
+            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+            }
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+            }
+        });
+
+
+        if(ImgViewFotoProfilo.getDrawable() == null) Log.e("null","null");
+
     }
 
     /** calcolo della distanza tra i il volto presente nella foto del profilo e il volto individuatoo in una foto postata**/
     private  float calculate_distance(float[][] ori_embedding, float[][] test_embedding) {
         float sum = (float) 0.0;
-        float diff = (float) 0.0;
         for(int i=0;i<192;i++){
-            diff = ori_embedding[0][i]-test_embedding[0][i];
+            float diff = ori_embedding[0][i]-test_embedding[0][i];
             sum += diff*diff;
         }
         return (float)Math.sqrt(sum);
@@ -296,8 +316,18 @@ public class Detector extends AppCompatActivity {
             test_embedding=embedding;
         }
 
-    }
 
+
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        if ((keyCode == KeyEvent.KEYCODE_BACK))
+        {
+            finish();
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
     public class CustomAdapter1 extends BaseAdapter {
 
