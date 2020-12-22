@@ -1,32 +1,24 @@
-
 package com.gmail.petraccaro.angelo.placesofinterest;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Matrix;
-import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.hardware.camera2.CameraCharacteristics;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.SystemClock;
-import android.provider.MediaStore;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,10 +32,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FileDownloadTask;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.ListResult;
-import com.google.firebase.storage.StorageReference;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.face.Face;
 import com.google.mlkit.vision.face.FaceDetection;
@@ -67,43 +55,34 @@ import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import static com.squareup.picasso.Picasso.*;
-
 
 public class Detector extends AppCompatActivity {
-
+    public ArrayList<String> distanza=new ArrayList<String>();
+    ArrayList<Bitmap> bitmapArray = new ArrayList<Bitmap>();
     protected Interpreter tflite;
     private  int imageSizeX;
     private  int imageSizeY;
-  ;
     /** face detector**/
     private FaceDetector faceDetector;
-
     private static final float IMAGE_MEAN = 128.0f;
     private static final float IMAGE_STD = 128.0f;
 
     // MobileFaceNet
     private static final int TF_OD_API_INPUT_SIZE = 112;
-
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
-
-
     public Bitmap oribitmap,testbitmap;
     public static Bitmap cropped;
     Uri imageuri;
-
     ImageView oriImage,testImage;
     Button buverify;
     TextView result_text;
-
     private Button btnDetec;
     private ImageView ImgViewFotoProfilo;
-    private    final ArrayList<String> arrayofuri = new ArrayList<>();
+    private final ArrayList<String> arrayofuri = new ArrayList<>();
 
     float[][]  ori_embedding = new float[1][192];
     float[][] test_embedding = new float[1][192];
@@ -111,11 +90,16 @@ public class Detector extends AppCompatActivity {
     /** contiene i bitmaps per ogni volto riconosciuto con la rispettiva distanza **/
     Map<Bitmap,Float> BitmpasVolti = new HashMap<>();
 
+    //....
+    GridView gridView;
+    String [] distance={"distance 1","distance 2","distance 3","distance 4"};
+    int[] imagesGrid= {R.drawable.angelo,R.drawable.angelo,R.drawable.angelo,R.drawable.angelo};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_gallery);
-        ImgViewFotoProfilo = findViewById(R.id.dlg_image);
+        setContentView(R.layout.activity_detect);
+        gridView=findViewById(R.id.grid);
+        ImgViewFotoProfilo = findViewById(R.id.imgFace);
 
         Intent i = getIntent();
         final String[] uriProfilo = {i.getStringExtra("uri")};
@@ -146,38 +130,31 @@ public class Detector extends AppCompatActivity {
                             Picasso.get().load(key).into( new Target() {
                                 @Override
                                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                                  //  Log.e("sto convertndo","converto");
+                                  //  Log.e("sto convertendo","converto");
                                     arrayBitmap.add(bitmap);
                                     if(arrayBitmap.size()>=arrayofuri.size()) {
                                         face_detector(BitMapFotoDelProfilo,"original", uriProfilo[0]);
                                         for(int i = 0; i< arrayBitmap.size(); i++)
-                                                face_detector(arrayBitmap.get(i),"test",arrayofuri.get(i));
+                                            face_detector(arrayBitmap.get(i),"test",arrayofuri.get(i));
                                     }
-
                                 }
-
                                 @Override
                                 public void onBitmapFailed(Exception e, Drawable errorDrawable) {
 
                                 }
-
-
                                 @Override
                                 public void onPrepareLoad(Drawable placeHolderDrawable) {
 
                                 }
                             });
-
-
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
 
                     }
                 });
-
-
     }
+
     /** calcolo della distanza tra i il volto presente nella foto del profilo e il volto individuatoo in una foto postata**/
     private  float calculate_distance(float[][] ori_embedding, float[][] test_embedding) {
         float sum = (float) 0.0;
@@ -260,19 +237,20 @@ public class Detector extends AppCompatActivity {
                                         Log.e("distance",String.valueOf(distance));
                                         if(distance<1.01){
                                             /** volto riconosciuto**/
-                                            BitmpasVolti.put(bitmap,distance);
+                                            //BitmpasVolti.put(bitmap,distance);
+                                            distanza.add(distance+"");
+                                            bitmapArray.add(bitmap);
 
-                                            Log.e("distace ok","distace ok" + BitmpasVolti.size());
+                                            CustomAdapter1 customAdapter=new CustomAdapter1(bitmapArray,distanza,getApplicationContext());
+                                            gridView.setAdapter(customAdapter);
+
+                                            Log.e("distace ok","distace ok, volti riconosciuti=" + BitmpasVolti.size());
                                         }
-
-
                                         else
                                             Log.e("distace not ok","distace not ok");
                                     }
-
-                                       }
-                      }
-
+                                }
+                            }
                         })
                 .addOnFailureListener(
                         new OnFailureListener() {
@@ -318,5 +296,63 @@ public class Detector extends AppCompatActivity {
             test_embedding=embedding;
         }
 
+    }
+
+
+    public class CustomAdapter1 extends BaseAdapter {
+
+        private String[] imagesName;
+        private int[] imagesPhoto;
+        private Context context;
+        private LayoutInflater layoutInflater;
+
+        private ArrayList<Bitmap> bitmap;
+        private ArrayList<String> distanza;
+
+        public CustomAdapter1(String[] imagesName, int[] imagesPhoto, Context context) {
+            this.imagesName = imagesName;
+            this.imagesPhoto = imagesPhoto;
+            this.context = context;
+            this.layoutInflater =  (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
+        }
+
+        public CustomAdapter1(ArrayList<Bitmap>  bitmap, ArrayList<String> distanza, Context context) {
+            this.bitmap = bitmap;
+            this.distanza=distanza;
+            this.context = context;
+            this.layoutInflater =  (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
+        }
+
+        @Override
+        public int getCount() {
+            //return imagesPhoto.length;
+            return distanza.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View view, ViewGroup viewGroup) {
+
+            if(view == null){
+                view=layoutInflater.inflate(R.layout.row_item,viewGroup,false);
+            }
+
+            TextView textGrid = view.findViewById(R.id.textGrid);
+            ImageView imageGrid = view.findViewById(R.id.imageGrid);
+
+            textGrid.setText(distanza.get(position));
+            imageGrid.setImageBitmap(bitmap.get(position));
+
+            return view;
+        }
     }
 }

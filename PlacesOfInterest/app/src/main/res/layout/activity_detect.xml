@@ -9,15 +9,36 @@
     android:orientation="vertical"
     tools:context=".Detect">
 
+    <TextView
+        android:id="@+id/text_face_ori"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Foto Profilo Utente"
+        android:textAllCaps="false"
+        android:textSize="22sp"
+        android:textColor="@color/colorPrimaryDark"
+        android:textStyle="bold" />
+
     <ImageView
         android:id="@+id/imgFace"
         android:layout_width="wrap_content"
-        android:layout_height="244dp"
-        android:layout_marginTop="16dp"
+        android:layout_height="230dp"
+        android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@drawable/angelo" />
+
+    <TextView
+        android:id="@+id/text_face_test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Foto in cui è presente la sua faccia"
+        android:textAllCaps="false"
+        android:textSize="22sp"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/colorPrimaryDark"
+        android:textStyle="bold" />
 
     <GridView
         android:id="@+id/grid"
