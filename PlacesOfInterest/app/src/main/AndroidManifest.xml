@@ -27,7 +27,7 @@
         <activity android:name=".CreatActivity"></activity>
         <activity android:name=".RegisterActivity" />
 
-        <activity android:name=".GalleryActivity"/>
+        <activity android:name=".Detector"/>
 
         <uses-library
             android:name="org.apache.http.legacy"

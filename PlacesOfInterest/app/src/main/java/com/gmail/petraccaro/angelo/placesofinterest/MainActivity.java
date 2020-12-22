@@ -1,3 +1,4 @@
+
 package com.gmail.petraccaro.angelo.placesofinterest;
 
 import android.annotation.SuppressLint;
@@ -159,8 +160,9 @@ public class MainActivity extends AppCompatActivity {
           Toast.makeText(this,R.string.NuovoPost,Toast.LENGTH_LONG);
 
     }
-    public boolean Avvia_Riconoscimento(MenuItem item) {
-        Intent i=new Intent(this,GalleryActivity.class);
+  public boolean Avvia_Riconoscimento(MenuItem item) {
+        Intent i=new Intent(this, Detector.class);
+        i.putExtra("uri",userLogged.getUriFotoDelProfilo());
         startActivity(i);
         return true;
     }
@@ -386,4 +388,3 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 }
-
