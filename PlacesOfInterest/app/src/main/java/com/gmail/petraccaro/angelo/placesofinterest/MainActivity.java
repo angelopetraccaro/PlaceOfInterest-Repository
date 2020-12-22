@@ -1,17 +1,25 @@
+
 package com.gmail.petraccaro.angelo.placesofinterest;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.Image;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -36,12 +44,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
-import org.checkerframework.checker.units.qual.A;
-
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -59,8 +68,6 @@ public class MainActivity extends AppCompatActivity {
     private CircleImageView imgviewFotoProfilo;
     private User userLogged;
 
-    private ArrayList<ElementoLista> PublicList = new ArrayList<ElementoLista>();
-    private ArrayList<ElementoLista> PrivateList = new ArrayList<ElementoLista>();
 
 
     @Override
@@ -68,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_user_nav);
         Intent IntentInizializzazione = getIntent();
+
 
 
         String nome,cognome,username,password,email,uriFotoDelProfilo;
@@ -91,9 +99,7 @@ public class MainActivity extends AppCompatActivity {
             user.setText(userLogged.getUsername());
 
             StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(userLogged.getUriFotoDelProfilo());
-            Picasso.get().load(userLogged.getUriFotoDelProfilo()).into(imgviewFotoProfilo);
-            menu.getItem(0).setTitle(userLogged.getNome());
-
+            Picasso.get().load(userLogged.getUriFotoDelProfilo()).into(imgviewFotoProfilo); menu.getItem(0).setTitle(userLogged.getNome());
 
 
         }
@@ -108,8 +114,12 @@ public class MainActivity extends AppCompatActivity {
 
 
         }
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
+
+
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+ 
         setSupportActionBar(toolbar);
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mViewPager = findViewById(R.id.container);
@@ -150,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
           Toast.makeText(this,R.string.NuovoPost,Toast.LENGTH_LONG);
 
     }
-    public boolean Avvia_Riconoscimento(MenuItem item) {
+  public boolean Avvia_Riconoscimento(MenuItem item) {
         Intent i=new Intent(this, Detector.class);
         i.putExtra("uri",userLogged.getUriFotoDelProfilo());
         startActivity(i);
@@ -305,7 +315,8 @@ public class MainActivity extends AppCompatActivity {
                             ElementoLista els = ds.getValue(ElementoLista.class);
                             if(els.getAvailable() == true)
                                 PublicList.add(els);
-                             }
+
+                        }
 
                     ListOfPhotos.setAdapter(new CustomAdapter(getContext(), R.layout.list_item, PublicList));
                     ProgressBar.setVisibility(View.INVISIBLE);
@@ -377,4 +388,3 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 }
-
