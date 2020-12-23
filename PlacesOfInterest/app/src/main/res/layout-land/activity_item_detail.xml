@@ -27,7 +27,7 @@
             app:toolbarId="@+id/toolbar">
 
             <HorizontalScrollView
-                android:id="@+id/Horizontal"
+                android:id="@+id/horizontal"
                 android:layout_width="522dp"
                 android:layout_height="100dp"
                 android:layout_marginStart="8dp"
