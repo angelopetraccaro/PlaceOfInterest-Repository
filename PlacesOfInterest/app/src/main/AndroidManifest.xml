@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.gmail.petraccaro.angelo.placesofinterest">
 
     <meta-data
@@ -24,10 +25,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".CreatActivity"></activity>
+        <activity android:name=".CreateActivity"></activity>
         <activity android:name=".RegisterActivity" />
+        <service android:name=".ConvertitoreUriToBitmap"
+            android:label="ConvertitoreUriToBitmap"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service android:name=".Riconoscitore"
+            android:label="Riconoscitore"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            tools:ignore="Instantiatable" />
+        <activity android:name=".Detector">
 
-        <activity android:name=".Detector"/>
+        </activity>
+
+
 
         <uses-library
             android:name="org.apache.http.legacy"
@@ -48,7 +59,6 @@
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".CreateActivity" />
 
         <activity android:name=".ShowMapActivity" />
 
@@ -83,4 +93,4 @@
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
-</manifest>
+</manifest>
