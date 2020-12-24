@@ -91,7 +91,6 @@
 
     <Button
         android:id="@+id/email_sign_in_button"
-        style="?android:textAppearanceSmall"
         android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -101,6 +100,7 @@
         android:shadowColor="#FFFFFF"
         android:text="Login"
         android:textStyle="bold"
+        android:textColor="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/txt_no_account"

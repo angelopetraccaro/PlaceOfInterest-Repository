@@ -107,7 +107,7 @@ public class Detector extends AppCompatActivity {
         Picasso.get().load(uriProfilo[0]).into(ImgViewFotoProfilo);
         final Bitmap BitMapFotoDelProfilo = ((BitmapDrawable)ImgViewFotoProfilo.getDrawable()).getBitmap();
         try {
-            tflite=new Interpreter(loadmodelfile(this));
+            tflite=new Interpreter(loadModelFile(this));
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -133,9 +133,9 @@ public class Detector extends AppCompatActivity {
                                   //  Log.e("sto convertendo","converto");
                                     arrayBitmap.add(bitmap);
                                     if(arrayBitmap.size()>=arrayofuri.size()) {
-                                        face_detector(BitMapFotoDelProfilo,"original", uriProfilo[0]);
+                                        faceDetector(BitMapFotoDelProfilo,"original", uriProfilo[0]);
                                         for(int i = 0; i< arrayBitmap.size(); i++)
-                                            face_detector(arrayBitmap.get(i),"test",arrayofuri.get(i));
+                                            faceDetector(arrayBitmap.get(i),"test",arrayofuri.get(i));
                                     }
                                 }
                                 @Override
@@ -156,7 +156,7 @@ public class Detector extends AppCompatActivity {
     }
 
     /** calcolo della distanza tra i il volto presente nella foto del profilo e il volto individuatoo in una foto postata**/
-    private  float calculate_distance(float[][] ori_embedding, float[][] test_embedding) {
+    private  float calculateDistance(float[][] ori_embedding, float[][] test_embedding) {
         float sum = (float) 0.0;
         float diff = (float) 0.0;
         for(int i=0;i<192;i++){
@@ -182,7 +182,7 @@ public class Detector extends AppCompatActivity {
         return imageProcessor.process(inputImageBuffer);
     }
     /** carimento del modello **/
-    private  MappedByteBuffer loadmodelfile(Activity activity) throws IOException {
+    private  MappedByteBuffer loadModelFile(Activity activity) throws IOException {
         AssetFileDescriptor fileDescriptor=activity.getAssets().openFd("mobile_face_net.tflite");
        // Log.e("FileDesc",fileDescriptor.toString());
         FileInputStream inputStream=new FileInputStream(fileDescriptor.getFileDescriptor());
@@ -205,7 +205,7 @@ public class Detector extends AppCompatActivity {
      * @param imagetype tipo dell'immagine( usato per differenziare l'immagine del profilo da quelle di test)
      * @param uri uri dell'immagine che il face detector processa( usata per le verifche, dopo la possiamo anche eliminare)
      */
-    public  void face_detector(final Bitmap bitmap, final String imagetype, final String uri){
+    public  void faceDetector(final Bitmap bitmap, final String imagetype, final String uri){
 
         final InputImage image = InputImage.fromBitmap(bitmap,0);
 
@@ -229,10 +229,10 @@ public class Detector extends AppCompatActivity {
                                 for (Face face : faces) {
                                     Rect bounds = faces.get(0).getBoundingBox();
                                     cropped = Bitmap.createBitmap(bitmap, bounds.left, bounds.top, bounds.width(), bounds.height());
-                                    get_embaddings(cropped,imagetype);
+                                    getEmbaddings(cropped,imagetype);
 
                                     if(imagetype.equalsIgnoreCase("test")){
-                                        float distance = calculate_distance(ori_embedding,test_embedding);
+                                        float distance = calculateDistance(ori_embedding,test_embedding);
 
                                         Log.e("distance",String.valueOf(distance));
                                         if(distance<1.01){
@@ -267,7 +267,7 @@ public class Detector extends AppCompatActivity {
      * @param bitmap bitmap del volto riconosciuto
      * @param imagetype tipo dell'immagine( usato per differenziare l'immagine del profilo da quelle di test)
      */
-    public  void get_embaddings(Bitmap bitmap,String imagetype){
+    public  void getEmbaddings(Bitmap bitmap, String imagetype){
 
         TensorImage inputImageBuffer;
         float[][] embedding = new float[1][192];

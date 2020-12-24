@@ -19,33 +19,21 @@ public class User {
         this.uriFotoDelProfilo = uriFotoDelProfilo;
     }
     public  User(){}
-
-
-
     public String getCognome() {
         return cognome;
     }
-
-
-
     public String getUriFotoDelProfilo() {
         return uriFotoDelProfilo;
     }
-
     public String getPassword() {
         return password;
     }
-
-
-
     public String getNome() {
         return nome;
     }
-
     public String getUsername() {
         return username;
     }
-
     public String getEmail() {
         return email;
     }
