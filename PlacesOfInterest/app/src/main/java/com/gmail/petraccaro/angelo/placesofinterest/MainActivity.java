@@ -110,15 +110,10 @@ public class MainActivity extends AppCompatActivity {
             email = (String)savedInstanceState.get("email");
             uriFotoDelProfilo = (String) savedInstanceState.get("uriFotoDelProfilo");
             userLogged = new User(nome,cognome,username,email,password,uriFotoDelProfilo);
-
-
         }
 
 
-
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
- 
         setSupportActionBar(toolbar);
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mViewPager = findViewById(R.id.container);
@@ -132,13 +127,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i=new Intent(MainActivity.this,CreateActivity.class);
+                i.putExtra("username",userLogged.getUsername());
                 startActivityForResult(i,2);
             }
         });
 
-
-
     }
+
+
+
+
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
@@ -147,26 +145,24 @@ public class MainActivity extends AppCompatActivity {
         savedInstanceState.putString("username",userLogged.getUsername());
         savedInstanceState.putString("password",userLogged.getPassword());
         savedInstanceState.putString("email",userLogged.getEmail());
-
         savedInstanceState.putString("uriFotoDelProfilo",userLogged.getUriFotoDelProfilo());
         super.onSaveInstanceState(savedInstanceState);
 
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data){
-
         if(resultCode ==RESULT_OK )
           Toast.makeText(this,R.string.NuovoPost,Toast.LENGTH_LONG);
-
     }
-  public boolean Avvia_Riconoscimento(MenuItem item) {
+
+  public boolean avviaRiconoscimento(MenuItem item) {
         Intent i=new Intent(this, Detector.class);
         i.putExtra("uri",userLogged.getUriFotoDelProfilo());
         startActivity(i);
         return true;
     }
 
-    public boolean Logout(MenuItem item) {
+    public boolean logout(MenuItem item) {
             FirebaseAuth mAuth = FirebaseAuth.getInstance();
             mAuth.signOut();
             finish();
@@ -230,9 +226,7 @@ public class MainActivity extends AppCompatActivity {
                     intent1.putExtra("latitude",PublicList.get(position).getLatitude());
                     intent1.putExtra("longitude",PublicList.get(position).getLongitude());
                     intent1.putExtra("foto",PublicList.get(position).getUrl_foto());
-
                     intent1.putExtra("didascalia",PublicList.get(position).getDidascalia());
-
                     intent1.putExtra("owner",PublicList.get(position).getOwner());
                     intent1.putExtra("keyondb",PublicList.get(position).getKeyOnDb());
                     } else{
@@ -241,9 +235,7 @@ public class MainActivity extends AppCompatActivity {
                     intent1.putExtra("latitude",PrivateList.get(position).getLatitude());
                     intent1.putExtra("longitude",PrivateList.get(position).getLongitude());
                     intent1.putExtra("foto",PrivateList.get(position).getUrl_foto());
-
                     intent1.putExtra("didascalia",PrivateList.get(position).getDidascalia());
-
                     intent1.putExtra("owner",PrivateList.get(position).getOwner());
                     Log.e("key",PrivateList.get(position).getKeyOnDb() );
                     intent1.putExtra("keyondb",PrivateList.get(position).getKeyOnDb());
@@ -272,12 +264,12 @@ public class MainActivity extends AppCompatActivity {
                                    PublicList.remove(el);
                                }
                            });
+                            }else
+                                Toast.makeText(getContext(),"You are not the owner",Toast.LENGTH_LONG).show();
 
-                           }else
-                           Toast.makeText(getContext(),"You are not the owner",Toast.LENGTH_LONG).show();
 
-                           }else{
-                       /** nella parte private ci sono le foto dell'utente che non ha ancora deciso di pubblicare **/
+                            }else{
+                              /** nella parte private ci sono le foto dell'utente che non ha ancora deciso di pubblicare **/
                                 final ElementoLista el =  PrivateList.get(position);
                                 final String k = el.getKeyOnDb();
                                 StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(el.getUrl_foto());
@@ -314,7 +306,6 @@ public class MainActivity extends AppCompatActivity {
                             ElementoLista els = ds.getValue(ElementoLista.class);
                             if(els.getAvailable() == true)
                                 PublicList.add(els);
-
                         }
 
                     ListOfPhotos.setAdapter(new CustomAdapter(getContext(), R.layout.list_item, PublicList));
@@ -326,7 +317,6 @@ public class MainActivity extends AppCompatActivity {
                     ProgressBar.setVisibility(View.VISIBLE);
                 }
             });
-
         }
 
         /**
@@ -345,17 +335,13 @@ public class MainActivity extends AppCompatActivity {
                         ElementoLista els = ds.getValue(ElementoLista.class);
                         if(els.getAvailable()== false) PrivateList.add(els);
                         ProgressBar.setVisibility(View.INVISIBLE);
-
                     }
-
                     ListOfPhotos.setAdapter(new CustomAdapter(getContext(), R.layout.list_item, PrivateList));
-
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
                     ProgressBar.setVisibility(View.VISIBLE);
-
                 }
             });
         }

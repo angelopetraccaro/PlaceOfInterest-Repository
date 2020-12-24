@@ -87,6 +87,9 @@ public class CreateActivity extends AppCompatActivity {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create);
+        Intent inUs = getIntent();
+        String userName = inUs.getStringExtra("username");
+
 
         takefoto = (ImageButton) findViewById(R.id.take);
         galleria = (ImageButton) findViewById(R.id.apri);
@@ -95,7 +98,6 @@ public class CreateActivity extends AppCompatActivity {
         coord = (TextView) findViewById(R.id.text_cord);
         add = (Button) findViewById(R.id.imageButton);
         coordi =(TextView) findViewById(R.id.edit_cord);
-
         nom = (EditText) findViewById(R.id.NomeText);
         b_desc = (EditText) findViewById(R.id.b_desc);
         didascalia = (TextView) findViewById(R.id.Didascalia);
@@ -114,13 +116,7 @@ public class CreateActivity extends AppCompatActivity {
                 takePhoto(v);
             }
         });
-
-
         pub.setChecked(true);
-
-
-
-
         pub.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
