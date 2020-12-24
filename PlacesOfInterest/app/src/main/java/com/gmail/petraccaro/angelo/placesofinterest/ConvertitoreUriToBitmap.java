@@ -33,7 +33,6 @@ public class ConvertitoreUriToBitmap extends IntentService {
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
      *
-     *
      */
     public static final String FILTER_ACTION_KEY = "convertitore";
     private ArrayList<String>ArrayUri = null;
@@ -62,10 +61,7 @@ public class ConvertitoreUriToBitmap extends IntentService {
     private void convetBitmap(final String uri) {
         final Bitmap[] bitmap = {null};
 
-
                    // bitmap[0] = Glide.with(getApplicationContext()).asBitmap().load(uri).into(100, 100).get();
-
-
 
                  Glide.with(this)
                 .asBitmap()
@@ -102,11 +98,6 @@ public class ConvertitoreUriToBitmap extends IntentService {
                     public void onLoadCleared(@Nullable Drawable placeholder) {
                     }
                 });
-
-
-
-
-
 
 
     }

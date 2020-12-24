@@ -6,8 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/btn_arrotondato"
     android:textAlignment="center"
-    android:orientation="vertical"
-    tools:context=".Detect">
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/text_face_ori"

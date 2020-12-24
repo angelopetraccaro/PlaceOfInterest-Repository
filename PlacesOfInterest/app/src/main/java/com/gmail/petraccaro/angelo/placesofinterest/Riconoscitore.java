@@ -1,19 +1,15 @@
 package com.gmail.petraccaro.angelo.placesofinterest;
 
-import android.app.Activity;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
-import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.mlkit.vision.common.InputImage;
@@ -21,7 +17,6 @@ import com.google.mlkit.vision.face.Face;
 import com.google.mlkit.vision.face.FaceDetection;
 import com.google.mlkit.vision.face.FaceDetector;
 import com.google.mlkit.vision.face.FaceDetectorOptions;
-
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.Interpreter;
 import org.tensorflow.lite.support.common.TensorOperator;
@@ -30,7 +25,6 @@ import org.tensorflow.lite.support.image.ImageProcessor;
 import org.tensorflow.lite.support.image.TensorImage;
 import org.tensorflow.lite.support.image.ops.ResizeOp;
 import org.tensorflow.lite.support.image.ops.ResizeWithCropOrPadOp;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.MappedByteBuffer;
@@ -39,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Riconoscitore extends IntentService {
+    private ArrayList<String> distanza=new ArrayList<String>();
     private ArrayList<String> paths;
     private ArrayList<String> Filteredpaths;
     private  int imageSizeX;
@@ -61,7 +56,6 @@ public class Riconoscitore extends IntentService {
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
      *
-     *
      */
     public Riconoscitore() {
         super("Riconoscitore");
@@ -71,10 +65,8 @@ public class Riconoscitore extends IntentService {
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
 
-
         try {
             tflite=new Interpreter(loadmodelfile(Riconoscitore.this));
-
 
             paths = intent.getStringArrayListExtra("paths");
             Filteredpaths = new ArrayList<>();
@@ -90,12 +82,6 @@ public class Riconoscitore extends IntentService {
 
                 Thread.sleep(500);
             }
-
-
-
-
-
-
 
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
@@ -165,14 +151,12 @@ public class Riconoscitore extends IntentService {
 
 
         FaceDetector detector = FaceDetection.getClient(options);
-
         detector.process(image)
                 .addOnSuccessListener(
                         new OnSuccessListener<List<Face>>() {
                             @Override
                             public void onSuccess(List<Face> faces) {
 
-                                Log.e("sono il face detector","eccolo");
                                 for (Face face : faces) {
                                     Rect bounds = faces.get(0).getBoundingBox();
                                     cropped = Bitmap.createBitmap(bitmap, bounds.left, bounds.top, bounds.width(), bounds.height());
@@ -185,14 +169,9 @@ public class Riconoscitore extends IntentService {
                                         if(distance<1.01){
                                             /** volto riconosciuto**/
                                             Filteredpaths.add(path);
-                                            //BitmpasVolti.put(bitmap,distance);
-                                           // distanza.add(distance+"");
-                                            //bitmapArray.add(bitmap);
+                                            distanza.add(distance+"");
 
-                                            //Detector.CustomAdapter1 customAdapter=new Detector.CustomAdapter1(bitmapArray,distanza,getApplicationContext());
-                                            //gridView.setAdapter(customAdapter);
-
-                                            Log.e("distace ok","distace ok, volti riconosciuti=" + "ciao");
+                                            Log.e("distace ok","distace ok, volti riconosciuti="+distanza.size());
                                         }
                                         else
                                             Log.e("distace not ok","distace not ok");
@@ -247,8 +226,6 @@ public class Riconoscitore extends IntentService {
             test_embedding=embedding;
         }
 
-
-
     }
 
     private void sendCashbackInfoToClient(){
@@ -257,6 +234,7 @@ public class Riconoscitore extends IntentService {
             intent.setAction(FILTER_ACTION_KEY);
 
             intent.putStringArrayListExtra("arrayFilesFiltered",Filteredpaths);
+            intent.putStringArrayListExtra("arrayDistanceFiltered",distanza);
             sendBroadcast(intent);
         }
 
