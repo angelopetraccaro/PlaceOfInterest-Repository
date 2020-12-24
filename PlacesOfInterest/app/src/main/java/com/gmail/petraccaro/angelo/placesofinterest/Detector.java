@@ -95,11 +95,13 @@ public class Detector extends AppCompatActivity {
         customAdapter=new Detector.CustomAdapter1(getApplicationContext());
         Intent i = getIntent();
         final String[] uriProfilo = {i.getStringExtra("uri")};
+
         Picasso.get().load(uriProfilo[0]).into( new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                 Picasso.get().load(uriProfilo[0]).into(ImgViewFotoProfilo);
                 final Bitmap BitMapFotoDelProfilo = ((BitmapDrawable)ImgViewFotoProfilo.getDrawable()).getBitmap();
+
 
                 DatabaseReference myRef;
                 FirebaseDatabase db  = FirebaseDatabase.getInstance();
@@ -144,12 +146,14 @@ public class Detector extends AppCompatActivity {
 
         if(ImgViewFotoProfilo.getDrawable() == null) Log.e("null","null");
 
+
     }
     @Override
     protected void onStart() {
         setReceivers();
         //Log.e("sono on strt","sono start");
         super.onStart();
+
     }
 
     @Override
@@ -168,10 +172,14 @@ public class Detector extends AppCompatActivity {
         registerReceiver(myReceiver,intentFilter2);
 
 
+
+ 
+      
     }
     private class MyReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+
 
             if(intent.getAction().equalsIgnoreCase("convertitore")){
                 ArrayList<String> paths;

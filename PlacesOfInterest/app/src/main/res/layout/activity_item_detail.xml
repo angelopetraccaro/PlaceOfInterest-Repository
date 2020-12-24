@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
 
+    android:id="@+id/item"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     android:backgroundTint="@color/colorPrimary"
+    android:fitsSystemWindows="true"
     tools:context=".ReadActivity"
-    tools:ignore="MergeRootFrame"
-
-    >
+    tools:ignore="MergeRootFrame">
 
 
     <TextView
@@ -29,11 +27,11 @@
 
         android:textStyle="bold" />
 
-    <ScrollView
-        android:id="@+id/Horizontal"
+    <ImageView
+        android:id="@+id/horizontal"
         android:layout_width="match_parent"
         android:layout_height="319dp"
-        android:background="@color/colorPrimary"
+        android:scaleType="centerCrop"
         android:scrollbars="none"
         app:layout_constraintBottom_toTopOf="@+id/nome"
         app:layout_constraintEnd_toEndOf="parent"
@@ -41,15 +39,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/take">
 
-
-        <LinearLayout
-            android:id="@+id/gallery"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"></LinearLayout>
-
-
-    </ScrollView>
+    </ImageView>
 
     <TextView
         android:id="@+id/nome"
