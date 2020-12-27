@@ -14,14 +14,16 @@
         android:layout_height="wrap_content"
         android:text="Foto Profilo Utente"
         android:textAllCaps="false"
-        android:textSize="22sp"
         android:textColor="@color/colorPrimaryDark"
+        android:textSize="22sp"
         android:textStyle="bold" />
 
     <ImageView
         android:id="@+id/imgFace"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="230dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

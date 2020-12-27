@@ -203,7 +203,7 @@ public class Detector extends AppCompatActivity {
             TextView textGrid = view.findViewById(R.id.textGrid);
             ImageView imageGrid = view.findViewById(R.id.imageGrid);
 
-            textGrid.setText(distanza.get(position));
+            textGrid.setText("Distanza: "+distanza.get(position));
             imageGrid.setImageBitmap(bitmap.get(position));
 
             return view;
