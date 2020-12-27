@@ -12,8 +12,9 @@ public class ElementoLista {
     private String owner;
     private String keyOnDb;
     private boolean available;
+    private String username;
 
-    public ElementoLista(String nome, String breve_descrizione, String latitude, String longitude, String url_foto,  String didascalia, String owner,String key,boolean available) {
+    public ElementoLista(String nome, String breve_descrizione, String latitude, String longitude, String url_foto,  String didascalia, String owner,String key,boolean available,String username) {
         this.nome = nome;
         this.breve_descrizione = breve_descrizione;
         this.latitude = latitude;
@@ -23,6 +24,7 @@ public class ElementoLista {
         this.didascalia = didascalia;
         this.owner = owner;
         this.available = available;
+        this.username = username;
     }
 
     public  ElementoLista(){}
@@ -45,5 +47,6 @@ public class ElementoLista {
     public String getKeyOnDb() {
         return this.keyOnDb;
     }
+    public String getUsername(){return this.username;}
 
 }

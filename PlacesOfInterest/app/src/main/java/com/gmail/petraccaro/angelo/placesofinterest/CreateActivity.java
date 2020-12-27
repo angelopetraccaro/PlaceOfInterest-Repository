@@ -87,8 +87,7 @@ public class CreateActivity extends AppCompatActivity {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create);
-        Intent inUs = getIntent();
-        String userName = inUs.getStringExtra("username");
+
 
 
         takefoto = (ImageButton) findViewById(R.id.take);
@@ -346,13 +345,15 @@ public class CreateActivity extends AppCompatActivity {
      * @param outputUri uri della foto da salvare su firebase storage
      */
     public void addOnStorage(final Uri outputUri){
-
+        Intent inUs = getIntent();
+        final String userName = inUs.getStringExtra("username");
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final String breve = b_desc.getText().toString().trim();
                 final String nm = nom.getText().toString().trim();
                 final String ds = didascalia.getText().toString().trim();
+
 
                 FirebaseAuth mAuth = FirebaseAuth.getInstance();
                 final FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -389,7 +390,7 @@ public class CreateActivity extends AppCompatActivity {
                                         String uploadId = myRefToDb.push().getKey();
                                         ElementoLista el = new ElementoLista( nm,breve,
                                                 Double.toString(latitudine), Double.toString(longitudine), uriFoto.toString(),
-                                                ds, (currentUser != null) ? currentUser.getUid() : null, uploadId, available);
+                                                ds, (currentUser != null) ? currentUser.getUid() : null, uploadId, available,userName);
                                         myRefToDb.child(uploadId).setValue(el);
                                         Intent i = new Intent(CreateActivity.this, MainActivity.class);
                                         Intent returnIntent = new Intent();

@@ -14,6 +14,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
+
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 
@@ -36,9 +39,9 @@ public class CustomAdapter extends ArrayAdapter<ElementoLista>  {
         convertView = inflater.inflate(R.layout.list_item,null);
 
 
-
-        TextView n = convertView.findViewById(R.id.breveDescrizione);
-        TextView d = convertView.findViewById(R.id.NomeText);
+        TextView u = convertView.findViewById(R.id.breveDescrizione);
+        TextView n = convertView.findViewById(R.id.NomeText);
+        TextView d = convertView.findViewById(R.id.nomeText);
         ImageView i = convertView.findViewById(R.id.imageView2);
 
         ElementoLista c = getItem(position);
@@ -46,6 +49,7 @@ public class CustomAdapter extends ArrayAdapter<ElementoLista>  {
 
         n.setText(c.getNome());
         d.setText(c.getBreve_descrizione());
+        u.setText(c.getUsername());
 
         //picasso per passare da uri a img
         Uri myUri=Uri.parse(c.getUrl_foto());
