@@ -101,12 +101,16 @@ public class Detector extends AppCompatActivity {
     @Override
     protected void onStart() {
         setReceivers();
+
         super.onStart();
     }
 
     @Override
     protected void onStop() {
         unregisterReceiver(myReceiver);
+        CustomAdapter1 adapter = (CustomAdapter1) gridView.getAdapter();
+        adapter.clearData();
+
         super.onStop();
     }
 
@@ -144,15 +148,19 @@ public class Detector extends AppCompatActivity {
 
                 ArrayList<Bitmap> arrayFilteredBitmap = new ArrayList<>();
                 for(String path: Filteredpaths){
+
                     Bitmap bitmap = BitmapFactory.decodeFile(path);
                     arrayFilteredBitmap.add(bitmap);
                 }
 
                 CustomAdapter1 customAdapter=new CustomAdapter1(arrayFilteredBitmap,FilteredDistance,getApplicationContext());
                 gridView.setAdapter(customAdapter);
+
             }
         }
     }
+
+
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)
@@ -207,6 +215,12 @@ public class Detector extends AppCompatActivity {
             imageGrid.setImageBitmap(bitmap.get(position));
 
             return view;
+        }
+
+
+        public void clearData(){
+            this.bitmap.clear();
+            this.distanza.clear();
         }
     }
 }

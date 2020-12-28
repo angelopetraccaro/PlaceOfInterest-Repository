@@ -76,10 +76,9 @@ public class Riconoscitore extends IntentService {
             Thread.sleep(1000);
             paths.remove(paths.get(0));
             for(String path : paths){
-
+                Log.e("path",path);
                 Bitmap bitmap2 = BitmapFactory.decodeFile(path);
                 face_detector(path,bitmap2,"test");
-
                 Thread.sleep(500);
             }
 
@@ -158,7 +157,7 @@ public class Riconoscitore extends IntentService {
                             public void onSuccess(List<Face> faces) {
 
                                 for (Face face : faces) {
-                                    Rect bounds = faces.get(0).getBoundingBox();
+                                    Rect bounds = face.getBoundingBox();
                                     cropped = Bitmap.createBitmap(bitmap, bounds.left, bounds.top, bounds.width(), bounds.height());
                                     get_embaddings(cropped,imagetype);
 
