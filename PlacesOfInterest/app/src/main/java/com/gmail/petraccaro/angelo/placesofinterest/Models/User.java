@@ -1,4 +1,4 @@
-package com.gmail.petraccaro.angelo.placesofinterest;
+package com.gmail.petraccaro.angelo.placesofinterest.Models;
 
 public class User {
     private String nome;

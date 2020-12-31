@@ -1,4 +1,4 @@
-package com.gmail.petraccaro.angelo.placesofinterest;
+package com.gmail.petraccaro.angelo.placesofinterest.Controllers.Services;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -32,7 +32,7 @@ import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Riconoscitore extends IntentService {
+public class RecognizerService extends IntentService {
     private ArrayList<String> distanza=new ArrayList<String>();
     private ArrayList<String> paths;
     private ArrayList<String> Filteredpaths;
@@ -57,16 +57,21 @@ public class Riconoscitore extends IntentService {
      * Creates an IntentService.  Invoked by your subclass's constructor.
      *
      */
-    public Riconoscitore() {
+    public RecognizerService() {
         super("Riconoscitore");
 
+    }
+    @Override
+    public void onDestroy() {
+
+        Toast.makeText(this, "MyService Stopped", Toast.LENGTH_LONG).show();
     }
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
 
         try {
-            tflite=new Interpreter(loadmodelfile(Riconoscitore.this));
+            tflite=new Interpreter(loadmodelfile(RecognizerService.this));
 
             paths = intent.getStringArrayListExtra("paths");
             Filteredpaths = new ArrayList<>();
@@ -76,7 +81,7 @@ public class Riconoscitore extends IntentService {
             Thread.sleep(1000);
             paths.remove(paths.get(0));
             for(String path : paths){
-                Log.e("path",path);
+                //Log.e("path",path);
                 Bitmap bitmap2 = BitmapFactory.decodeFile(path);
                 face_detector(path,bitmap2,"test");
                 Thread.sleep(500);
@@ -90,7 +95,7 @@ public class Riconoscitore extends IntentService {
 
     /** carimento del modello
      * @param activity**/
-    private MappedByteBuffer loadmodelfile(Riconoscitore activity) throws IOException {
+    private MappedByteBuffer loadmodelfile(RecognizerService activity) throws IOException {
         AssetFileDescriptor fileDescriptor=activity.getAssets().openFd("mobile_face_net.tflite");
         // Log.e("FileDesc",fileDescriptor.toString());
         FileInputStream inputStream=new FileInputStream(fileDescriptor.getFileDescriptor());
@@ -149,8 +154,8 @@ public class Riconoscitore extends IntentService {
                         .build();
 
 
-        FaceDetector detector = FaceDetection.getClient(options);
-        detector.process(image)
+       faceDetector= FaceDetection.getClient(options);
+        faceDetector.process(image)
                 .addOnSuccessListener(
                         new OnSuccessListener<List<Face>>() {
                             @Override

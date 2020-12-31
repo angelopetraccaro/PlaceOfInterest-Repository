@@ -1,7 +1,9 @@
-package com.gmail.petraccaro.angelo.placesofinterest;
+package com.gmail.petraccaro.angelo.placesofinterest.Activities;
 
 import android.os.Bundle;
 import androidx.fragment.app.FragmentActivity;
+
+import com.gmail.petraccaro.angelo.placesofinterest.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;

@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:backgroundTint="@color/colorPrimary"
     android:fitsSystemWindows="true"
-    tools:context=".ReadActivity"
+    tools:context=".Activities.ReadActivity"
     tools:ignore="MergeRootFrame">
 
 

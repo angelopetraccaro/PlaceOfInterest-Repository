@@ -1,4 +1,4 @@
-package com.gmail.petraccaro.angelo.placesofinterest;
+package com.gmail.petraccaro.angelo.placesofinterest.Controllers.Services;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -29,7 +29,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-public class ConvertitoreUriToBitmap extends IntentService {
+public class UriToBitmapService extends IntentService {
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
      *
@@ -41,7 +41,7 @@ public class ConvertitoreUriToBitmap extends IntentService {
 
 
     private ArrayList<Bitmap>arrayOfBitmap ;
-    public ConvertitoreUriToBitmap() {
+    public UriToBitmapService() {
       super("convertitore");
         arrayOfBitmap = new ArrayList<>();
         paths = new ArrayList<>();

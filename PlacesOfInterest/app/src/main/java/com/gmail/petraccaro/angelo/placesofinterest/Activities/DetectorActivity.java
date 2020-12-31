@@ -1,4 +1,4 @@
-package com.gmail.petraccaro.angelo.placesofinterest;
+package com.gmail.petraccaro.angelo.placesofinterest.Activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.BroadcastReceiver;
@@ -12,13 +12,14 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.TextView;
+
+import com.gmail.petraccaro.angelo.placesofinterest.Adapters.CustumAdapterRecognizedPhotos;
+import com.gmail.petraccaro.angelo.placesofinterest.Controllers.Services.UriToBitmapService;
+import com.gmail.petraccaro.angelo.placesofinterest.Controllers.Services.RecognizerService;
+import com.gmail.petraccaro.angelo.placesofinterest.Models.Post;
+import com.gmail.petraccaro.angelo.placesofinterest.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,7 +30,7 @@ import com.squareup.picasso.Target;
 import java.util.ArrayList;
 
 
-public class Detector extends AppCompatActivity {
+public class DetectorActivity extends AppCompatActivity {
     public ArrayList<String> distanza=new ArrayList<>();
     ArrayList<Bitmap> bitmapArray = new ArrayList<>();
     private ImageView ImgViewFotoProfilo;
@@ -66,14 +67,14 @@ public class Detector extends AppCompatActivity {
                         arrayofuri.clear();
                         arrayofuri.add(uriProfilo[0]);
                         for(DataSnapshot ds: snapshot.getChildren()){
-                            final ElementoLista els = ds.getValue(ElementoLista.class);
+                            final Post els = ds.getValue(Post.class);
                             arrayofuri.add(els.getUrl_foto());
                         }
 
                         /** faccio partire l'intent che attiva il servizio di riconoscimento *
                          *
                          */
-                        Intent i2 = new Intent(Detector.this, ConvertitoreUriToBitmap.class);
+                        Intent i2 = new Intent(DetectorActivity.this, UriToBitmapService.class);
                         i2.setAction(FILTER_ACTION_KEY);
                         i2.putStringArrayListExtra("arrayurifoto",arrayofuri);
                         startService(i2);
@@ -107,10 +108,7 @@ public class Detector extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-        unregisterReceiver(myReceiver);
-        CustomAdapter1 adapter = (CustomAdapter1) gridView.getAdapter();
-        adapter.clearData();
-
+        if(myReceiver != null) unregisterReceiver(myReceiver);
         super.onStop();
     }
 
@@ -136,7 +134,7 @@ public class Detector extends AppCompatActivity {
                 paths = intent.getStringArrayListExtra("arrayFiles");
                 Log.e("ricevo dalla conversione",String.valueOf(paths.size()));
 
-                Intent i3 = new Intent(Detector.this, Riconoscitore.class);
+                Intent i3 = new Intent(DetectorActivity.this, RecognizerService.class);
                 i3.setAction(FILTER_ACTION_KEY2);
 
                 i3.putStringArrayListExtra("paths",paths);
@@ -153,14 +151,14 @@ public class Detector extends AppCompatActivity {
                     arrayFilteredBitmap.add(bitmap);
                 }
 
-                CustomAdapter1 customAdapter=new CustomAdapter1(arrayFilteredBitmap,FilteredDistance,getApplicationContext());
+                CustumAdapterRecognizedPhotos customAdapter=new CustumAdapterRecognizedPhotos(arrayFilteredBitmap,FilteredDistance,getApplicationContext());
                 gridView.setAdapter(customAdapter);
 
             }
         }
     }
 
-
+/*
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)
@@ -170,57 +168,16 @@ public class Detector extends AppCompatActivity {
             finish();
         }
         return super.onKeyDown(keyCode, event);
-    }
+    }*/
 
-    public class CustomAdapter1 extends BaseAdapter {
+    @Override
+    public void onBackPressed() {
+        Log.e("vengo","vengo chiamato");
 
-        private Context context;
-        private LayoutInflater layoutInflater;
-        private ArrayList<Bitmap> bitmap;
-        private ArrayList<String> distanza;
+        stopService(new Intent(this, RecognizerService.class));
 
-        public CustomAdapter1(ArrayList<Bitmap> bitmap, ArrayList<String> distanza, Context applicationContext) {
-            this.bitmap=bitmap;
-            this.distanza=distanza;
-            this.context=applicationContext;
-            this.layoutInflater = (LayoutInflater) applicationContext.getSystemService(LAYOUT_INFLATER_SERVICE);
-        }
-
-        @Override
-        public int getCount() {
-            return distanza.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View view, ViewGroup viewGroup) {
-
-            if(view == null){
-                view=layoutInflater.inflate(R.layout.row_item,viewGroup,false);
-            }
-
-            TextView textGrid = view.findViewById(R.id.textGrid);
-            ImageView imageGrid = view.findViewById(R.id.imageGrid);
-
-            textGrid.setText("Distanza: "+distanza.get(position));
-            imageGrid.setImageBitmap(bitmap.get(position));
-
-            return view;
-        }
+        super.onBackPressed();
 
 
-        public void clearData(){
-            this.bitmap.clear();
-            this.distanza.clear();
-        }
     }
 }

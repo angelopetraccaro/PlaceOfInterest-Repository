@@ -1,24 +1,16 @@
-package com.gmail.petraccaro.angelo.placesofinterest;
+package com.gmail.petraccaro.angelo.placesofinterest.Activities;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -32,6 +24,12 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.gmail.petraccaro.angelo.placesofinterest.Adapters.CustomAdapter;
+import com.gmail.petraccaro.angelo.placesofinterest.Controllers.Contract;
+import com.gmail.petraccaro.angelo.placesofinterest.Controllers.ControllerUser;
+import com.gmail.petraccaro.angelo.placesofinterest.Models.Post;
+import com.gmail.petraccaro.angelo.placesofinterest.Models.User;
+import com.gmail.petraccaro.angelo.placesofinterest.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -43,13 +41,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -60,12 +55,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Permette il passaggio alla ReadActivity per visualizzare una foto;
  *
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Contract {
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     private CircleImageView imgviewFotoProfilo;
     private User userLogged;
+    private ControllerUser cp = ControllerUser.getInstance();
 
 
 
@@ -75,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.layout_user_nav);
         Intent IntentInizializzazione = getIntent();
 
+        cp.SetContext(this);
 
 
         String nome,cognome,username,password,email,uriFotoDelProfilo;
@@ -126,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i=new Intent(MainActivity.this,CreateActivity.class);
+                Intent i=new Intent(MainActivity.this, CreateActivity.class);
                 i.putExtra("username",userLogged.getUsername());
                 startActivityForResult(i,2);
             }
@@ -156,19 +153,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
   public boolean avviaRiconoscimento(MenuItem item) {
-        Intent i=new Intent(this, Detector.class);
+        Intent i=new Intent(this, DetectorActivity.class);
         i.putExtra("uri",userLogged.getUriFotoDelProfilo());
         startActivity(i);
         return true;
     }
 
-    public boolean logout(MenuItem item) {
-            FirebaseAuth mAuth = FirebaseAuth.getInstance();
-            mAuth.signOut();
-            finish();
-            Intent i=new Intent(this,LoginActivity.class);
-            startActivity(i);
-            return true;
+    public void logout(MenuItem item) { cp.Logout(); }
+
+    @Override
+    public void OnSuccess(Object obj) {
+        finish();
+        Intent i=new Intent(this, LoginActivity.class);
+        startActivity(i);
+    }
+
+    @Override
+    public void OnError(String message) {
+
     }
 
     /**
@@ -177,8 +179,8 @@ public class MainActivity extends AppCompatActivity {
     public static class PlaceholderFragment extends Fragment {
         private static final String ARG_SECTION_NUMBER = "section_number";
         private ListView ListOfPhotos;
-        private ArrayList<ElementoLista> PublicList = new ArrayList<ElementoLista>();
-        private ArrayList<ElementoLista> PrivateList = new ArrayList<ElementoLista>();
+        private ArrayList<Post> PublicList = new ArrayList<Post>();
+        private ArrayList<Post> PrivateList = new ArrayList<Post>();
         private FirebaseDatabase db;
         private DatabaseReference myRef;
         private FirebaseAuth mAuth;
@@ -219,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
             ListOfPhotos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent1=new Intent(getContext(),ReadActivity.class);
+                Intent intent1=new Intent(getContext(), ReadActivity.class);
                 if (getArguments().getInt(ARG_SECTION_NUMBER) == 1) {
                     intent1.putExtra("name",PublicList.get(position).getNome());
                     intent1.putExtra("b_desc",PublicList.get(position).getBreve_descrizione());
@@ -254,7 +256,7 @@ public class MainActivity extends AppCompatActivity {
                             if(getArguments().getInt(ARG_SECTION_NUMBER) == 1){
 
                             if (PublicList.get(position).getOwner().equalsIgnoreCase(currentUser.getUid())) {
-                                final ElementoLista el =  PublicList.get(position);
+                                final Post el =  PublicList.get(position);
                                 final String key = el.getKeyOnDb();
                                 StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(el.getUrl_foto());
                                 storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -270,7 +272,7 @@ public class MainActivity extends AppCompatActivity {
 
                             }else{
                               /** nella parte private ci sono le foto dell'utente che non ha ancora deciso di pubblicare **/
-                                final ElementoLista el =  PrivateList.get(position);
+                                final Post el =  PrivateList.get(position);
                                 final String k = el.getKeyOnDb();
                                 StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(el.getUrl_foto());
                                  storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -303,7 +305,7 @@ public class MainActivity extends AppCompatActivity {
                     PublicList.clear();
                     PrivateList.clear();
                     for(DataSnapshot ds: snapshot.getChildren()){
-                            ElementoLista els = ds.getValue(ElementoLista.class);
+                            Post els = ds.getValue(Post.class);
                             if(els.getAvailable() == true)
                                 PublicList.add(els);
                         }
@@ -332,7 +334,7 @@ public class MainActivity extends AppCompatActivity {
                     PrivateList.clear();
                     PublicList.clear();
                     for(DataSnapshot ds: snapshot.getChildren()){
-                        ElementoLista els = ds.getValue(ElementoLista.class);
+                        Post els = ds.getValue(Post.class);
                         if(els.getAvailable()== false) PrivateList.add(els);
                         ProgressBar.setVisibility(View.INVISIBLE);
                     }

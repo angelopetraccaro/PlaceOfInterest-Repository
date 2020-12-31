@@ -2,17 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9810b8ab-0978-4702-b72f-f6e86fef6640" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/PlacesOfInterest/app/src/main/assets/Qfacenet.tflite" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PlacesOfInterest/app/src/main/assets/labelmap.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PlacesOfInterest/app/src/main/assets/mobile_face_net.tflite" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PlacesOfInterest/app/src/main/res/drawable/gualtieri.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PlacesOfInterest/app/src/main/res/drawable/index.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PlacesOfInterest/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/PlacesOfInterest/.idea/jarRepositories.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PlacesOfInterest/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/PlacesOfInterest/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PlacesOfInterest/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/PlacesOfInterest/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PlacesOfInterest/app/src/main/java/com/gmail/petraccaro/angelo/placesofinterest/GalleryActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/PlacesOfInterest/app/src/main/java/com/gmail/petraccaro/angelo/placesofinterest/Detector.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PlacesOfInterest/app/src/main/java/com/gmail/petraccaro/angelo/placesofinterest/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/PlacesOfInterest/app/src/main/java/com/gmail/petraccaro/angelo/placesofinterest/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PlacesOfInterest/app/src/main/res/layout/activity_gallery.xml" beforeDir="false" afterPath="$PROJECT_DIR$/PlacesOfInterest/app/src/main/res/layout/activity_gallery.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PlacesOfInterest/app/src/main/java/com/gmail/petraccaro/angelo/placesofinterest/CreateActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/PlacesOfInterest/app/src/main/java/com/gmail/petraccaro/angelo/placesofinterest/CreateActivity.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,9 +38,9 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state x="740" y="275" key="FileChooserDialogImpl" timestamp="1608527568458">
+    <state x="740" y="275" key="FileChooserDialogImpl" timestamp="1609228664528">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="740" y="275" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1608527568458" />
+    <state x="740" y="275" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1609228664528" />
   </component>
 </project>
