@@ -26,7 +26,7 @@ import com.google.firebase.storage.UploadTask;
 public class ControllerUser {
     private FirebaseFirestore myDB = FirebaseFirestore.getInstance();
     private static ControllerUser controller = new ControllerUser();
-    Contract lw;
+    Contract lw;  //serve per far dialogare controllore e activity
     Uri uri= null;
 
 

@@ -77,6 +77,7 @@ public class CreateActivity extends AppCompatActivity implements ContractPhoto {
         super.onCreate(savedInstanceState);
         cp = ControllerPhoto.getInstance();
         cp.SetContext((ContractPhoto) this);
+
         setContentView(R.layout.activity_create);
         takefoto = (ImageButton) findViewById(R.id.take);
         galleria = (ImageButton) findViewById(R.id.apri);
