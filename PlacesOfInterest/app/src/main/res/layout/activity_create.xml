@@ -74,9 +74,10 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.414"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/b_desc"
-        app:layout_constraintVertical_bias="0.629" />
+        app:layout_constraintVertical_bias="0.461" />
 
     <EditText
         android:id="@+id/Didascalia"
@@ -107,6 +108,7 @@
         android:paddingRight="10dp"
         android:paddingBottom="10dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.39"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nome" />
 
@@ -114,7 +116,7 @@
         android:id="@+id/b_desc"
         android:layout_width="329dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="7dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/text_arrotondato"
         android:backgroundTint="@color/cardview_light_background"
         android:ems="10"
@@ -126,6 +128,7 @@
         android:paddingBottom="10dp"
 
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.414"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/breve_desc" />
 
@@ -178,17 +181,6 @@
         app:layout_constraintTop_toBottomOf="@+id/Didascalia" />
 
     <Switch
-        android:id="@+id/pubblico"
-        android:layout_width="77dp"
-        android:layout_height="23dp"
-        android:layout_marginTop="18dp"
-        android:layout_marginEnd="32dp"
-        android:scaleX="1"
-        android:scaleY="1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/b_desc" />
-
-    <Switch
         android:id="@+id/privato"
         android:layout_width="77dp"
         android:layout_height="23dp"
@@ -203,15 +195,15 @@
         android:id="@+id/edit_cord"
         android:layout_width="154dp"
         android:layout_height="18dp"
-        android:layout_marginTop="36dp"
-        android:layout_marginEnd="144dp"
-        android:text="posizione"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="116dp"
 
+        android:text="posizione"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pubblico" />
+        app:layout_constraintTop_toBottomOf="@+id/b_desc" />
 
     <TextView
         android:id="@+id/privat"
@@ -225,19 +217,6 @@
         android:visibility="invisible"
         app:layout_constraintEnd_toStartOf="@+id/privato"
         app:layout_constraintHorizontal_bias="0.209"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/b_desc" />
-
-    <TextView
-        android:id="@+id/pubkic"
-        android:layout_width="115dp"
-        android:layout_height="21dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="18dp"
-        android:text="Pubblico"
-        android:textColor="@color/design_default_color_primary_dark"
-        android:textSize="15sp"
-        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/b_desc" />
 
@@ -271,15 +250,15 @@
         android:id="@+id/text_cord"
         android:layout_width="54dp"
         android:layout_height="45dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="18dp"
+        android:layout_marginStart="76dp"
+        android:layout_marginTop="48dp"
         android:background="@drawable/ic_location"
         android:backgroundTint="@android:color/holo_blue_dark"
         android:textColor="@color/design_default_color_primary_dark"
         android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pubkic" />
+        app:layout_constraintTop_toBottomOf="@+id/b_desc" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

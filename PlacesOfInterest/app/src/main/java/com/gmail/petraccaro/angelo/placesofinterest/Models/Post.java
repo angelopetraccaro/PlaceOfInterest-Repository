@@ -11,10 +11,9 @@ public class Post {
     private String didascalia;
     private String owner;
     private String keyOnDb;
-    private boolean available;
     private String username;
 
-    public Post(String nome, String breve_descrizione, String latitude, String longitude, String url_foto, String didascalia, String owner, String key, boolean available, String username) {
+    public Post(String nome, String breve_descrizione, String latitude, String longitude, String url_foto, String didascalia, String owner, String key, String username) {
         this.nome = nome;
         this.breve_descrizione = breve_descrizione;
         this.latitude = latitude;
@@ -23,7 +22,6 @@ public class Post {
         this.keyOnDb = key;
         this.didascalia = didascalia;
         this.owner = owner;
-        this.available = available;
         this.username = username;
     }
 
@@ -43,7 +41,6 @@ public class Post {
     public String getOwner() {
         return owner;
     }
-    public boolean getAvailable(){return  available;}
     public String getKeyOnDb() {
         return this.keyOnDb;
     }

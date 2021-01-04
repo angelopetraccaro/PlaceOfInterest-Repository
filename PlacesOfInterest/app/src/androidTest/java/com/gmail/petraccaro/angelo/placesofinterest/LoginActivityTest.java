@@ -1,21 +1,41 @@
 package com.gmail.petraccaro.angelo.placesofinterest;
 
 
+import android.app.Activity;
+import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
+import com.gmail.petraccaro.angelo.placesofinterest.Activities.LoginActivity;
+import com.gmail.petraccaro.angelo.placesofinterest.Models.Post;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.UUID;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -33,10 +53,32 @@ public class LoginActivityTest {
     @Rule
     public ActivityTestRule<LoginActivity> mActivityTestRule = new ActivityTestRule<>(LoginActivity.class);
 
+
+    @Before
+    public void CreatePost(){
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        final FirebaseUser currentUser = mAuth.getCurrentUser();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        FirebaseStorage myStorage = FirebaseStorage.getInstance();
+        StorageReference rootStorageRef = myStorage.getReference();
+        StorageReference documentRef = rootStorageRef.child("images");
+        final DatabaseReference myRefToDb = database.getReference("photos");
+
+        String uploadId = myRefToDb.push().getKey();
+        Post el = new Post("test", "test",
+                Double.toString(120), Double.toString(120),
+                "https://firebasestorage.googleapis.com/v0/b/placesofinterest-2bc8d.appspot.com/o/images%2F1325357829?alt=media&token=fd52c26c-cec7-45f5-8d13-bb1bde6e16ed",
+                                "test", (currentUser != null) ? currentUser.getUid() : null, uploadId, "Angelo_Petrccaro");
+        myRefToDb.child(uploadId).setValue(el);
+        util.waitFor(500);
+    }
+
+
+
     @Test
     public void loginActivityTest() {
         ViewInteraction appCompatTextView = onView(
-                allOf(withId(R.id.txt_no_account), withText("Non hai un account? Registrati"),
+                allOf(withId(R.id.login), withText("Non hai un account? Registrati"),
                         childAtPosition(
                                 allOf(withId(R.id.layout2),
                                         childAtPosition(
@@ -71,4 +113,7 @@ public class LoginActivityTest {
             }
         };
     }
+
+
+
 }
