@@ -98,6 +98,10 @@ dependencies {
     implementation 'com.github.bumptech.glide:compiler:4.9.0'
     implementation 'com.github.bumptech.glide:annotations:4.11.0'
 
+    //recyclerview
+    def recyclerview_version = "1.1.0"
+    implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
+
 }
 
 apply plugin: 'com.google.gms.google-services'

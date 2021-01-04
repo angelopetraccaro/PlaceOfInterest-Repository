@@ -51,7 +51,7 @@ public class CreateActivity extends AppCompatActivity implements ContractPhoto {
     private static int RESULT_LOAD_IMAGE = 1;   //per chiamare la galleria
     private ImageView photoTakenImageView;
     private ImageButton takefoto, galleria;
-    private Switch pub, pri;
+
     private TextView  didascalia, coord,coordi;
     private Button add;
     private EditText nom, b_desc;
@@ -81,8 +81,7 @@ public class CreateActivity extends AppCompatActivity implements ContractPhoto {
         setContentView(R.layout.activity_create);
         takefoto = (ImageButton) findViewById(R.id.take);
         galleria = (ImageButton) findViewById(R.id.apri);
-        pub = (Switch) findViewById(R.id.pubblico);
-        pri = (Switch) findViewById(R.id.privato);
+
         coord = (TextView) findViewById(R.id.text_cord);
         add = (Button) findViewById(R.id.imageButton);
         coordi =(TextView) findViewById(R.id.edit_cord);
@@ -103,19 +102,6 @@ public class CreateActivity extends AppCompatActivity implements ContractPhoto {
             @Override
             public void onClick(View v) {
                 cp.takePhoto(v);
-            }
-        });
-        pub.setChecked(true);
-        pub.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (pub.isChecked()== false) {
-                    pri.setChecked(true);
-                    pri.setEnabled(true);
-                    Toast.makeText(CreateActivity.this, "Post privato", Toast.LENGTH_SHORT).show();
-                } else {
-                    pub.setEnabled(true);
-                }
             }
         });
 
@@ -280,20 +266,11 @@ public class CreateActivity extends AppCompatActivity implements ContractPhoto {
                 final String ds = didascalia.getText().toString().trim();
 
 
-                FirebaseAuth mAuth = FirebaseAuth.getInstance();
-                final FirebaseUser currentUser = mAuth.getCurrentUser();
-                    FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    FirebaseStorage myStorage = FirebaseStorage.getInstance();
-                    StorageReference rootStorageRef = myStorage.getReference();
-                    StorageReference documentRef = rootStorageRef.child("images");
-                    final DatabaseReference myRefToDb = database.getReference("photos");
 
                     Uri uri= outputUri;
                 if( !TextUtils.isEmpty(breve) && !TextUtils.isEmpty(nm) && !TextUtils.isEmpty(ds) ) {
                     add.setEnabled(false);
-                    if(pub.isChecked()) available = true;
-                    if(pri.isChecked()) available = false;
-                    cp.addOnStorage(uriFoto,nm,breve,ds,available,latitudine,longitudine,userName);
+                    cp.addOnStorage(uriFoto,nm,breve,ds,latitudine,longitudine,userName);
 
                 }else{
                     if(uriFoto == null)

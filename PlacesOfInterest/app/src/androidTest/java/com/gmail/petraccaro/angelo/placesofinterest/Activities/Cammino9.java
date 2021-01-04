@@ -86,8 +86,7 @@ public class Cammino9 {
             ViewInteraction textView = onView(
                     allOf(withText("PlacesOfInterest"),
                             withParent(allOf(withId(R.id.toolbar),
-                                    withParent(withId(R.id.appbar)))),
-                            isDisplayed()));
+                            isDisplayed()))));
             textView.check(matches(withText("PlacesOfInterest")));
             ViewInteraction textView1 = onView(
                     allOf(withText("PUBLIC"),
@@ -124,8 +123,7 @@ public class Cammino9 {
             ViewInteraction textView5 = onView(
                 allOf(withText("PlacesOfInterest"),
                         withParent(allOf(withId(R.id.toolbar),
-                                withParent(withId(R.id.appbar)))),
-                        isDisplayed()));
+                        isDisplayed()))));
             textView5.check(matches(withText("PlacesOfInterest")));
 
     }
