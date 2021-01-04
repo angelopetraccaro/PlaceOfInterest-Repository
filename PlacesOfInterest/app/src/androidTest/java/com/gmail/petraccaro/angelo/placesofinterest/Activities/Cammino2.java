@@ -1,4 +1,4 @@
-package com.gmail.petraccaro.angelo.placesofinterest;
+package com.gmail.petraccaro.angelo.placesofinterest.Activities;
 
 
 import android.view.View;
@@ -10,6 +10,8 @@ import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
+import com.gmail.petraccaro.angelo.placesofinterest.R;
+
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -18,6 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -28,13 +31,13 @@ import static org.hamcrest.Matchers.allOf;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class LoginActivityTest {
+public class Cammino2 {
 
     @Rule
     public ActivityTestRule<LoginActivity> mActivityTestRule = new ActivityTestRule<>(LoginActivity.class);
 
     @Test
-    public void loginActivityTest() {
+    public void registerOnBack() {
         ViewInteraction appCompatTextView = onView(
                 allOf(withId(R.id.txt_no_account), withText("Non hai un account? Registrati"),
                         childAtPosition(
@@ -46,11 +49,20 @@ public class LoginActivityTest {
                         isDisplayed()));
         appCompatTextView.perform(click());
 
-        ViewInteraction textView = onView(
-                allOf(withId(R.id.registrati), withText("Registrati"),
-                        withParent(withParent(withId(android.R.id.content))),
+        pressBack();
+        ViewInteraction textView5 = onView(
+                allOf(withId(R.id.login), withText("Login"),
+                        withParent(allOf(withId(R.id.layout2),
+                                withParent(withId(android.R.id.content)))),
                         isDisplayed()));
-        textView.check(matches(withText("Registrati")));
+        textView5.check(matches(withText("Login")));
+
+        ViewInteraction textView4 = onView(
+                allOf(withId(R.id.txt_no_account), withText("Non hai un account? Registrati"),
+                        withParent(allOf(withId(R.id.layout2),
+                                withParent(withId(android.R.id.content)))),
+                        isDisplayed()));
+        textView4.check(matches(withText("Non hai un account? Registrati")));
     }
 
     private static Matcher<View> childAtPosition(

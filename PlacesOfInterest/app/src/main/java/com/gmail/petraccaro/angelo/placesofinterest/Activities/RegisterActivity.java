@@ -314,4 +314,9 @@ public class RegisterActivity extends AppCompatActivity implements Contract, Con
     public void OnError(String message) {
 
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }

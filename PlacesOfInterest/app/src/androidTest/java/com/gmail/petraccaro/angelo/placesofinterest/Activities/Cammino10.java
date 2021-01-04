@@ -8,10 +8,10 @@ import android.view.ViewParent;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.ViewInteraction;
-import androidx.test.espresso.contrib.DrawerActions;
 import androidx.test.filters.LargeTest;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
+import androidx.test.rule.GrantPermissionRule;
 import androidx.test.runner.AndroidJUnit4;
 
 import com.gmail.petraccaro.angelo.placesofinterest.R;
@@ -27,25 +27,46 @@ import org.junit.runner.RunWith;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.pressBack;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.allOf;
-
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class Cammino4 {
+public class Cammino10 {
 
     @Rule
     public ActivityTestRule<LoginActivity> mActivityTestRule = new ActivityTestRule<>(LoginActivity.class);
 
+    @Rule
+    public GrantPermissionRule mGrantPermissionRule =
+            GrantPermissionRule.grant(
+                    "android.permission.WRITE_EXTERNAL_STORAGE");
+    @Rule
+    public GrantPermissionRule m1GrantPermissionRule =
+            GrantPermissionRule.grant(
+                    "com.google.android.providers.gsf.permission.READ_GSERVICES");
+    @Rule
+    public GrantPermissionRule m2GrantPermissionRule =
+            GrantPermissionRule.grant(
+                    "android.permission.ACCESS_FINE_LOCATION");
+    @Rule
+    public GrantPermissionRule m3GrantPermissionRule =
+            GrantPermissionRule.grant(
+                    "android.permission.ACCESS_COARSE_LOCATION");
+
+
+
     @Test
-    public void loginActivityTest2() throws InterruptedException {
+    public void loginActivityTest() throws InterruptedException {
         ViewInteraction appCompatAutoCompleteTextView = onView(
                 allOf(withId(R.id.email),
                         childAtPosition(
@@ -55,8 +76,7 @@ public class Cammino4 {
                                                 0)),
                                 2),
                         isDisplayed()));
-        appCompatAutoCompleteTextView.perform(replaceText("petraccaro.angelo@gmail.com"), closeSoftKeyboard());
-
+        appCompatAutoCompleteTextView.perform(replaceText(EspressoTestUtils.TEST_USER_EMAIL), closeSoftKeyboard());
 
         ViewInteraction appCompatEditText = onView(
                 allOf(withId(R.id.password),
@@ -67,7 +87,7 @@ public class Cammino4 {
                                                 0)),
                                 3),
                         isDisplayed()));
-        appCompatEditText.perform(replaceText("asd123"), closeSoftKeyboard());
+        appCompatEditText.perform(replaceText(EspressoTestUtils.TEST_USER_PASSWORD), closeSoftKeyboard());
 
         ViewInteraction appCompatButton = onView(
                 allOf(withId(R.id.email_sign_in_button), withText("Login"),
@@ -79,58 +99,61 @@ public class Cammino4 {
                                 4),
                         isDisplayed()));
         appCompatButton.perform(click());
+
+
         ActivityScenario.launch(getActivityIntent());
-        //Thread.sleep(700);
-        EspressoTestUtils.waitFor(700);
-        ViewInteraction textView = onView(
-                allOf(withText("PlacesOfInterest"),
-                        withParent(allOf(withId(R.id.toolbar),
-                                withParent(withId(R.id.appbar)))),
+        onView(withText("PlacesOfInterest")).inRoot(withDecorView(
+                not(mActivityTestRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
+
+        ViewInteraction imageButton = onView(
+                allOf(withId(R.id.fab),
+                        withParent(allOf(withId(R.id.main_content),
+                                withParent(withId(R.id.drawer_layout)))),
                         isDisplayed()));
-        textView.check(matches(withText("PlacesOfInterest")));
-        ViewInteraction textView1 = onView(
+        imageButton.check(matches(isDisplayed()));
+
+        ViewInteraction textView = onView(
                 allOf(withText("PUBLIC"),
                         withParent(allOf(withContentDescription("Public"),
                                 withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class)))),
                         isDisplayed()));
-        textView1.check(matches(withText("Public")));
+        textView.check(matches(withText("PUBLIC")));
 
         ViewInteraction textView2 = onView(
                 allOf(withText("PRIVATE"),
                         withParent(allOf(withContentDescription("Private"),
                                 withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class)))),
                         isDisplayed()));
-        textView2.check(matches(withText("Private")));
+        textView2.check(matches(withText("PRIVATE")));
 
-        EspressoTestUtils.waitFor(800);
-        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        // wait 1000 ms to avoid the exception:
+        // "com.google.android.apps.common.testing.ui.espresso.PerformException: Error performing 'single click' on view [...]
+        //      Caused by: java.lang.RuntimeException: Action will not be performed because the target view does not match one or more of the following constraints: at least 90 percent of the view's area is displayed to the user."
+        EspressoTestUtils.waitFor(3000);
 
-        //ViewInteraction ItemFun = onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(R.id.itemfun)).perform(NavigationViewActions.navigateTo(R.id.action_settings));
-        ViewInteraction navigationMenuItemView = onView(
-                allOf(childAtPosition(
-                        allOf(withId(R.id.design_navigation_view),
-                                childAtPosition(
-                                        withId(R.id.nav_view),
-                                        0)),
-                        7),
+        ViewInteraction floatingActionButton = onView(
+                allOf(withId(R.id.fab),
+                        childAtPosition(
+                                allOf(withId(R.id.main_content),
+                                        childAtPosition(
+                                                withId(R.id.drawer_layout),
+                                                0)),
+                                2),
                         isDisplayed()));
-        navigationMenuItemView.perform(click());
-        EspressoTestUtils.waitFor(800);
+        floatingActionButton.perform(click());
+        Thread.sleep(1000);
+        ActivityScenario.launch(getActivityIntent1());
 
-
+        pressBack();
+        ActivityScenario.launch(getActivityIntent());
+        Thread.sleep(1000);
         ViewInteraction textView5 = onView(
-                allOf(withId(R.id.login), withText("Login"),
-                        withParent(allOf(withId(R.id.layout2),
-                                withParent(withId(android.R.id.content)))),
+                allOf(withText("PlacesOfInterest"),
+                        withParent(allOf(withId(R.id.toolbar),
+                                withParent(withId(R.id.appbar)))),
                         isDisplayed()));
-        textView5.check(matches(withText("Login")));
+        textView5.check(matches(withText("PlacesOfInterest")));
 
-        ViewInteraction textView4 = onView(
-                allOf(withId(R.id.txt_no_account), withText("Non hai un account? Registrati"),
-                        withParent(allOf(withId(R.id.layout2),
-                                withParent(withId(android.R.id.content)))),
-                        isDisplayed()));
-        textView4.check(matches(withText("Non hai un account? Registrati")));
     }
 
     protected Intent getActivityIntent() {
@@ -142,12 +165,17 @@ public class Cammino4 {
         i.putExtra("username","Angelo_Petraccaro");
         i.putExtra("password","asd123");
         i.putExtra("email","petraccaro.angelo@gmail.com");
-
         i.putExtra("uriFotoDelProfilo","https://firebasestorage.googleapis.com/v0/b/placesofinterest-2bc8d.appspot.com/o/ProfileImages%2F20ACC158-687A-4411-906E-0333D49FE6E7.jpeg?alt=media&token=5d8e9d45-3db7-47c3-9f5e-e02aa2d55fbd");
-
         return i;
     }
 
+    protected Intent getActivityIntent1() {
+        Context targetContext = InstrumentationRegistry.getInstrumentation()
+                .getTargetContext();
+        Intent i = new Intent(targetContext, CreateActivity.class);
+        i.putExtra("username","Angelo_Petraccaro");
+        return i;
+    }
 
     private static Matcher<View> childAtPosition(
             final Matcher<View> parentMatcher, final int position) {
