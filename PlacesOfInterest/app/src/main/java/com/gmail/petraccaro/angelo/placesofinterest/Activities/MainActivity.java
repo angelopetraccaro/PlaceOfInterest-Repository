@@ -1,8 +1,5 @@
 package com.gmail.petraccaro.angelo.placesofinterest.Activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,6 +13,9 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.gmail.petraccaro.angelo.placesofinterest.Adapters.CustomAdapter;
 import com.gmail.petraccaro.angelo.placesofinterest.Controllers.Contract;
@@ -93,8 +93,6 @@ public class MainActivity extends AppCompatActivity implements Contract {
             getContactPublic();
 
 
-
-
             ListOfPhotos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -115,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements Contract {
                 public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
                     AlertDialog.Builder adb= new AlertDialog.Builder(MainActivity.this);
                     adb.setTitle("Delete?");
-                    adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    adb.setPositiveButton(R.string.Ok, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                                    if (PublicList.get(position).getOwner().equalsIgnoreCase(currentUser.getUid())) {
                                     final Post el =  PublicList.get(position);

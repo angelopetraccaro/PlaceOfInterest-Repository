@@ -1,14 +1,12 @@
 package com.gmail.petraccaro.angelo.placesofinterest.Activities;
 
-
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
-import androidx.annotation.NonNull;
-import androidx.test.espresso.DataInteraction;
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.filters.LargeTest;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -17,11 +15,8 @@ import androidx.test.runner.AndroidJUnit4;
 
 import com.gmail.petraccaro.angelo.placesofinterest.Models.Post;
 import com.gmail.petraccaro.angelo.placesofinterest.R;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -36,13 +31,13 @@ import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.pressBack;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
 
@@ -91,26 +86,21 @@ public class Cammino8 {
                         isDisplayed()));
         appCompatButton.perform(click());
 
-        /*ActivityScenario.launch(getActivityIntent());
+        ActivityScenario.launch(getActivityIntent());
         ViewInteraction textView = onView(
                 allOf(withText("PlacesOfInterest"),
                         withParent(allOf(withId(R.id.toolbar),
-                                withParent(withId(R.id.appbar)))),
-                        isDisplayed()));
-        textView.check(matches(withText("PlacesOfInterest")));*/
-        onView(withText("PlacesOfInterest")).inRoot(withDecorView(
-                not(mActivityTestRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
+                        isDisplayed()))));
+        textView.check(matches(withText("PlacesOfInterest")));
+
+        //onView(withText("PlacesOfInterest")).inRoot(withDecorView(
+          //      not(mActivityTestRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
         EspressoTestUtils.waitFor(3000);
 
-        DataInteraction constraintLayout = onData(anything())
-                .inAdapterView(allOf(withId(R.id.lista),
-                        childAtPosition(
-                                withId(R.id.constraintLayout),
-                                0)))
-                .atPosition(0);
-        constraintLayout.perform(click());
+        onData(anything()).inAdapterView(withId(R.id.PostList1)).atPosition(0).perform(click());
+        EspressoTestUtils.waitFor(1000);
 
-       /* ActivityScenario.launch(getActivityIntent1());
+        ActivityScenario.launch(getActivityIntent1());
         ViewInteraction textView2 = onView(
                 allOf(withId(R.id.didascalia), withText("Didascalia"),
                         withParent(allOf(withId(R.id.item),
@@ -126,13 +116,13 @@ public class Cammino8 {
         imageButton.check(matches(isDisplayed()));
 
         pressBack();
-
+        ActivityScenario.launch(getActivityIntent());
+        EspressoTestUtils.waitFor(1000);
         ViewInteraction textView3 = onView(
                 allOf(withText("PlacesOfInterest"),
                         withParent(allOf(withId(R.id.toolbar),
-                                withParent(withId(R.id.appbar)))),
-                        isDisplayed()));
-        textView3.check(matches(withText("PlacesOfInterest")));*/
+                        isDisplayed()))));
+        textView3.check(matches(withText("PlacesOfInterest")));
     }
 
 
@@ -150,37 +140,17 @@ public class Cammino8 {
     }
 
     protected Intent getActivityIntent1() {
-        PublicList.clear();
-        db = FirebaseDatabase.getInstance();
-        myRef  = db.getReference("photos");
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                PublicList.clear();
-                for (DataSnapshot ds : snapshot.getChildren()) {
-                    Post els = ds.getValue(Post.class);
-                    if (els.getAvailable() == true)
-                        PublicList.add(els);
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                //
-            }
-        });
-
         Context targetContext = InstrumentationRegistry.getInstrumentation()
                 .getTargetContext();
-        Intent i = new Intent(targetContext, CreateActivity.class);
-        i.putExtra("name",PublicList.get(0).getNome());
-        i.putExtra("b_desc",PublicList.get(0).getBreve_descrizione());
-        i.putExtra("latitude",PublicList.get(0).getLatitude());
-        i.putExtra("longitude",PublicList.get(0).getLongitude());
-        i.putExtra("foto",PublicList.get(0).getUrl_foto());
-        i.putExtra("didascalia",PublicList.get(0).getDidascalia());
-        i.putExtra("owner",PublicList.get(0).getOwner());
-        i.putExtra("keyondb",PublicList.get(0).getKeyOnDb());
-
+        Intent i = new Intent(targetContext, ReadActivity.class);
+        i.putExtra("name","Tocco Caudio");
+        i.putExtra("b_desc","Paesello Ai Piedi Del Taburno");
+        i.putExtra("latitude","41.1259804");
+        i.putExtra("longitude","14.6360056");
+        i.putExtra("foto","https://firebasestorage.googleapis.com/v0/b/placesofinterest-2bc8d.appspot.com/o/images%2FIMAGE_20201222_073877.jpg?alt=media&token=d0cc3df7-57a8-47fb-9550-85126af06fba");
+        i.putExtra("didascalia","22/12/2020 ore 07:39");
+        i.putExtra("owner","euoO41YduiSieqgoz9OWdDx16ew1");
+        i.putExtra("keyondb","MP8AArjLHS-Q0NMzYdH");
         return i;
     }
 

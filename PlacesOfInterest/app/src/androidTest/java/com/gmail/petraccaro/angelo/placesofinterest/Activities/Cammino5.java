@@ -3,15 +3,11 @@ package com.gmail.petraccaro.angelo.placesofinterest.Activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
 import androidx.test.espresso.ViewInteraction;
-import androidx.test.espresso.action.ViewActions;
-import androidx.test.espresso.contrib.RecyclerViewActions;
-import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.filters.LargeTest;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
@@ -40,39 +36,33 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.longClick;
 import static androidx.test.espresso.action.ViewActions.replaceText;
-import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
-import static org.hamcrest.Matchers.is;
-
-
 @LargeTest
 @RunWith(AndroidJUnit4.class)
 
 public class Cammino5 {
 
-    private static final String ARG_SECTION_NUMBER = "";
     @Rule
     public ActivityTestRule<LoginActivity> LoginActivityActivityTestRule = new ActivityTestRule<>(LoginActivity.class);
     public ActivityTestRule<MainActivity> mainActivityActivityTestRule = new ActivityTestRule<>(MainActivity.class);
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    final FirebaseUser currentUser = mAuth.getCurrentUser();
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    FirebaseStorage myStorage = FirebaseStorage.getInstance();
+    StorageReference rootStorageRef = myStorage.getReference();
+    StorageReference documentRef = rootStorageRef.child("images");
+    final DatabaseReference myRefToDb = database.getReference("photos");
+    private String uploadId;
+
     @Before
     public void CreatePost(){
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        final FirebaseUser currentUser = mAuth.getCurrentUser();
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        FirebaseStorage myStorage = FirebaseStorage.getInstance();
-        StorageReference rootStorageRef = myStorage.getReference();
-        StorageReference documentRef = rootStorageRef.child("images");
-        final DatabaseReference myRefToDb = database.getReference("photos");
 
-        String uploadId = myRefToDb.push().getKey();
+        uploadId = myRefToDb.push().getKey();
         Post el = new Post("test", "test",
                 Double.toString(120), Double.toString(120),
                 "https://firebasestorage.googleapis.com/v0/b/placesofinterest-2bc8d.appspot.com/o/images%2F1325357829?alt=media&token=fd52c26c-cec7-45f5-8d13-bb1bde6e16ed",
@@ -80,6 +70,7 @@ public class Cammino5 {
         myRefToDb.child(uploadId).setValue(el);
         EspressoTestUtils.waitFor(700);
     }
+
     @Test
     public void cammino5() {
         ViewInteraction appCompatAutoCompleteTextView = onView(
@@ -115,29 +106,32 @@ public class Cammino5 {
                         isDisplayed()));
         appCompatButton.perform(click());
 
-
         mainActivityActivityTestRule.launchActivity(getActivityIntent());
-       // ActivityScenario main = ActivityScenario.launch(getActivityIntent());
-        EspressoTestUtils.waitFor(1500);
+        EspressoTestUtils.waitFor(3000);
 
         ViewInteraction textView = onView(
                 allOf(withText("PlacesOfInterest"),
                         isDisplayed()));
         textView.check(matches(withText("PlacesOfInterest")));
 
-        //Matcher<View> matcher = allOf(isDescendantOfA(withId(R.id.PostList1)));
-       // onView(withId(R.id.PostList1)).perform(RecyclerViewActions.actionOnItemAtPosition(2, click()));
-       // onView(withText("Angelo_Petraccaro")).perform(ViewActions.click());
-        //ViewInteraction view = onView(ViewMatchers.withId(R.id.PostList1));
-        //view.check(matches(isDisplayed()));
+        onData(anything()).inAdapterView(withId(R.id.PostList1)).atPosition(12).perform(longClick());
+        EspressoTestUtils.waitFor(1000);
 
-       onData(anything()).inAdapterView(withId(R.id.PostList1)).atPosition(6).perform(click());
-        EspressoTestUtils.waitFor(500);
-
-        /*EspressoTestUtils.waitFor(100);
         onView(withText("Delete?"))
-                .check(matches(isDisplayed()))
-                .perform(click());*/
+                .check(matches(isDisplayed()));
+
+        onView(withText(R.string.Ok))
+                .check(matches(isDisplayed())).perform(click());
+
+        deletePost();
+        EspressoTestUtils.waitFor(100);
+
+        ViewInteraction textView6 = onView(
+                allOf(withText("PlacesOfInterest"),
+                        isDisplayed()));
+        textView6.check(matches(withText("PlacesOfInterest")));
+        EspressoTestUtils.waitFor(300);
+
     }
 
     protected Intent getActivityIntent() {
@@ -152,6 +146,12 @@ public class Cammino5 {
         i.putExtra("uriFotoDelProfilo","https://firebasestorage.googleapis.com/v0/b/placesofinterest-2bc8d.appspot.com/o/ProfileImages%2FBill_Gates_2018.jpg?alt=media&token=5213cce9-106e-4ecf-a99f-a585b322064b");
         return i;
     }
+
+
+    public void deletePost(){
+        myRefToDb.child(uploadId).removeValue();
+    }
+
 
 
     private static Matcher<View> childAtPosition(

@@ -19,7 +19,6 @@ import com.gmail.petraccaro.angelo.placesofinterest.R;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
-import org.hamcrest.core.IsInstanceOf;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +31,6 @@ import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -105,44 +103,19 @@ public class Cammino10 {
         onView(withText("PlacesOfInterest")).inRoot(withDecorView(
                 not(mActivityTestRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
 
-        ViewInteraction imageButton = onView(
-                allOf(withId(R.id.fab),
-                        withParent(allOf(withId(R.id.main_content),
-                                withParent(withId(R.id.drawer_layout)))),
-                        isDisplayed()));
-        imageButton.check(matches(isDisplayed()));
-
-        ViewInteraction textView = onView(
-                allOf(withText("PUBLIC"),
-                        withParent(allOf(withContentDescription("Public"),
-                                withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class)))),
-                        isDisplayed()));
-        textView.check(matches(withText("PUBLIC")));
-
-        ViewInteraction textView2 = onView(
-                allOf(withText("PRIVATE"),
-                        withParent(allOf(withContentDescription("Private"),
-                                withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class)))),
-                        isDisplayed()));
-        textView2.check(matches(withText("PRIVATE")));
-
         // wait 1000 ms to avoid the exception:
         // "com.google.android.apps.common.testing.ui.espresso.PerformException: Error performing 'single click' on view [...]
         //      Caused by: java.lang.RuntimeException: Action will not be performed because the target view does not match one or more of the following constraints: at least 90 percent of the view's area is displayed to the user."
         EspressoTestUtils.waitFor(3000);
 
-        ViewInteraction floatingActionButton = onView(
+        ViewInteraction imageButton = onView(
                 allOf(withId(R.id.fab),
-                        childAtPosition(
-                                allOf(withId(R.id.main_content),
-                                        childAtPosition(
-                                                withId(R.id.drawer_layout),
-                                                0)),
-                                2),
+                        withParent(allOf(withId(R.id.main_content),
+                                withParent(withId(R.id.drawer_layout)))),
                         isDisplayed()));
-        floatingActionButton.perform(click());
-        Thread.sleep(1000);
+        imageButton.perform(click());
         ActivityScenario.launch(getActivityIntent1());
+
 
         pressBack();
         ActivityScenario.launch(getActivityIntent());
@@ -150,8 +123,7 @@ public class Cammino10 {
         ViewInteraction textView5 = onView(
                 allOf(withText("PlacesOfInterest"),
                         withParent(allOf(withId(R.id.toolbar),
-                                withParent(withId(R.id.appbar)))),
-                        isDisplayed()));
+                        isDisplayed()))));
         textView5.check(matches(withText("PlacesOfInterest")));
 
     }

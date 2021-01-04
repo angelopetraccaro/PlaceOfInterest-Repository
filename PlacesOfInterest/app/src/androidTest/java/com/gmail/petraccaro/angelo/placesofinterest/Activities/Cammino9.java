@@ -20,7 +20,6 @@ import com.gmail.petraccaro.angelo.placesofinterest.R;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
-import org.hamcrest.core.IsInstanceOf;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +31,6 @@ import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -82,25 +80,13 @@ public class Cammino9 {
             appCompatButton.perform(click());
             ActivityScenario.launch(getActivityIntent());
 
-            EspressoTestUtils.waitFor(700);
+            EspressoTestUtils.waitFor(1000);
             ViewInteraction textView = onView(
                     allOf(withText("PlacesOfInterest"),
                             withParent(allOf(withId(R.id.toolbar),
                             isDisplayed()))));
             textView.check(matches(withText("PlacesOfInterest")));
-            ViewInteraction textView1 = onView(
-                    allOf(withText("PUBLIC"),
-                            withParent(allOf(withContentDescription("Public"),
-                                    withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class)))),
-                            isDisplayed()));
-            textView1.check(matches(withText("Public")));
 
-            ViewInteraction textView2 = onView(
-                    allOf(withText("PRIVATE"),
-                            withParent(allOf(withContentDescription("Private"),
-                                    withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class)))),
-                            isDisplayed()));
-            textView2.check(matches(withText("Private")));
 
             EspressoTestUtils.waitFor(800);
             onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
