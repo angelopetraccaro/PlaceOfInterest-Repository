@@ -1,15 +1,12 @@
 package com.gmail.petraccaro.angelo.placesofinterest.Activities;
 
 
-import android.content.Context;
-import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.filters.LargeTest;
-import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
@@ -106,15 +103,14 @@ public class Cammino5 {
                         isDisplayed()));
         appCompatButton.perform(click());
 
-        mainActivityActivityTestRule.launchActivity(getActivityIntent());
-        EspressoTestUtils.waitFor(3000);
+        EspressoTestUtils.waitFor(5000);
 
         ViewInteraction textView = onView(
                 allOf(withText("PlacesOfInterest"),
                         isDisplayed()));
         textView.check(matches(withText("PlacesOfInterest")));
 
-        onData(anything()).inAdapterView(withId(R.id.PostList1)).atPosition(12).perform(longClick());
+        onData(anything()).inAdapterView(withId(R.id.PostList1)).atPosition(11).perform(longClick());
         EspressoTestUtils.waitFor(1000);
 
         onView(withText("Delete?"))
@@ -124,7 +120,7 @@ public class Cammino5 {
                 .check(matches(isDisplayed())).perform(click());
 
         deletePost();
-        EspressoTestUtils.waitFor(100);
+        EspressoTestUtils.waitFor(1000);
 
         ViewInteraction textView6 = onView(
                 allOf(withText("PlacesOfInterest"),
@@ -134,24 +130,9 @@ public class Cammino5 {
 
     }
 
-    protected Intent getActivityIntent() {
-        Context targetContext = InstrumentationRegistry.getInstrumentation()
-                .getTargetContext();
-        Intent i = new Intent(targetContext, MainActivity.class);
-        i.putExtra("nome","Francesco");
-        i.putExtra("cognome","Rossi");
-        i.putExtra("username","francescosax");
-        i.putExtra("password","123456");
-        i.putExtra("email","francescosax@gmail.com");
-        i.putExtra("uriFotoDelProfilo","https://firebasestorage.googleapis.com/v0/b/placesofinterest-2bc8d.appspot.com/o/ProfileImages%2FBill_Gates_2018.jpg?alt=media&token=5213cce9-106e-4ecf-a99f-a585b322064b");
-        return i;
-    }
-
-
     public void deletePost(){
         myRefToDb.child(uploadId).removeValue();
     }
-
 
 
     private static Matcher<View> childAtPosition(
