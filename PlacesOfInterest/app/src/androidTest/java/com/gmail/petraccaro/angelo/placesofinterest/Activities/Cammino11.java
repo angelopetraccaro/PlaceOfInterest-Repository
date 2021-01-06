@@ -112,7 +112,6 @@ public class Cammino11 {
                                 withParent(withId(R.id.drawer_layout)))),
                         isDisplayed()));
         imageButton.perform(click());
-        ActivityScenario.launch(getActivityIntent1());
 
         EspressoTestUtils.waitFor(1000);
 
@@ -185,7 +184,6 @@ public class Cammino11 {
                                 withParent(withId(R.id.drawer_layout)))),
                         isDisplayed()));
         imageButton.perform(click());
-        ActivityScenario.launch(getActivityIntent1());
 
         EspressoTestUtils.waitFor(1500);
 
@@ -258,7 +256,6 @@ public class Cammino11 {
                                 withParent(withId(R.id.drawer_layout)))),
                         isDisplayed()));
         imageButton.perform(click());
-        ActivityScenario.launch(getActivityIntent1());
 
         EspressoTestUtils.waitFor(1000);
 
@@ -278,8 +275,6 @@ public class Cammino11 {
         onView(withId(R.id.imageButton)).perform(click());
         EspressoTestUtils.waitFor(4000);
 
-        ActivityScenario.launch(getActivityIntent());
-        EspressoTestUtils.waitFor(800);
         ViewInteraction textView2 = onView(
                 allOf(withText("PlacesOfInterest"),
                         withParent(allOf(withId(R.id.toolbar),
@@ -298,14 +293,6 @@ public class Cammino11 {
         i.putExtra("password","asd123");
         i.putExtra("email","petraccaro.angelo@gmail.com");
         i.putExtra("uriFotoDelProfilo","https://firebasestorage.googleapis.com/v0/b/placesofinterest-2bc8d.appspot.com/o/ProfileImages%2F20ACC158-687A-4411-906E-0333D49FE6E7.jpeg?alt=media&token=5d8e9d45-3db7-47c3-9f5e-e02aa2d55fbd");
-        return i;
-    }
-
-    protected Intent getActivityIntent1() {
-        Context targetContext = InstrumentationRegistry.getInstrumentation()
-                .getTargetContext();
-        Intent i = new Intent(targetContext, CreateActivity.class);
-        i.putExtra("username","Angelo_Petraccaro");
         return i;
     }
 
