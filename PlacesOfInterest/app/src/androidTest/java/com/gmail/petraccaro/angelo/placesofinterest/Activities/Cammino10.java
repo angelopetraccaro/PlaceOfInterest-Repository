@@ -61,6 +61,8 @@ public class Cammino10 {
             GrantPermissionRule.grant(
                     "android.permission.ACCESS_COARSE_LOCATION");
 
+
+
     @Test
     public void loginActivityTest() throws InterruptedException {
         ViewInteraction appCompatAutoCompleteTextView = onView(
