@@ -62,7 +62,7 @@ public class Cammino8 {
                                                 0)),
                                 2),
                         isDisplayed()));
-        appCompatAutoCompleteTextView.perform(replaceText("petraccaro.angelo@gmail.com"), closeSoftKeyboard());
+        appCompatAutoCompleteTextView.perform(replaceText(EspressoTestUtils.TEST_USER_EMAIL), closeSoftKeyboard());
 
         ViewInteraction appCompatEditText = onView(
                 allOf(withId(R.id.password),
@@ -73,7 +73,7 @@ public class Cammino8 {
                                                 0)),
                                 3),
                         isDisplayed()));
-        appCompatEditText.perform(replaceText("asd123"), closeSoftKeyboard());
+        appCompatEditText.perform(replaceText(EspressoTestUtils.TEST_USER_PASSWORD), closeSoftKeyboard());
 
         ViewInteraction appCompatButton = onView(
                 allOf(withId(R.id.email_sign_in_button), withText("Login"),
