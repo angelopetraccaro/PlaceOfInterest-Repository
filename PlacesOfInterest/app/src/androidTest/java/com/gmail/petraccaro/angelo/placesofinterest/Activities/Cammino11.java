@@ -96,9 +96,8 @@ public class Cammino11 {
                                 4),
                         isDisplayed()));
         appCompatButton.perform(click());
-        ActivityScenario.launch(getActivityIntent());
 
-        EspressoTestUtils.waitFor(3000);
+        EspressoTestUtils.waitFor(9000);
         ViewInteraction textView = onView(
                 allOf(withText("PlacesOfInterest"),
                         withParent(allOf(withId(R.id.toolbar),
@@ -113,7 +112,7 @@ public class Cammino11 {
                         isDisplayed()));
         imageButton.perform(click());
 
-        EspressoTestUtils.waitFor(1000);
+        EspressoTestUtils.waitFor(4000);
 
         ViewInteraction textView5= onView(
                 allOf(withText("Nome"), isDisplayed()));
@@ -168,9 +167,8 @@ public class Cammino11 {
                                 4),
                         isDisplayed()));
         appCompatButton.perform(click());
-        ActivityScenario.launch(getActivityIntent());
 
-        EspressoTestUtils.waitFor(4000);
+        EspressoTestUtils.waitFor(9000);
         ViewInteraction textView = onView(
                 allOf(withText("PlacesOfInterest"),
                         withParent(allOf(withId(R.id.toolbar),
@@ -185,7 +183,7 @@ public class Cammino11 {
                         isDisplayed()));
         imageButton.perform(click());
 
-        EspressoTestUtils.waitFor(1500);
+        EspressoTestUtils.waitFor(4500);
 
         ViewInteraction textView5= onView(
                 allOf(withText("Nome"), isDisplayed()));
@@ -240,9 +238,9 @@ public class Cammino11 {
                                 4),
                         isDisplayed()));
         appCompatButton.perform(click());
-        ActivityScenario.launch(getActivityIntent());
 
-        EspressoTestUtils.waitFor(3000);
+
+        EspressoTestUtils.waitFor(9000);
         ViewInteraction textView = onView(
                 allOf(withText("PlacesOfInterest"),
                         withParent(allOf(withId(R.id.toolbar),
@@ -257,7 +255,8 @@ public class Cammino11 {
                         isDisplayed()));
         imageButton.perform(click());
 
-        EspressoTestUtils.waitFor(1000);
+
+        EspressoTestUtils.waitFor(4000);
 
         ViewInteraction textView5= onView(
                 allOf(withText("Nome"), isDisplayed()));
@@ -273,7 +272,7 @@ public class Cammino11 {
         ViewInteraction  bdesc = onView(withId(R.id.b_desc)).perform(typeText("Sede Unisannio"),ViewActions.closeSoftKeyboard());
 
         onView(withId(R.id.imageButton)).perform(click());
-        EspressoTestUtils.waitFor(4000);
+        EspressoTestUtils.waitFor(9000);
 
         ViewInteraction textView2 = onView(
                 allOf(withText("PlacesOfInterest"),

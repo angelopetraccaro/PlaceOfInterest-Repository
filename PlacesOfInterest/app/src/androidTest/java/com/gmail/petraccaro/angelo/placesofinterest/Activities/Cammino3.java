@@ -137,7 +137,7 @@ public class Cammino3 {
         ViewInteraction textUsername = onView(withId(R.id.username)).perform(typeText(username),ViewActions.closeSoftKeyboard());
         onView(withId(R.id.btnRegistrati)).perform(click());
         onView(withId(R.id.cognome)).check(matches(hasErrorText("This field is required")));
-        mActivityTestRule.launchActivity(getActivityIntent());
+       // mActivityTestRule.launchActivity(getActivityIntent());
 
     }
 
@@ -170,7 +170,7 @@ public class Cammino3 {
         ViewInteraction textUsername = onView(withId(R.id.username)).perform(typeText(username),ViewActions.closeSoftKeyboard());
         onView(withId(R.id.btnRegistrati)).perform(click());
         onView(withId(R.id.email1)).check(matches(hasErrorText("This field is required")));
-        mActivityTestRule.launchActivity(getActivityIntent());
+        //mActivityTestRule.launchActivity(getActivityIntent());
 
     }
 
