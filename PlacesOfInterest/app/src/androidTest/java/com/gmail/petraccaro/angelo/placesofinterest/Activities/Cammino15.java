@@ -2,10 +2,12 @@ package com.gmail.petraccaro.angelo.placesofinterest.Activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
+import androidx.annotation.NonNull;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.action.ViewActions;
@@ -16,10 +18,16 @@ import androidx.test.rule.GrantPermissionRule;
 import androidx.test.runner.AndroidJUnit4;
 
 import com.gmail.petraccaro.angelo.placesofinterest.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -83,6 +91,9 @@ public class Cammino15 {
         ViewInteraction textPassword = onView(withId(R.id.password1)).perform(typeText(password), ViewActions.closeSoftKeyboard());
         ViewInteraction textUsername = onView(withId(R.id.username)).perform(typeText(username),ViewActions.closeSoftKeyboard());
 
+        onView(withId(R.id.galleria)).perform(click());
+
+
 
         ViewInteraction button = onView(
                 allOf(withId(R.id.btnRegistrati), withText("REGISTRATI"),
@@ -91,10 +102,9 @@ public class Cammino15 {
                         isDisplayed()));
         button.check(matches(isDisplayed()));
         button.perform(click());
-        ActivityScenario.launch(getActivityIntent());
 
 
-        EspressoTestUtils.waitFor(3000);
+        EspressoTestUtils.waitFor(12000);
         ViewInteraction textView = onView(
                 allOf(withText("PlacesOfInterest"),
                         withParent(allOf(withId(R.id.toolbar),
@@ -125,10 +135,8 @@ public class Cammino15 {
         ViewInteraction  bdesc = onView(withId(R.id.b_desc)).perform(typeText("Sede Unisannio"),ViewActions.closeSoftKeyboard());
 
         onView(withId(R.id.imageButton)).perform(click());
-        EspressoTestUtils.waitFor(4000);
+        EspressoTestUtils.waitFor(9000);
 
-        ActivityScenario.launch(getActivityIntent());
-        EspressoTestUtils.waitFor(800);
         ViewInteraction textView2 = onView(
                 allOf(withText("PlacesOfInterest"),
                         withParent(allOf(withId(R.id.toolbar),
@@ -136,19 +144,24 @@ public class Cammino15 {
         textView2.check(matches(withText("PlacesOfInterest")));
     }
 
-    protected Intent getActivityIntent() {
-        Context targetContext = InstrumentationRegistry.getInstrumentation()
-                .getTargetContext();
-        Intent i = new Intent(targetContext, MainActivity.class);
-        i.putExtra("nome",name);
-        i.putExtra("cognome",surname);
-        i.putExtra("username",username);
-        i.putExtra("password",password);
-        i.putExtra("email",email);
-        i.putExtra("uriFotoDelProfilo","https://firebasestorage.googleapis.com/v0/b/placesofinterest-2bc8d.appspot.com/o/images%2FContacts-icon.png?alt=media&token=814b591f-b7c8-495d-96cf-16a6808ab58b");
-        return i;
-    }
 
+    @After
+    public  void deleteUser(){
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        EspressoTestUtils.waitFor(300);
+        if (user != null) {
+            user.delete()
+                    .addOnCompleteListener(new OnCompleteListener() {
+                        @Override
+                        public void onComplete(@NonNull Task task) {
+                            FirebaseFirestore.getInstance().collection("users").document("test@gmail.com").delete();
+
+                            Log.e("eliminazione user","eliminato");
+                        }
+                    });
+        }
+
+    }
     private static Matcher<View> childAtPosition(
             final Matcher<View> parentMatcher, final int position) {
 
