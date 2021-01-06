@@ -48,7 +48,7 @@ public class Cammino3 {
     private String passwordShort = "lasai";
     private String username = "testUsername";
 
-    // TESTARE FOTOCAMERA E GALLERIA (in automatico se possibile)
+    // TESTARE FOTOCAMERA E GALLERIA in automatico (se possibile)
 
     @Rule
     public ActivityTestRule<LoginActivity> mActivityTestRule = new ActivityTestRule<>(LoginActivity.class);
@@ -72,7 +72,6 @@ public class Cammino3 {
 
     @Test
     public void fallimentoRegistrazioneUtenteTestNoName() {
-        //nome non presente
         ViewInteraction appCompatTextView = onView(
                 allOf(withId(R.id.txt_no_account), withText("Non hai un account? Registrati"),
                         childAtPosition(
@@ -101,7 +100,7 @@ public class Cammino3 {
 
         ViewInteraction textName = onView(withId(R.id.nome)).perform(typeText(""), ViewActions.closeSoftKeyboard());
         ViewInteraction textSurname = onView(withId(R.id.cognome)).perform(typeText(surname), ViewActions.closeSoftKeyboard());
-        ViewInteraction textEmail = onView(withId(R.id.email1)).perform(typeText("test@gmail.com"),ViewActions.closeSoftKeyboard());
+        ViewInteraction textEmail = onView(withId(R.id.email1)).perform(typeText(email),ViewActions.closeSoftKeyboard());
         ViewInteraction textPassword = onView(withId(R.id.password1)).perform(typeText(password), ViewActions.closeSoftKeyboard());
         ViewInteraction textUsername = onView(withId(R.id.username)).perform(typeText(username),ViewActions.closeSoftKeyboard());
 
@@ -133,7 +132,7 @@ public class Cammino3 {
 
         ViewInteraction textName = onView(withId(R.id.nome)).perform(typeText(name), ViewActions.closeSoftKeyboard());
         ViewInteraction textSurname = onView(withId(R.id.cognome)).perform(typeText(""), ViewActions.closeSoftKeyboard());
-        ViewInteraction textEmail = onView(withId(R.id.email1)).perform(typeText("test@gmail.com"),ViewActions.closeSoftKeyboard());
+        ViewInteraction textEmail = onView(withId(R.id.email1)).perform(typeText(email),ViewActions.closeSoftKeyboard());
         ViewInteraction textPassword = onView(withId(R.id.password1)).perform(typeText(password), ViewActions.closeSoftKeyboard());
         ViewInteraction textUsername = onView(withId(R.id.username)).perform(typeText(username),ViewActions.closeSoftKeyboard());
         onView(withId(R.id.btnRegistrati)).perform(click());
@@ -196,7 +195,7 @@ public class Cammino3 {
         textView.check(matches(withText("Registrati")));
         ViewInteraction textName = onView(withId(R.id.nome)).perform(typeText(name), ViewActions.closeSoftKeyboard());
         ViewInteraction textSurname = onView(withId(R.id.cognome)).perform(typeText(""), ViewActions.closeSoftKeyboard());
-        ViewInteraction textEmail = onView(withId(R.id.email1)).perform(typeText("test@gmail.com"),ViewActions.closeSoftKeyboard());
+        ViewInteraction textEmail = onView(withId(R.id.email1)).perform(typeText(email),ViewActions.closeSoftKeyboard());
         ViewInteraction textPassword = onView(withId(R.id.password1)).perform(typeText(password), ViewActions.closeSoftKeyboard());
         ViewInteraction textUsername = onView(withId(R.id.username)).perform(typeText(username),ViewActions.closeSoftKeyboard());
 
@@ -255,7 +254,7 @@ public class Cammino3 {
         textView.check(matches(withText("Registrati")));
         ViewInteraction textName = onView(withId(R.id.nome)).perform(typeText(name), ViewActions.closeSoftKeyboard());
         ViewInteraction textSurname = onView(withId(R.id.cognome)).perform(typeText(surname), ViewActions.closeSoftKeyboard());
-        ViewInteraction textEmail = onView(withId(R.id.email1)).perform(typeText("test@gmail.com"),ViewActions.closeSoftKeyboard());
+        ViewInteraction textEmail = onView(withId(R.id.email1)).perform(typeText(email),ViewActions.closeSoftKeyboard());
         ViewInteraction textPassword = onView(withId(R.id.password1)).perform(typeText(""), ViewActions.closeSoftKeyboard());
         ViewInteraction textUsername = onView(withId(R.id.username)).perform(typeText(username),ViewActions.closeSoftKeyboard());
 
@@ -284,7 +283,7 @@ public class Cammino3 {
         textView.check(matches(withText("Registrati")));
         ViewInteraction textName = onView(withId(R.id.nome)).perform(typeText(name), ViewActions.closeSoftKeyboard());
         ViewInteraction textSurname = onView(withId(R.id.cognome)).perform(typeText(surname), ViewActions.closeSoftKeyboard());
-        ViewInteraction textEmail = onView(withId(R.id.email1)).perform(typeText("test@gmail.com"),ViewActions.closeSoftKeyboard());
+        ViewInteraction textEmail = onView(withId(R.id.email1)).perform(typeText(email),ViewActions.closeSoftKeyboard());
         ViewInteraction textPassword = onView(withId(R.id.password1)).perform(typeText(passwordShort), ViewActions.closeSoftKeyboard());
         ViewInteraction textUsername = onView(withId(R.id.username)).perform(typeText(username),ViewActions.closeSoftKeyboard());
 
@@ -314,7 +313,7 @@ public class Cammino3 {
         textView.check(matches(withText("Registrati")));
         ViewInteraction textName = onView(withId(R.id.nome)).perform(typeText(name), ViewActions.closeSoftKeyboard());
         ViewInteraction textSurname = onView(withId(R.id.cognome)).perform(typeText(surname), ViewActions.closeSoftKeyboard());
-        ViewInteraction textEmail = onView(withId(R.id.email1)).perform(typeText("test@gmail.com"),ViewActions.closeSoftKeyboard());
+        ViewInteraction textEmail = onView(withId(R.id.email1)).perform(typeText(email),ViewActions.closeSoftKeyboard());
         ViewInteraction textPassword = onView(withId(R.id.password1)).perform(typeText(password), ViewActions.closeSoftKeyboard());
         ViewInteraction textUsername = onView(withId(R.id.username)).perform(typeText(""),ViewActions.closeSoftKeyboard());
 
@@ -344,7 +343,7 @@ public class Cammino3 {
         textView.check(matches(withText("Registrati")));
         ViewInteraction textName = onView(withId(R.id.nome)).perform(typeText(name), ViewActions.closeSoftKeyboard());
         ViewInteraction textSurname = onView(withId(R.id.cognome)).perform(typeText(surname), ViewActions.closeSoftKeyboard());
-        ViewInteraction textEmail = onView(withId(R.id.email1)).perform(typeText("test@gmail.com"),ViewActions.closeSoftKeyboard());
+        ViewInteraction textEmail = onView(withId(R.id.email1)).perform(typeText(email),ViewActions.closeSoftKeyboard());
         ViewInteraction textPassword = onView(withId(R.id.password1)).perform(typeText(password), ViewActions.closeSoftKeyboard());
         ViewInteraction textUsername = onView(withId(R.id.username)).perform(typeText(username),ViewActions.closeSoftKeyboard());
 

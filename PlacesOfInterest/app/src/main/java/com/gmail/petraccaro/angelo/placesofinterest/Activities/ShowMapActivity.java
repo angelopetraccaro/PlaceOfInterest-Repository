@@ -39,4 +39,9 @@ public class ShowMapActivity extends FragmentActivity implements OnMapReadyCallb
         mMap.addMarker(new MarkerOptions().position(place));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(place));
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }

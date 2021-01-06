@@ -126,4 +126,9 @@ public class ReadActivity extends AppCompatActivity {
         super.onSaveInstanceState(b);
         b.putString("Uri", uriFoto);
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }

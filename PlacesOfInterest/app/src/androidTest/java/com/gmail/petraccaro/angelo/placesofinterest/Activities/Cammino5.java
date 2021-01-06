@@ -1,11 +1,18 @@
 package com.gmail.petraccaro.angelo.placesofinterest.Activities;
 
 
+
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
 import androidx.test.espresso.ViewInteraction;
+import androidx.test.espresso.action.ViewActions;
+import androidx.test.espresso.contrib.RecyclerViewActions;
+import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
@@ -35,6 +42,7 @@ import static androidx.test.espresso.action.ViewActions.longClick;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
@@ -44,6 +52,7 @@ import static org.hamcrest.Matchers.anything;
 
 public class Cammino5 {
 
+    private static final String ARG_SECTION_NUMBER = "";
     @Rule
     public ActivityTestRule<LoginActivity> LoginActivityActivityTestRule = new ActivityTestRule<>(LoginActivity.class);
     public ActivityTestRule<MainActivity> mainActivityActivityTestRule = new ActivityTestRule<>(MainActivity.class);
@@ -55,9 +64,9 @@ public class Cammino5 {
     StorageReference documentRef = rootStorageRef.child("images");
     final DatabaseReference myRefToDb = database.getReference("photos");
     private String uploadId;
-
     @Before
     public void CreatePost(){
+
 
         uploadId = myRefToDb.push().getKey();
         Post el = new Post("test", "test",
@@ -67,7 +76,6 @@ public class Cammino5 {
         myRefToDb.child(uploadId).setValue(el);
         EspressoTestUtils.waitFor(700);
     }
-
     @Test
     public void cammino5() {
         ViewInteraction appCompatAutoCompleteTextView = onView(
@@ -103,15 +111,18 @@ public class Cammino5 {
                         isDisplayed()));
         appCompatButton.perform(click());
 
-        EspressoTestUtils.waitFor(5000);
+
+
+        EspressoTestUtils.waitFor(9000);
+
 
         ViewInteraction textView = onView(
-                allOf(withText("PlacesOfInterest"),
+                allOf(withText(  "PlacesOfInterest"),
                         isDisplayed()));
         textView.check(matches(withText("PlacesOfInterest")));
 
-        onData(anything()).inAdapterView(withId(R.id.PostList1)).atPosition(11).perform(longClick());
-        EspressoTestUtils.waitFor(1000);
+        onData(anything()).inAdapterView(withId(R.id.PostList1)).atPosition(12).perform(longClick());
+        EspressoTestUtils.waitFor(500);
 
         onView(withText("Delete?"))
                 .check(matches(isDisplayed()));
@@ -128,6 +139,8 @@ public class Cammino5 {
         textView6.check(matches(withText("PlacesOfInterest")));
         EspressoTestUtils.waitFor(300);
 
+
+
     }
 
     public void deletePost(){
@@ -135,7 +148,10 @@ public class Cammino5 {
     }
 
 
-    private static Matcher<View> childAtPosition(
+
+
+    static Matcher<View> childAtPosition(
+
             final Matcher<View> parentMatcher, final int position) {
 
         return new TypeSafeMatcher<View>() {
