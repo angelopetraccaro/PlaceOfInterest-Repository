@@ -15,10 +15,12 @@ import androidx.test.rule.GrantPermissionRule;
 import androidx.test.runner.AndroidJUnit4;
 
 import com.gmail.petraccaro.angelo.placesofinterest.R;
+import com.gmail.petraccaro.angelo.placesofinterest.util;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.hamcrest.core.IsInstanceOf;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,11 +28,11 @@ import org.junit.runner.RunWith;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static androidx.test.espresso.action.ViewActions.pressBack;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -39,7 +41,7 @@ import static org.hamcrest.Matchers.allOf;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class Cammino10 {
+public class LoginActivityTestcreate {
 
     @Rule
     public ActivityTestRule<LoginActivity> mActivityTestRule = new ActivityTestRule<>(LoginActivity.class);
@@ -74,7 +76,7 @@ public class Cammino10 {
                                                 0)),
                                 2),
                         isDisplayed()));
-        appCompatAutoCompleteTextView.perform(replaceText(EspressoTestUtils.TEST_USER_EMAIL), closeSoftKeyboard());
+        appCompatAutoCompleteTextView.perform(replaceText(util.TEST_USER_EMAIL), closeSoftKeyboard());
 
         ViewInteraction appCompatEditText = onView(
                 allOf(withId(R.id.password),
@@ -85,7 +87,7 @@ public class Cammino10 {
                                                 0)),
                                 3),
                         isDisplayed()));
-        appCompatEditText.perform(replaceText(EspressoTestUtils.TEST_USER_PASSWORD), closeSoftKeyboard());
+        appCompatEditText.perform(replaceText(util.TEST_USER_PASSWORD), closeSoftKeyboard());
 
         ViewInteraction appCompatButton = onView(
                 allOf(withId(R.id.email_sign_in_button), withText("Login"),
@@ -103,28 +105,12 @@ public class Cammino10 {
         onView(withText("PlacesOfInterest")).inRoot(withDecorView(
                 not(mActivityTestRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
 
+
         // wait 1000 ms to avoid the exception:
         // "com.google.android.apps.common.testing.ui.espresso.PerformException: Error performing 'single click' on view [...]
         //      Caused by: java.lang.RuntimeException: Action will not be performed because the target view does not match one or more of the following constraints: at least 90 percent of the view's area is displayed to the user."
-        EspressoTestUtils.waitFor(3000);
-
-        ViewInteraction imageButton = onView(
-                allOf(withId(R.id.fab),
-                        withParent(allOf(withId(R.id.main_content),
-                                withParent(withId(R.id.drawer_layout)))),
-                        isDisplayed()));
-        imageButton.perform(click());
+        Thread.sleep(500);
         ActivityScenario.launch(getActivityIntent1());
-
-
-        pressBack();
-        ActivityScenario.launch(getActivityIntent());
-        Thread.sleep(1000);
-        ViewInteraction textView5 = onView(
-                allOf(withText("PlacesOfInterest"),
-                        withParent(allOf(withId(R.id.toolbar),
-                        isDisplayed()))));
-        textView5.check(matches(withText("PlacesOfInterest")));
 
     }
 

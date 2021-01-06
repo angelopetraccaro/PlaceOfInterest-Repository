@@ -1,13 +1,17 @@
 package com.gmail.petraccaro.angelo.placesofinterest.Activities;
 
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
 import androidx.test.espresso.DataInteraction;
 import androidx.test.espresso.ViewInteraction;
+import androidx.test.espresso.web.internal.deps.guava.collect.Maps;
 import androidx.test.filters.LargeTest;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
@@ -16,6 +20,7 @@ import com.gmail.petraccaro.angelo.placesofinterest.R;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.hamcrest.core.IsInstanceOf;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,6 +33,7 @@ import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -36,13 +42,15 @@ import static org.hamcrest.Matchers.anything;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class Cammino8 {
+public class Cammino16 {
 
     @Rule
     public ActivityTestRule<LoginActivity> mActivityTestRule = new ActivityTestRule<>(LoginActivity.class);
+    public ActivityTestRule<MainActivity> mainActivityActivityTestRule = new ActivityTestRule<>(MainActivity.class);
+    public ActivityTestRule<ShowMapActivity> MapsActivityActivityTestRule = new ActivityTestRule<>(ShowMapActivity.class);
 
     @Test
-    public void cammino8io() {
+    public void cammino16() {
         ViewInteraction appCompatAutoCompleteTextView = onView(
                 allOf(withId(R.id.email),
                         childAtPosition(
@@ -52,7 +60,7 @@ public class Cammino8 {
                                                 0)),
                                 2),
                         isDisplayed()));
-        appCompatAutoCompleteTextView.perform(replaceText("petraccaro.angelo@gmail.com"), closeSoftKeyboard());
+        appCompatAutoCompleteTextView.perform(replaceText("francescosax@gmail.com"), closeSoftKeyboard());
 
         ViewInteraction appCompatEditText = onView(
                 allOf(withId(R.id.password),
@@ -63,7 +71,7 @@ public class Cammino8 {
                                                 0)),
                                 3),
                         isDisplayed()));
-        appCompatEditText.perform(replaceText("asd123"), closeSoftKeyboard());
+        appCompatEditText.perform(replaceText("123456"), closeSoftKeyboard());
 
         ViewInteraction appCompatButton = onView(
                 allOf(withId(R.id.email_sign_in_button), withText("Login"),
@@ -76,26 +84,23 @@ public class Cammino8 {
                         isDisplayed()));
         appCompatButton.perform(click());
 
-        EspressoTestUtils.waitFor(3000);
+        //mainActivityActivityTestRule.launchActivity(getActivityIntent());
+        EspressoTestUtils.waitFor(3500);
+
+        DataInteraction constraintLayout = onData(anything())
+                .inAdapterView(allOf(withId(R.id.PostList1),
+                        childAtPosition(
+                                withId(R.id.main_content),
+                                1)))
+                .atPosition(0);
+        constraintLayout.perform(click());
+
         ViewInteraction textView = onView(
-                allOf(withText("PlacesOfInterest"),
-                        withParent(allOf(withId(R.id.toolbar),
-                                isDisplayed()))));
-        textView.check(matches(withText("PlacesOfInterest")));
-
-
-
-        onData(anything()).inAdapterView(withId(R.id.PostList1)).atPosition(0).perform(click());
-
-        EspressoTestUtils.waitFor(1000);
-
-
-        ViewInteraction textView9 = onView(
                 allOf(withId(R.id.nome), withText("Nome"),
                         withParent(allOf(withId(R.id.item),
                                 withParent(withId(android.R.id.content)))),
                         isDisplayed()));
-        textView9.check(matches(withText("Nome")));
+        textView.check(matches(withText("Nome")));
 
         ViewInteraction textView2 = onView(
                 allOf(withId(R.id.breve_desc2), withText("Breve descrizione"),
@@ -104,35 +109,41 @@ public class Cammino8 {
                         isDisplayed()));
         textView2.check(matches(withText("Breve descrizione")));
 
-        ViewInteraction textView3 = onView(
-                allOf(withId(R.id.didascalia), withText("Didascalia"),
-                        withParent(allOf(withId(R.id.item),
-                                withParent(withId(android.R.id.content)))),
-                        isDisplayed()));
-        textView3.check(matches(withText("Didascalia")));
-
         ViewInteraction imageButton = onView(
                 allOf(withId(R.id.gps),
-                        withParent(allOf(withId(R.id.item),
-                                withParent(withId(android.R.id.content)))),
                         isDisplayed()));
         imageButton.check(matches(isDisplayed()));
 
-        ViewInteraction imageButton2 = onView(
+        ViewInteraction appCompatImageButton = onView(
                 allOf(withId(R.id.gps),
+                        childAtPosition(
+                                allOf(withId(R.id.item),
+                                        childAtPosition(
+                                                withId(android.R.id.content),
+                                                0)),
+                                7),
+                        isDisplayed()));
+        appCompatImageButton.perform(click());
+
+        EspressoTestUtils.waitFor(3000);
+
+        ViewInteraction view = onView(withId(R.id.map)).check(matches(isDisplayed()));
+
+        pressBack();
+        EspressoTestUtils.waitFor(3000);
+        ViewInteraction textView3 = onView(
+                allOf(withId(R.id.nome), withText("Nome"),
                         withParent(allOf(withId(R.id.item),
                                 withParent(withId(android.R.id.content)))),
                         isDisplayed()));
-        imageButton2.check(matches(isDisplayed()));
+        textView3.check(matches(withText("Nome")));
 
-        pressBack();
-
-        EspressoTestUtils.waitFor(2000);
-        ViewInteraction textView15 = onView(
-                allOf(withText("PlacesOfInterest"),
-                        withParent(allOf(withId(R.id.toolbar),
-                                isDisplayed()))));
-        textView15.check(matches(withText("PlacesOfInterest")));
+        ViewInteraction textView4 = onView(
+                allOf(withId(R.id.breve_desc2), withText("Breve descrizione"),
+                        withParent(allOf(withId(R.id.item),
+                                withParent(withId(android.R.id.content)))),
+                        isDisplayed()));
+        textView4.check(matches(withText("Breve descrizione")));
     }
 
     private static Matcher<View> childAtPosition(
@@ -153,4 +164,5 @@ public class Cammino8 {
             }
         };
     }
+
 }

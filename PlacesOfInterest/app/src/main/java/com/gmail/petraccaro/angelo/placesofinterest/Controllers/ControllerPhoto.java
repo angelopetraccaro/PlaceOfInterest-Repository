@@ -129,8 +129,7 @@ public class ControllerPhoto {
 
 
     public void addOnStorage(final Uri outputUri, final String breveDescrizione, final String nome, final String didascalia, final Double latitudine, final Double longitudine, final String username) {
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        final FirebaseUser currentUser = mAuth.getCurrentUser();
+
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         FirebaseStorage myStorage = FirebaseStorage.getInstance();
         StorageReference rootStorageRef = myStorage.getReference();
@@ -157,7 +156,7 @@ public class ControllerPhoto {
                     public void onSuccess(Uri uri) {
                         Uri uriFoto = uri;
 
-
+                        final FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
                         String uploadId = myRefToDb.push().getKey();
                         Post el = new Post(nome, breveDescrizione,
                                 Double.toString(latitudine), Double.toString(longitudine), uriFoto.toString(),

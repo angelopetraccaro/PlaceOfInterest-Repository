@@ -101,9 +101,8 @@ public class Cammino9 {
                             isDisplayed()));
             navigationMenuItemView.perform(click());
 
-            //lanciare intent da main a detector. intent da detector a convertitore e da detector a riconoscitore
-            //dato che la testiamo singolarmente con test di unità, evitiamo di replicare il test.
-            EspressoTestUtils.waitFor(400);
+
+            EspressoTestUtils.waitFor(10000);
 
             pressBack();
             ViewInteraction textView5 = onView(

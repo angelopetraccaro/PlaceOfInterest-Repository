@@ -1,10 +1,16 @@
 package com.gmail.petraccaro.angelo.placesofinterest.Activities;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.View;
 
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.intent.Intents;
+import androidx.test.espresso.web.internal.deps.guava.collect.Maps;
+import androidx.test.platform.app.InstrumentationRegistry;
+
 import org.hamcrest.Matcher;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -47,5 +53,17 @@ public class EspressoTestUtils {
     public static void releaseIntent() {
         Intents.release();
     }
+
+
+    public static Intent getIntentMaps(){
+            Context targetContext = InstrumentationRegistry.getInstrumentation()
+                    .getTargetContext();
+            Intent i = new Intent(targetContext, ShowMapActivity.class);
+            i.putExtra("Latitude",120);
+            i.putExtra("cognome",120);
+            return i;
+
+    }
+
 
 }

@@ -9,53 +9,6 @@
     tools:layout_editor_absoluteY="81dp">
 
 
-    <!-- <CheckBox
-        android:id="@+id/pubblico"
-        android:layout_width="149dp"
-        android:layout_height="44dp"
-        android:layout_marginTop="40dp"
-        android:text="Pubblico"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/privato"
-        app:layout_constraintHorizontal_bias="0.223"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_cord"
-        app:layout_constraintVertical_bias="0.052" />
-
-  <EditText
-        android:id="@+id/nome"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/text_arrotondato"
-        android:backgroundTint="@color/cardview_light_background"
-        android:ems="10"
-        android:hint="Nome"
-        android:inputType="textPersonName"
-        android:paddingLeft="20dp"
-        android:paddingTop="10dp"
-        android:paddingRight="10dp"
-        android:paddingBottom="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/registrati" />
-    <CheckBox
-        android:id="@+id/privato"
-        android:layout_width="152dp"
-        android:layout_height="42dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="16dp"
-        android:text="Privato"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_cord"
-        app:layout_constraintVertical_bias="0.051" />
--->
-
     <Button
         android:id="@+id/imageButton"
         android:layout_width="329dp"
@@ -179,17 +132,6 @@
         android:text="Scatta"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Didascalia" />
-
-    <Switch
-        android:id="@+id/privato"
-        android:layout_width="77dp"
-        android:layout_height="23dp"
-        android:layout_marginEnd="48dp"
-        android:scaleX="1"
-        android:scaleY="1"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/privat" />
 
     <TextView
         android:id="@+id/edit_cord"
