@@ -1,5 +1,6 @@
 package com.gmail.petraccaro.angelo.placesofinterest.Activities;
 
+
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
@@ -7,15 +8,8 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 
 import androidx.test.core.app.ActivityScenario;
-import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.ViewInteraction;
-import androidx.test.espresso.action.GeneralLocation;
-import androidx.test.espresso.action.GeneralSwipeAction;
-import androidx.test.espresso.action.Press;
-import androidx.test.espresso.action.Swipe;
 import androidx.test.espresso.action.ViewActions;
-import androidx.test.espresso.contrib.DrawerActions;
-import androidx.test.espresso.contrib.NavigationViewActions;
 import androidx.test.filters.LargeTest;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
@@ -42,34 +36,30 @@ import static org.hamcrest.Matchers.allOf;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class Cammino7 {
+public class Cammino14 {
 
-    //da settare foto in circleimageview e passare stessa foto nell'intent per farla combaciare nel menù a tendina
-    //oppure togliere il toast che appare e passare la foto dell'omino in circleimg registrati anche nell'intent,
-    //in modo tale da farlo apparire nel menù a tendina
+    //da settare foto in circleimageview per non far uscire il toast
 
+    @Rule
+    public ActivityTestRule<LoginActivity> mActivityTestRule = new ActivityTestRule<>(LoginActivity.class);
     private String name = "testName";
     private String surname = "testSurname";
     private String email = "test@gmail.com";
     private String password = "secret";
     private String username = "testUsername";
 
-    @Rule
-    public ActivityTestRule<LoginActivity> mActivityTestRule = new ActivityTestRule<>(LoginActivity.class);
-
     @Test
-    public void fallimentoRegistrazioneUtenteTestGalleria() {
-
-            ViewInteraction appCompatTextView = onView(
-                    allOf(withId(R.id.txt_no_account), withText("Non hai un account? Registrati"),
-                            childAtPosition(
-                                    allOf(withId(R.id.layout2),
-                                            childAtPosition(
-                                                    withId(android.R.id.content),
-                                                    0)),
-                                    5),
-                            isDisplayed()));
-            appCompatTextView.perform(click());
+    public void loginActivityTest() throws InterruptedException {
+        ViewInteraction appCompatTextView = onView(
+                allOf(withId(R.id.txt_no_account), withText("Non hai un account? Registrati"),
+                        childAtPosition(
+                                allOf(withId(R.id.layout2),
+                                        childAtPosition(
+                                                withId(android.R.id.content),
+                                                0)),
+                                5),
+                        isDisplayed()));
+        appCompatTextView.perform(click());
 
 
         ViewInteraction textName = onView(withId(R.id.nome)).perform(typeText(name), ViewActions.closeSoftKeyboard());
@@ -88,44 +78,35 @@ public class Cammino7 {
         button.perform(click());
         ActivityScenario.launch(getActivityIntent());
 
+        EspressoTestUtils.waitFor(1000);
+        ViewInteraction textView = onView(
+                allOf(withText("PlacesOfInterest"),
+                        withParent(allOf(withId(R.id.toolbar), isDisplayed()))));
+        textView.check(matches(withText("PlacesOfInterest")));
 
-        EspressoTestUtils.waitFor(700);
-        ViewInteraction textView2 = onView(
+        EspressoTestUtils.waitFor(3000);
+
+        ViewInteraction imageButton = onView(
+                allOf(withId(R.id.fab),
+                        withParent(allOf(withId(R.id.main_content),
+                                withParent(withId(R.id.drawer_layout)))),
+                        isDisplayed()));
+        imageButton.perform(click());
+
+        EspressoTestUtils.waitFor(500);
+
+        ViewActions.pressBack();
+        ActivityScenario.launch(getActivityIntent());
+        Thread.sleep(1000);
+        ViewInteraction textView5 = onView(
                 allOf(withText("PlacesOfInterest"),
                         withParent(allOf(withId(R.id.toolbar),
-                        isDisplayed()))));
-        textView2.check(matches(withText("PlacesOfInterest")));
-
-
-        EspressoTestUtils.waitFor(800);
-        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
-        EspressoTestUtils.waitFor(800);
-        ViewInteraction ItemFun = onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(R.id.itemfun)).perform(NavigationViewActions.navigateTo(R.id.action_settings));
-        EspressoTestUtils.waitFor(800);
-
-        ViewInteraction textView5 = onView(
-                allOf(withId(R.id.login), withText("Login"),
-                        withParent(allOf(withId(R.id.layout2),
-                                withParent(withId(android.R.id.content)))),
-                        isDisplayed()));
-        textView5.check(matches(withText("Login")));
-
-        ViewInteraction textView4 = onView(
-                allOf(withId(R.id.txt_no_account), withText("Non hai un account? Registrati"),
-                        withParent(allOf(withId(R.id.layout2),
-                                withParent(withId(android.R.id.content)))),
-                        isDisplayed()));
-        textView4.check(matches(withText("Non hai un account? Registrati")));
-    }
-
-
-    public static ViewAction swipeUp() {
-        return new GeneralSwipeAction(Swipe.FAST, GeneralLocation.CENTER_LEFT,
-                GeneralLocation.CENTER_RIGHT, Press.FINGER);
+                                isDisplayed()))));
+        textView5.check(matches(withText("PlacesOfInterest")));
 
     }
 
-    private Intent getActivityIntent() {
+    protected Intent getActivityIntent() {
         Context targetContext = InstrumentationRegistry.getInstrumentation()
                 .getTargetContext();
         Intent i = new Intent(targetContext, MainActivity.class);
@@ -134,10 +115,9 @@ public class Cammino7 {
         i.putExtra("username",username);
         i.putExtra("password",password);
         i.putExtra("email",email);
-        i.putExtra("uriFotoDelProfilo","https://firebasestorage.googleapis.com/v0/b/placesofinterest-2bc8d.appspot.com/o/ProfileImages%2F20ACC158-687A-4411-906E-0333D49FE6E7.jpeg?alt=media&token=5d8e9d45-3db7-47c3-9f5e-e02aa2d55fbd");
+        i.putExtra("uriFotoDelProfilo","https://firebasestorage.googleapis.com/v0/b/placesofinterest-2bc8d.appspot.com/o/images%2FContacts-icon.png?alt=media&token=814b591f-b7c8-495d-96cf-16a6808ab58b");
         return i;
     }
-
 
     private static Matcher<View> childAtPosition(
             final Matcher<View> parentMatcher, final int position) {
@@ -157,7 +137,4 @@ public class Cammino7 {
             }
         };
     }
-
-
-
 }

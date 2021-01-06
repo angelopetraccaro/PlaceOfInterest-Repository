@@ -9,6 +9,7 @@ import android.view.ViewParent;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.ViewInteraction;
+import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.contrib.DrawerActions;
 import androidx.test.filters.LargeTest;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -27,8 +28,7 @@ import org.junit.runner.RunWith;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static androidx.test.espresso.action.ViewActions.replaceText;
+import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -38,59 +38,59 @@ import static org.hamcrest.Matchers.allOf;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class Cammino9 {
+public class Cammino13 {
+
+    //da settare foto in circleimageview e passare stessa foto nell'intent per farla combaciare nel menù a tendina
+    //oppure togliere il toast che appare e passare la foto dell'omino in circleimg registrati anche nell'intent,
+    //in modo tale da farlo apparire nel menù a tendina
 
     @Rule
     public ActivityTestRule<LoginActivity> mActivityTestRule = new ActivityTestRule<>(LoginActivity.class);
+    private String name = "testName";
+    private String surname = "testSurname";
+    private String email = "test@gmail.com";
+    private String password = "secret";
+    private String username = "testUsername";
 
     @Test
     public void loginActivityTest() throws InterruptedException {
-            ViewInteraction appCompatAutoCompleteTextView = onView(
-                    allOf(withId(R.id.email),
-                            childAtPosition(
-                                    allOf(withId(R.id.layout2),
-                                            childAtPosition(
-                                                    withId(android.R.id.content),
-                                                    0)),
-                                    2),
-                            isDisplayed()));
-            appCompatAutoCompleteTextView.perform(replaceText(EspressoTestUtils.TEST_USER_EMAIL), closeSoftKeyboard());
+        ViewInteraction appCompatTextView = onView(
+                allOf(withId(R.id.txt_no_account), withText("Non hai un account? Registrati"),
+                        childAtPosition(
+                                allOf(withId(R.id.layout2),
+                                        childAtPosition(
+                                                withId(android.R.id.content),
+                                                0)),
+                                5),
+                        isDisplayed()));
+        appCompatTextView.perform(click());
 
 
-            ViewInteraction appCompatEditText = onView(
-                    allOf(withId(R.id.password),
-                            childAtPosition(
-                                    allOf(withId(R.id.layout2),
-                                            childAtPosition(
-                                                    withId(android.R.id.content),
-                                                    0)),
-                                    3),
-                            isDisplayed()));
-            appCompatEditText.perform(replaceText(EspressoTestUtils.TEST_USER_PASSWORD), closeSoftKeyboard());
-
-            ViewInteraction appCompatButton = onView(
-                    allOf(withId(R.id.email_sign_in_button), withText("Login"),
-                            childAtPosition(
-                                    allOf(withId(R.id.layout2),
-                                            childAtPosition(
-                                                    withId(android.R.id.content),
-                                                    0)),
-                                    4),
-                            isDisplayed()));
-            appCompatButton.perform(click());
-            ActivityScenario.launch(getActivityIntent());
-
-            EspressoTestUtils.waitFor(1000);
-            ViewInteraction textView = onView(
-                    allOf(withText("PlacesOfInterest"),
-                            withParent(allOf(withId(R.id.toolbar),
-                            isDisplayed()))));
-            textView.check(matches(withText("PlacesOfInterest")));
+        ViewInteraction textName = onView(withId(R.id.nome)).perform(typeText(name), ViewActions.closeSoftKeyboard());
+        ViewInteraction textSurname = onView(withId(R.id.cognome)).perform(typeText(surname), ViewActions.closeSoftKeyboard());
+        ViewInteraction textEmail = onView(withId(R.id.email1)).perform(typeText(email),ViewActions.closeSoftKeyboard());
+        ViewInteraction textPassword = onView(withId(R.id.password1)).perform(typeText(password), ViewActions.closeSoftKeyboard());
+        ViewInteraction textUsername = onView(withId(R.id.username)).perform(typeText(username),ViewActions.closeSoftKeyboard());
 
 
-            EspressoTestUtils.waitFor(800);
-            onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        ViewInteraction button = onView(
+                allOf(withId(R.id.btnRegistrati), withText("REGISTRATI"),
+                        withParent(allOf(withId(R.id.register),
+                                withParent(withId(android.R.id.content)))),
+                        isDisplayed()));
+        button.check(matches(isDisplayed()));
+        button.perform(click());
+        ActivityScenario.launch(getActivityIntent());
 
+        EspressoTestUtils.waitFor(1000);
+        ViewInteraction textView = onView(
+                allOf(withText("PlacesOfInterest"),
+                        withParent(allOf(withId(R.id.toolbar), isDisplayed()))));
+        textView.check(matches(withText("PlacesOfInterest")));
+
+
+        EspressoTestUtils.waitFor(1500);
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
             ViewInteraction navigationMenuItemView = onView(
                     allOf(childAtPosition(
                             allOf(withId(R.id.design_navigation_view),
@@ -101,8 +101,7 @@ public class Cammino9 {
                             isDisplayed()));
             navigationMenuItemView.perform(click());
 
-
-            EspressoTestUtils.waitFor(10000);
+            EspressoTestUtils.waitFor(800);
 
             pressBack();
             ViewInteraction textView5 = onView(
@@ -117,12 +116,12 @@ public class Cammino9 {
         Context targetContext = InstrumentationRegistry.getInstrumentation()
                 .getTargetContext();
         Intent i = new Intent(targetContext, MainActivity.class);
-        i.putExtra("nome","Angelo");
-        i.putExtra("cognome","Petraccaro");
-        i.putExtra("username","Angelo_Petraccaro");
-        i.putExtra("password","asd123");
-        i.putExtra("email","petraccaro.angelo@gmail.com");
-        i.putExtra("uriFotoDelProfilo","https://firebasestorage.googleapis.com/v0/b/placesofinterest-2bc8d.appspot.com/o/ProfileImages%2F20ACC158-687A-4411-906E-0333D49FE6E7.jpeg?alt=media&token=5d8e9d45-3db7-47c3-9f5e-e02aa2d55fbd");
+        i.putExtra("nome",name);
+        i.putExtra("cognome",surname);
+        i.putExtra("username",username);
+        i.putExtra("password",password);
+        i.putExtra("email",email);
+        i.putExtra("uriFotoDelProfilo","https://firebasestorage.googleapis.com/v0/b/placesofinterest-2bc8d.appspot.com/o/images%2FContacts-icon.png?alt=media&token=814b591f-b7c8-495d-96cf-16a6808ab58b");
         return i;
     }
 

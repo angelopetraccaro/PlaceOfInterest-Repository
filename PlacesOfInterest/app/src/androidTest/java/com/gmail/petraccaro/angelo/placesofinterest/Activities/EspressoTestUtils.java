@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.View;
-
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.intent.Intents;
@@ -12,14 +11,11 @@ import androidx.test.espresso.web.internal.deps.guava.collect.Maps;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.hamcrest.Matcher;
-
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 
 public class EspressoTestUtils {
-    public final static String TEST_USER_NOME = "TEST_NOME";
-    public final static String TEST_USER_COGNOME = "TEST_COGNOME";
-    public final static String TEST_USER_EMAIL = "Petraccaro.angelo@gmail.com";
+    public final static String TEST_USER_EMAIL = "petraccaro.angelo@gmail.com";
     public final static String TEST_USER_PASSWORD = "asd123";
     public final static String TEST_USER_USER = "Angelo_Petraccaro";
 

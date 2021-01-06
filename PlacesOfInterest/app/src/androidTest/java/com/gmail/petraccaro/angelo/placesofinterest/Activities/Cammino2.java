@@ -3,21 +3,17 @@ package com.gmail.petraccaro.angelo.placesofinterest.Activities;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
-
 import com.gmail.petraccaro.angelo.placesofinterest.R;
-
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
