@@ -3,10 +3,12 @@ package com.gmail.petraccaro.angelo.placesofinterest.Activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
+import androidx.annotation.NonNull;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.action.ViewActions;
@@ -16,15 +18,22 @@ import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
 import com.gmail.petraccaro.angelo.placesofinterest.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -38,7 +47,6 @@ import static org.hamcrest.Matchers.allOf;
 @RunWith(AndroidJUnit4.class)
 public class Cammino14 {
 
-    //da settare foto in circleimageview per non far uscire il toast
 
     @Rule
     public ActivityTestRule<LoginActivity> mActivityTestRule = new ActivityTestRule<>(LoginActivity.class);
@@ -67,6 +75,7 @@ public class Cammino14 {
         ViewInteraction textEmail = onView(withId(R.id.email1)).perform(typeText(email),ViewActions.closeSoftKeyboard());
         ViewInteraction textPassword = onView(withId(R.id.password1)).perform(typeText(password), ViewActions.closeSoftKeyboard());
         ViewInteraction textUsername = onView(withId(R.id.username)).perform(typeText(username),ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.galleria)).perform(click());
 
 
         ViewInteraction button = onView(
@@ -76,9 +85,9 @@ public class Cammino14 {
                         isDisplayed()));
         button.check(matches(isDisplayed()));
         button.perform(click());
-        ActivityScenario.launch(getActivityIntent());
 
-        EspressoTestUtils.waitFor(1000);
+
+        EspressoTestUtils.waitFor(9000);
         ViewInteraction textView = onView(
                 allOf(withText("PlacesOfInterest"),
                         withParent(allOf(withId(R.id.toolbar), isDisplayed()))));
@@ -93,11 +102,11 @@ public class Cammino14 {
                         isDisplayed()));
         imageButton.perform(click());
 
-        EspressoTestUtils.waitFor(500);
+        EspressoTestUtils.waitFor(9000);
 
-        ViewActions.pressBack();
-        ActivityScenario.launch(getActivityIntent());
-        Thread.sleep(1000);
+        pressBack();
+
+
         ViewInteraction textView5 = onView(
                 allOf(withText("PlacesOfInterest"),
                         withParent(allOf(withId(R.id.toolbar),
@@ -105,19 +114,24 @@ public class Cammino14 {
         textView5.check(matches(withText("PlacesOfInterest")));
 
     }
+    @After
+    public  void deleteUser(){
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        EspressoTestUtils.waitFor(300);
+        if (user != null) {
+            user.delete()
+                    .addOnCompleteListener(new OnCompleteListener() {
+                        @Override
+                        public void onComplete(@NonNull Task task) {
+                            FirebaseFirestore.getInstance().collection("users").document("test@gmail.com").delete();
 
-    protected Intent getActivityIntent() {
-        Context targetContext = InstrumentationRegistry.getInstrumentation()
-                .getTargetContext();
-        Intent i = new Intent(targetContext, MainActivity.class);
-        i.putExtra("nome",name);
-        i.putExtra("cognome",surname);
-        i.putExtra("username",username);
-        i.putExtra("password",password);
-        i.putExtra("email",email);
-        i.putExtra("uriFotoDelProfilo","https://firebasestorage.googleapis.com/v0/b/placesofinterest-2bc8d.appspot.com/o/images%2FContacts-icon.png?alt=media&token=814b591f-b7c8-495d-96cf-16a6808ab58b");
-        return i;
+                            Log.e("eliminazione user","eliminato");
+                        }
+                    });
+        }
+
     }
+
 
     private static Matcher<View> childAtPosition(
             final Matcher<View> parentMatcher, final int position) {
