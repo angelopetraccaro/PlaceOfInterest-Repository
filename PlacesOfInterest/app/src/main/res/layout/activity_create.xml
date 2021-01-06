@@ -5,7 +5,7 @@
     android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F0F8FF"
+    android:background="@drawable/background"
     tools:layout_editor_absoluteY="81dp">
 
 
@@ -37,11 +37,12 @@
         android:layout_width="199dp"
         android:layout_height="114dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginEnd="16dp"
         android:ems="10"
         android:hint="Aggiungi una didascalia..."
         android:inputType="textMultiLine"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/horizontal"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
@@ -54,7 +55,7 @@
         android:backgroundTint="@color/cardview_light_background"
         android:drawablePadding="10dp"
         android:ems="10"
-        android:hint="Nome"
+        android:hint="Nome Foto"
         android:inputType="textPersonName"
         android:paddingLeft="20dp"
         android:paddingTop="10dp"
@@ -73,7 +74,7 @@
         android:background="@drawable/text_arrotondato"
         android:backgroundTint="@color/cardview_light_background"
         android:ems="10"
-        android:hint="Descrizione"
+        android:hint="Descrizione Foto"
         android:inputType="textPersonName"
         android:paddingLeft="20dp"
         android:paddingTop="10dp"
@@ -85,51 +86,50 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/breve_desc" />
 
-    <HorizontalScrollView
+    <ImageView
         android:id="@+id/horizontal"
-        android:layout_width="122dp"
-        android:layout_height="119dp"
+        android:layout_width="135dp"
+        android:layout_height="132dp"
         android:layout_marginTop="16dp"
-        android:background="#FFFAFA"
+        android:background="@drawable/contact1"
         android:foregroundTintMode="add"
+        android:scaleType="centerCrop"
         android:scrollbars="none"
-
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.116"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
-            android:id="@+id/gallery"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:backgroundTint="@color/colorPrimary"
-            android:orientation="vertical"></LinearLayout>
-
-    </HorizontalScrollView>
+    </ImageView>
 
 
     <ImageButton
         android:id="@+id/apri"
         style="?android:textAppearanceSmall"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="60dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="34dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="320dp"
-        android:src="@android:drawable/ic_menu_gallery"
+        android:backgroundTint="#FFFFFF"
         android:text="Galleria"
+        android:tint="@color/colorPrimaryDark"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Didascalia" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Didascalia"
+        app:srcCompat="@drawable/ic_baseline_insert_photo_24" />
 
     <ImageButton
         android:id="@+id/take"
         style="?android:textAppearanceSmall"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="60dp"
+        android:layout_height="56dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="32dp"
-        android:src="@android:drawable/ic_menu_camera"
+        app:srcCompat="@drawable/ic_baseline_add_a_photo_24"
         android:text="Scatta"
+        android:backgroundTint="#FFFFFF"
+        android:tint="@color/colorPrimaryDark"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Didascalia" />
 
@@ -139,27 +139,11 @@
         android:layout_height="18dp"
         android:layout_marginTop="64dp"
         android:layout_marginEnd="116dp"
-
         android:text="posizione"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="#B2000000"
         android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/b_desc" />
-
-    <TextView
-        android:id="@+id/privat"
-        android:layout_width="115dp"
-        android:layout_height="21dp"
-        android:layout_marginTop="164dp"
-        android:text="Privato"
-        android:textColor="@color/design_default_color_primary_dark"
-        android:textSize="15sp"
-        android:textStyle="bold"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toStartOf="@+id/privato"
-        app:layout_constraintHorizontal_bias="0.209"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/b_desc" />
 
     <TextView
@@ -169,7 +153,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="18dp"
         android:text="Nome"
-        android:textColor="@color/design_default_color_primary_dark"
+        android:textColor="#B2000000"
         android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -182,7 +166,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="18dp"
         android:text="Breve descrizione"
-        android:textColor="@color/design_default_color_primary_dark"
+        android:textColor="#B2000000"
         android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -195,9 +179,8 @@
         android:layout_marginStart="76dp"
         android:layout_marginTop="48dp"
         android:background="@drawable/ic_location"
-        android:backgroundTint="@android:color/holo_blue_dark"
-        android:textColor="@color/design_default_color_primary_dark"
-        android:textSize="15sp"
+        android:backgroundTint="@color/design_default_color_primary_dark"
+         android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/b_desc" />

@@ -14,14 +14,11 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,12 +27,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.gmail.petraccaro.angelo.placesofinterest.Controllers.ContractPhoto;
 import com.gmail.petraccaro.angelo.placesofinterest.Controllers.ControllerPhoto;
 import com.gmail.petraccaro.angelo.placesofinterest.R;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -51,7 +42,6 @@ public class CreateActivity extends AppCompatActivity implements ContractPhoto {
     private static int RESULT_LOAD_IMAGE = 1;   //per chiamare la galleria
     private ImageView photoTakenImageView;
     private ImageButton takefoto, galleria;
-
     private TextView  didascalia, coord,coordi;
     private Button add;
     private EditText nom, b_desc;
@@ -61,8 +51,8 @@ public class CreateActivity extends AppCompatActivity implements ContractPhoto {
     private LocationListener mLocationListener;
     private double latitudine,longitudine;
     private Uri uriFoto;
-    private LinearLayout gallery;
-    private LayoutInflater inflater;
+    // private LinearLayout gallery;
+    //private LayoutInflater inflater;
     private ControllerPhoto cp;
     View x;
 
@@ -81,22 +71,18 @@ public class CreateActivity extends AppCompatActivity implements ContractPhoto {
         setContentView(R.layout.activity_create);
         takefoto = (ImageButton) findViewById(R.id.take);
         galleria = (ImageButton) findViewById(R.id.apri);
-
         coord = (TextView) findViewById(R.id.text_cord);
         add = (Button) findViewById(R.id.imageButton);
         coordi =(TextView) findViewById(R.id.edit_cord);
         nom = (EditText) findViewById(R.id.NomeText);
         b_desc = (EditText) findViewById(R.id.b_desc);
         didascalia = (TextView) findViewById(R.id.Didascalia);
+       // gallery=findViewById(R.id.gallery);
+       // inflater=LayoutInflater.from(this);
+        uriFoto=null;
 
-
-
-        gallery=findViewById(R.id.gallery);
-        inflater=LayoutInflater.from(this);
-        add.setEnabled(true);
-
-        x = inflater.inflate(R.layout.item_immage_create, gallery, false);
-        photoTakenImageView = x.findViewById(R.id.item);
+       // x = inflater.inflate(R.layout.item_immage_create, gallery, false);
+        photoTakenImageView = findViewById(R.id.horizontal);
 
         takefoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,14 +147,14 @@ public class CreateActivity extends AppCompatActivity implements ContractPhoto {
         };
 
         if(savedInstanceState!=null) {
-            gallery.removeAllViews();
+           // gallery.removeAllViews();
             if(savedInstanceState.getString("uri")!=null){
                 Uri u = Uri.parse(savedInstanceState.getString("uri"));
                 Picasso.get().load(u).fit().centerInside().into(photoTakenImageView);
                 uriFoto = u;
             }
 
-            gallery.addView(x);
+          //  gallery.addView(x);
             if(uriFoto !=null) { //alla 1 foto inserita disablito i bottoni e se faccio landscape si disattivano cmq
                 takefoto.setEnabled(false);
                 galleria.setEnabled(false);
@@ -238,12 +224,9 @@ public class CreateActivity extends AppCompatActivity implements ContractPhoto {
         Pair<Uri, Bitmap> pair = cp.onActivityresult(requestCode,resultCode,data);
 
         if(pair.second != null && pair.first != null){
-            gallery.addView(x);
-
+          //  gallery.addView(x);
             uriFoto = pair.first;
             photoTakenImageView.setImageBitmap(pair.second);
-
-
              addOnStorage(pair.first);
         }
 
@@ -265,15 +248,11 @@ public class CreateActivity extends AppCompatActivity implements ContractPhoto {
                 final String nm = nom.getText().toString().trim();
                 final String ds = didascalia.getText().toString().trim();
 
-
-
                     Uri uri= outputUri;
                 if( !TextUtils.isEmpty(breve) && !TextUtils.isEmpty(nm) && !TextUtils.isEmpty(ds) ) {
-                    add.setEnabled(false);
                     cp.addOnStorage(uriFoto,nm,breve,ds,latitudine,longitudine,userName);
-
                 }else{
-                    if(uriFoto == null)
+                    if(uriFoto.equals(null))
                         Toast.makeText(CreateActivity.this, "Attenzione,scegli o scatta una foto", Toast.LENGTH_SHORT).show();
                     if(TextUtils.isEmpty(b_desc.getText()))
                         b_desc.setError("Attenzione, aggiungi una descrizione!");
@@ -281,7 +260,6 @@ public class CreateActivity extends AppCompatActivity implements ContractPhoto {
                         nom.setError("Attenzione, aggiungi un nome!");
                     if(TextUtils.isEmpty(ds))
                         didascalia.setError("Attenzione, aggiungi una didascalia!");
-
                 }
             }
         });
@@ -322,12 +300,9 @@ public class CreateActivity extends AppCompatActivity implements ContractPhoto {
         Intent returnIntent = new Intent();
         setResult(Activity.RESULT_OK,returnIntent);
         finish();
-
-
     }
 
     @Override
     public void OnError(String message) {
-
     }
 }
