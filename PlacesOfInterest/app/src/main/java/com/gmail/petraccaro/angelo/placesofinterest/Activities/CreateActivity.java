@@ -285,6 +285,7 @@ public class CreateActivity extends AppCompatActivity implements ContractPhoto {
     /**
      * Utilizzato perchè, tornando indietro senza crere luoghi, resetta le variabili
      */
+    @Override
     public void onBackPressed(){
         latitudine=0.0;
         longitudine=0.0;

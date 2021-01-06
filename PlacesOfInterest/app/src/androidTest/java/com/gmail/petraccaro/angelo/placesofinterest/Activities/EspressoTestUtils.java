@@ -13,7 +13,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 public class EspressoTestUtils {
     public final static String TEST_USER_NOME = "TEST_NOME";
     public final static String TEST_USER_COGNOME = "TEST_COGNOME";
-    public final static String TEST_USER_EMAIL = "Petraccaro.angelo@gmail.com";
+    public final static String TEST_USER_EMAIL = "petraccaro.angelo@gmail.com";
     public final static String TEST_USER_PASSWORD = "asd123";
     public final static String TEST_USER_USER = "Angelo_Petraccaro";
 

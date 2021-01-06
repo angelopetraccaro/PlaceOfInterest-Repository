@@ -43,6 +43,7 @@ public class Cammino10 {
 
     @Rule
     public ActivityTestRule<LoginActivity> mActivityTestRule = new ActivityTestRule<>(LoginActivity.class);
+    public ActivityTestRule<MainActivity> mainActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
     @Rule
     public GrantPermissionRule mGrantPermissionRule =
@@ -99,14 +100,9 @@ public class Cammino10 {
         appCompatButton.perform(click());
 
 
-        ActivityScenario.launch(getActivityIntent());
+        EspressoTestUtils.waitFor(9000);
         onView(withText("PlacesOfInterest")).inRoot(withDecorView(
                 not(mActivityTestRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
-
-        // wait 1000 ms to avoid the exception:
-        // "com.google.android.apps.common.testing.ui.espresso.PerformException: Error performing 'single click' on view [...]
-        //      Caused by: java.lang.RuntimeException: Action will not be performed because the target view does not match one or more of the following constraints: at least 90 percent of the view's area is displayed to the user."
-        EspressoTestUtils.waitFor(3000);
 
         ViewInteraction imageButton = onView(
                 allOf(withId(R.id.fab),
@@ -114,17 +110,23 @@ public class Cammino10 {
                                 withParent(withId(R.id.drawer_layout)))),
                         isDisplayed()));
         imageButton.perform(click());
-        ActivityScenario.launch(getActivityIntent1());
+        EspressoTestUtils.waitFor(2000);
 
 
-        pressBack();
-        ActivityScenario.launch(getActivityIntent());
-        Thread.sleep(1000);
-        ViewInteraction textView5 = onView(
+        ViewInteraction textView5= onView(
+                allOf(withText("Nome"), isDisplayed()));
+        textView5.check(matches(withText("Nome")));
+
+        ViewInteraction textView6= onView(
+                allOf(withText("Breve descrizione"), isDisplayed()));
+        textView6.check(matches(withText("Breve descrizione")));
+
+       mainActivityTestRule.launchActivity(getActivityIntent());
+        EspressoTestUtils.waitFor(7000);
+        ViewInteraction textView7 = onView(
                 allOf(withText("PlacesOfInterest"),
-                        withParent(allOf(withId(R.id.toolbar),
-                        isDisplayed()))));
-        textView5.check(matches(withText("PlacesOfInterest")));
+                        isDisplayed()));
+        textView7.check(matches(withText("PlacesOfInterest")));
 
     }
 
