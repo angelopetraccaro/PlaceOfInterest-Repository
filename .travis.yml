@@ -2,32 +2,15 @@ language: android
 jdk: openjdk8
 android:
   components:
-    # The BuildTools version used by your project
     - build-tools-28.0.3
-    
-    # The SDK version used to compile your project
     - android-28
-
-    # Additional components
     - extra-google-google_play_services
     - extra-google-m2repository
     - extra-android-m2repository
-
-    # Specify at least one system image,
-    # if you need to run emulator(s) during your tests
-    - sys-img-x86-android-28
-    - sys-img-armeabi-v7a-addon-google_apis-google-22
     
 before_install:
   - chmod +x ./PlacesOfInterest/gradlew
   - echo yes | sdkmanager "build-tools;28.0.3"
-
-before_script:
-  # Create and start emulator
-  - echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a
-  - emulator -avd test -no-skin -no-audio -no-window &
-  - android-wait-for-emulator   - adb shell input keyevent 82 &
-
 script:
   - ./PlacesOfInterest/gradlew build
 
