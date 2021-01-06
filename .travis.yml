@@ -16,7 +16,7 @@ android:
     # Specify at least one system image,
     # if you need to run emulator(s) during your tests
     - sys-img-x86-android-28
-    - sys-img-armeabi-v7a-android-22
+    - sys-img-armeabi-v7a-addon-google_apis-google-22
     
 before_install:
   - chmod +x ./PlacesOfInterest/gradlew
