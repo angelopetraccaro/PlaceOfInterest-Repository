@@ -2,10 +2,12 @@ package com.gmail.petraccaro.angelo.placesofinterest.Activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
+import androidx.annotation.NonNull;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.ViewInteraction;
@@ -22,10 +24,16 @@ import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
 import com.gmail.petraccaro.angelo.placesofinterest.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,10 +52,6 @@ import static org.hamcrest.Matchers.allOf;
 @RunWith(AndroidJUnit4.class)
 public class Cammino7 {
 
-    //da settare foto in circleimageview e passare stessa foto nell'intent per farla combaciare nel menù a tendina
-    //oppure togliere il toast che appare e passare la foto dell'omino in circleimg registrati anche nell'intent,
-    //in modo tale da farlo apparire nel menù a tendina
-
     private String name = "testName";
     private String surname = "testSurname";
     private String email = "test@gmail.com";
@@ -58,7 +62,7 @@ public class Cammino7 {
     public ActivityTestRule<LoginActivity> mActivityTestRule = new ActivityTestRule<>(LoginActivity.class);
 
     @Test
-    public void fallimentoRegistrazioneUtenteTestGalleria() {
+    public void testregistrazioneConfotoGalleria() {
 
             ViewInteraction appCompatTextView = onView(
                     allOf(withId(R.id.txt_no_account), withText("Non hai un account? Registrati"),
@@ -77,7 +81,7 @@ public class Cammino7 {
         ViewInteraction textEmail = onView(withId(R.id.email1)).perform(typeText(email),ViewActions.closeSoftKeyboard());
         ViewInteraction textPassword = onView(withId(R.id.password1)).perform(typeText(password), ViewActions.closeSoftKeyboard());
         ViewInteraction textUsername = onView(withId(R.id.username)).perform(typeText(username),ViewActions.closeSoftKeyboard());
-
+        onView(withId(R.id.galleria)).perform(click());
 
         ViewInteraction button = onView(
                 allOf(withId(R.id.btnRegistrati), withText("REGISTRATI"),
@@ -86,10 +90,8 @@ public class Cammino7 {
                         isDisplayed()));
         button.check(matches(isDisplayed()));
         button.perform(click());
-        ActivityScenario.launch(getActivityIntent());
 
-
-        EspressoTestUtils.waitFor(700);
+        EspressoTestUtils.waitFor(7000);
         ViewInteraction textView2 = onView(
                 allOf(withText("PlacesOfInterest"),
                         withParent(allOf(withId(R.id.toolbar),
@@ -100,6 +102,7 @@ public class Cammino7 {
         EspressoTestUtils.waitFor(800);
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         EspressoTestUtils.waitFor(800);
+        deleteUser();
         ViewInteraction ItemFun = onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(R.id.itemfun)).perform(NavigationViewActions.navigateTo(R.id.action_settings));
         EspressoTestUtils.waitFor(800);
 
@@ -119,23 +122,22 @@ public class Cammino7 {
     }
 
 
-    public static ViewAction swipeUp() {
-        return new GeneralSwipeAction(Swipe.FAST, GeneralLocation.CENTER_LEFT,
-                GeneralLocation.CENTER_RIGHT, Press.FINGER);
 
-    }
+    public  void deleteUser(){
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        EspressoTestUtils.waitFor(300);
+        if (user != null) {
+            user.delete()
+                    .addOnCompleteListener(new OnCompleteListener() {
+                        @Override
+                        public void onComplete(@NonNull Task task) {
+                            FirebaseFirestore.getInstance().collection("users").document("test@gmail.com").delete();
 
-    private Intent getActivityIntent() {
-        Context targetContext = InstrumentationRegistry.getInstrumentation()
-                .getTargetContext();
-        Intent i = new Intent(targetContext, MainActivity.class);
-        i.putExtra("nome",name);
-        i.putExtra("cognome",surname);
-        i.putExtra("username",username);
-        i.putExtra("password",password);
-        i.putExtra("email",email);
-        i.putExtra("uriFotoDelProfilo","https://firebasestorage.googleapis.com/v0/b/placesofinterest-2bc8d.appspot.com/o/ProfileImages%2F20ACC158-687A-4411-906E-0333D49FE6E7.jpeg?alt=media&token=5d8e9d45-3db7-47c3-9f5e-e02aa2d55fbd");
-        return i;
+                            Log.e("eliminazione user","eliminato");
+                        }
+                    });
+        }
+
     }
 
 
