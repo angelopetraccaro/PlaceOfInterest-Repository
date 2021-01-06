@@ -282,6 +282,19 @@ public class Cammino11 {
         EspressoTestUtils.waitFor(3000);
     }
 
+    protected Intent getActivityIntent() {
+        Context targetContext = InstrumentationRegistry.getInstrumentation()
+                .getTargetContext();
+        Intent i = new Intent(targetContext, MainActivity.class);
+        i.putExtra("nome","Angelo");
+        i.putExtra("cognome","Petraccaro");
+        i.putExtra("username","Angelo_Petraccaro");
+        i.putExtra("password","asd123");
+        i.putExtra("email","petraccaro.angelo@gmail.com");
+        i.putExtra("uriFotoDelProfilo","https://firebasestorage.googleapis.com/v0/b/placesofinterest-2bc8d.appspot.com/o/ProfileImages%2F20ACC158-687A-4411-906E-0333D49FE6E7.jpeg?alt=media&token=5d8e9d45-3db7-47c3-9f5e-e02aa2d55fbd");
+        return i;
+    }
+
     private static Matcher<View> childAtPosition(
             final Matcher<View> parentMatcher, final int position) {
 
