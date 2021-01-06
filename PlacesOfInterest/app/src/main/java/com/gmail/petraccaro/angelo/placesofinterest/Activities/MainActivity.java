@@ -115,10 +115,12 @@ public class MainActivity extends AppCompatActivity implements Contract {
                     adb.setTitle("Delete?");
                     adb.setPositiveButton(R.string.Ok, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                                   if (PublicList.get(position).getOwner().equalsIgnoreCase(currentUser.getUid())) {
+                            currentUser = mAuth.getCurrentUser();
+                            if (PublicList.get(position).getOwner().equalsIgnoreCase(currentUser.getUid())) {
                                     final Post el =  PublicList.get(position);
                                     final String key = el.getKeyOnDb();
                                     StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(el.getUrl_foto());
+                                    Log.e("urlfoto",el.getUrl_foto());
                                     storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {

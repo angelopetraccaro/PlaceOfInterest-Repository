@@ -43,9 +43,9 @@ public class RegisterActivity extends AppCompatActivity implements Contract, Con
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        lw.SetContext(this);
-        lw2.SetContext(this);
 
+        lw.SetContext(RegisterActivity.this);
+        lw2.SetContext(RegisterActivity.this);
         TextView txt = findViewById(R.id.account);
         txt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,97 +100,12 @@ public class RegisterActivity extends AppCompatActivity implements Contract, Con
                     Toast.makeText(RegisterActivity.this, R.string.FotoNonAggiunta, Toast.LENGTH_LONG).show();
 
                 else{
-
+                     ControllerUser lw = ControllerUser.getInstance();
+                     ControllerPhoto lw2 = ControllerPhoto.getInstance();
+                    lw.SetContext(RegisterActivity.this);
+                    lw2.SetContext(RegisterActivity.this);
                     lw.register(str_nome,str_cognome,str_email,str_password,str_user,uri);
-                    /*
-                    FirebaseStorage myStorage = FirebaseStorage.getInstance();
-                    StorageReference rootStorageRef = myStorage.getReference();
-                    final StorageReference documentRef = rootStorageRef.child("ProfileImages");
-                    final StorageReference scoreRef = documentRef.child(uri.getLastPathSegment());
-                    final UploadTask uploadTask = scoreRef.putFile(uri);
-                    uploadTask.addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            Toast.makeText(getApplicationContext(), "Upload Failure", Toast.LENGTH_LONG).show();
-                        }
-                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            scoreRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                @Override
-                                public void onSuccess(final Uri uri) {
-                                    myDB.collection("users")
-                                            .get()
-                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                    boolean  presente = false;
-
-                                                    if(task.isSuccessful()){
-                                                        for(QueryDocumentSnapshot qds: task.getResult()){
-                                                           User usr= qds.toObject(User.class);
-                                                            if(usr.getEmail().equalsIgnoreCase(str_email)){
-                                                                presente = !presente;
-                                                            }
-                                                        }
-
-                                                        if(!presente){
-                                                            DocumentReference myRef = myDB.collection("users").document(str_email);
-
-                                                            final User user = new User(str_nome,str_cognome,str_user,str_email,str_password, uri.toString() );
-                                                            myRef.set(user);
-                                                            FirebaseAuth mAuth = FirebaseAuth.getInstance();
-                                                            mAuth.signOut();
-
-                                                            mAuth.createUserWithEmailAndPassword(str_email,str_password)
-                                                                    .addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
-                                                                        @Override
-                                                                        public void onComplete(@NonNull Task<AuthResult> task) {
-                                                                            if (task.isSuccessful()){
-
-                                                                                Intent i = new Intent(RegisterActivity.this, MainActivity.class);
-                                                                                i.putExtra("nome",user.getNome());
-                                                                                i.putExtra("cognome",user.getCognome());
-                                                                                i.putExtra("username",user.getUsername());
-                                                                                i.putExtra("password",user.getPassword());
-                                                                                i.putExtra("email",user.getEmail());
-                                                                                i.putExtra("uriFotoDelProfilo",user.getUriFotoDelProfilo());
-                                                                                startActivity(i);
-                                                                            }else{
-                                                                                Log.e("cosa succede", task.getException().toString());
-                                                                            }
-
-
-                                                                        }
-                                                                    });
-
-
-                                                        }else{
-                                                            Toast.makeText(RegisterActivity.this, R.string.UtenteGiaregistrato, Toast.LENGTH_LONG).show();
-                                                            imgbtnGallery.setEnabled(true);
-                                                            imgbtnFotocamera.setEnabled(true);
-                                                        }
-
-                                                    }
-
-                                                }
-                                            });
-
-
-
-                                }
-                            });
-
-                        }
-                    }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            imgbtnGallery.setEnabled(false);
-                            imgbtnFotocamera.setEnabled(false);
-
-                        }
-                    });
-               */ }
+                   }
 
 
             }
