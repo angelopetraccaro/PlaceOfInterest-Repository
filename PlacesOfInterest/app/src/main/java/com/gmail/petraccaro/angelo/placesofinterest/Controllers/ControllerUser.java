@@ -24,13 +24,13 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 public class ControllerUser {
-    private FirebaseFirestore myDB = FirebaseFirestore.getInstance();
     private static ControllerUser controller = new ControllerUser();
     Contract lw;  //serve per far dialogare controllore e activity
     Uri uri= null;
 
 
     public void Login(final String email, String password) {
+        final FirebaseFirestore myDB = FirebaseFirestore.getInstance();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         mAuth.signOut();
 
@@ -83,6 +83,7 @@ public class ControllerUser {
                 scoreRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(final Uri uri) {
+                        final FirebaseFirestore myDB = FirebaseFirestore.getInstance();
                         myDB.collection("users")
                                 .get()
                                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
