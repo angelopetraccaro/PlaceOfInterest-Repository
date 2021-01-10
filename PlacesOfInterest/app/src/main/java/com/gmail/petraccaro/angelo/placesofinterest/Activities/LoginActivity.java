@@ -19,7 +19,6 @@ import com.gmail.petraccaro.angelo.placesofinterest.Controllers.Contract;
 import com.gmail.petraccaro.angelo.placesofinterest.Controllers.ControllerUser;
 import com.gmail.petraccaro.angelo.placesofinterest.Models.User;
 import com.gmail.petraccaro.angelo.placesofinterest.R;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 
 /**
@@ -29,8 +28,8 @@ public class LoginActivity extends AppCompatActivity implements Contract {
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
     private final String TAG = "ANGELO.PETRACCARO";
-    private FirebaseFirestore myDB = FirebaseFirestore.getInstance();
     private ControllerUser cl = ControllerUser.getInstance();
+    private User LoggedUser = null;
 
     /**
      * Il metodo crea la LoginActivity, inizializza le variabili di email e password
@@ -87,52 +86,25 @@ public class LoginActivity extends AppCompatActivity implements Contract {
         }
 
         else {
-
             cl.Login(email,password);
-         /*   FirebaseAuth mAuth = FirebaseAuth.getInstance();
-            mAuth.signOut();
-
-            mAuth.signInWithEmailAndPassword(email,password)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-
-
-                                myDB.collection("users")
-                                        .document(email)
-                                        .get()
-                                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                            @Override
-                                            public void onSuccess(DocumentSnapshot documentSnapshot) {
-
-                                            }
-                                        });
-
-
-
-                            } else
-                                Toast.makeText(LoginActivity.this, R.string.UtenteNonregistrato, Toast.LENGTH_LONG).show();
-
-                        }
-                    });*/
-
-
         }
     }
 
-    private boolean isEmailValid(String email) {
+    protected boolean isEmailValid(String email) {
         return email.contains("@");
     }
 
-    private boolean isPasswordValid(String password) {
+    protected boolean isEmailOK(String email) {
+        return email.length()>0;
+    }
+
+    protected boolean isPasswordValid(String password) {
         return password.length() > 5;
     }
 
     @Override
     public void OnSuccess(Object LoggedUs) {
-
-        User LoggedUser = (User)LoggedUs;
+        LoggedUser= (User)LoggedUs;
         Intent i = new Intent(LoginActivity.this, MainActivity.class);
         i.putExtra("nome",LoggedUser.getNome());
         i.putExtra("cognome",LoggedUser.getCognome());
@@ -147,6 +119,5 @@ public class LoginActivity extends AppCompatActivity implements Contract {
     public void OnError(String message) {
         Log.e("Errore_login",message);
         Toast.makeText(LoginActivity.this, R.string.UtenteNonregistrato, Toast.LENGTH_LONG).show();
-
     }
 }
