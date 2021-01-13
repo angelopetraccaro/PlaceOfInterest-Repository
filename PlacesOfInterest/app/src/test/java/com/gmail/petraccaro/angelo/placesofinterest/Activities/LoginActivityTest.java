@@ -81,14 +81,14 @@ public class LoginActivityTest {
         assertFalse("I campi sono vuoti", la.isEmailOK(""));
     }
 
-    //driver
+    //stub
     public boolean isRegistered(String email, String password){
 
         if(email.equalsIgnoreCase("petraccaro.angelo@gmail.com") && password.equalsIgnoreCase("asd123"))
             return true;
         return false;
     }
-    //driver
+    //stub
     public boolean isLogged(){
         return true;
     }
