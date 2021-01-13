@@ -63,7 +63,7 @@ public class CreateActivityTest {
         assertFalse("Foto selezionata",!photoSelected());
     }
 
-    //stub
+    //driver
     public boolean photoSelected(){
         return true;
     }
