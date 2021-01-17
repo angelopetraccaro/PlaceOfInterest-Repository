@@ -24,7 +24,6 @@
         android:text="Breve descrizione"
         android:textColor="@color/design_default_color_primary_dark"
         android:textSize="20sp"
-
         android:textStyle="bold" />
 
     <ImageView
@@ -67,7 +66,6 @@
         android:layout_toEndOf="@+id/nome"
         android:ems="10"
         android:hint="Name"
-        android:inputType="textPersonName"
         android:textColor="@color/colorBlack"
         android:textSize="20sp" />
 

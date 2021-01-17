@@ -16,7 +16,7 @@
         android:background="@drawable/text_arrotondato"
         android:backgroundTint="@color/cardview_light_background"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:textAllCaps="false"
         android:paddingLeft="20dp"
         android:paddingTop="10dp"
         android:paddingRight="10dp"

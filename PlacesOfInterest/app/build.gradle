@@ -3,7 +3,7 @@ apply plugin: 'checkstyle'
 apply plugin: 'jacoco'
 
 jacoco {
-    toolVersion = '0.8.0'
+    toolVersion = '0.8.6'
 }
 
 android {
@@ -102,6 +102,23 @@ dependencies {
     def recyclerview_version = "1.1.0"
     implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
 
+}
+task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'createDebugCoverageReport', 'test', 'connectedAndroidTest']) {
+
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+
+    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
+    def debugTree = fileTree(dir: "$project.buildDir/intermediates/classes/debug", excludes: fileFilter)
+    def mainSrc = "$project.projectDir/src/main/java"
+
+    sourceDirectories = files([mainSrc])
+    classDirectories = files([debugTree])
+    executionData = fileTree(dir: project.buildDir, includes: [
+            'jacoco/testDebugUnitTest.exec', 'outputs/code-coverage/connected/*coverage.ec'
+    ])
 }
 
 apply plugin: 'com.google.gms.google-services'
